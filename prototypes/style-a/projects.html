@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" class="font-body">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 100: "#a5d2d5", 200: "#7bbcc1", 300: "#4ca6af", 400: "#008f9c", 500: "#007683", 600: "#005e6b", 700: "#004754", 800: "#00313d", 900: "#001d25" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 100: "#e3bfdd", 200: "#d6a1ca", 300: "#c982b5", 400: "#bd62a0", 500: "#a54988", 600: "#8c3271", 700: "#73195b", 800: "#590043", 900: "#390027" },
+          "purple": { 50: "#ede0f1", 400: "#787acd", 500: "#5d64b5", 700: "#293a85" },
+          "leaf-green": { 50: "#e5e6cb", 400: "#788a32" },
+          "yellow": { 50: "#ebe3ca", 400: "#af7532" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-gray-50 font-body text-gray-900">
+
+  <!-- Top Nav -->
+  <nav class="bg-white border-b border-gray-200 sticky top-0 z-50" x-data="{ mobileOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 shrink-0">
+          <svg class="w-8 h-8 text-ubt-green-400" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M10 20 Q16 8 22 20" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="16" cy="14" r="3" fill="currentColor"/>
+          </svg>
+          <span class="text-lg font-semibold text-gray-900 hidden sm:inline">Africa Multiple</span>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="dashboard.html" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition">Dashboard</a>
+          <a href="listing.html" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition">Persons</a>
+          <a href="projects.html" class="px-3 py-2 rounded-lg text-sm font-medium bg-ubt-green-50 text-ubt-green-400">Projects</a>
+          <a href="events.html" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition">Events</a>
+          <a href="institutions.html" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition">Institutions</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../index.html" class="text-xs text-gray-400 hover:text-gray-600 hidden lg:inline transition">All Prototypes</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-1.5 rounded-lg hover:bg-gray-100 transition cursor-pointer" aria-label="Toggle menu">
+            <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="w-9 h-9 rounded-full bg-ubt-green-400 text-white flex items-center justify-center text-sm font-semibold">AD</div>
+        </div>
+      </div>
+      <div class="md:hidden flex gap-1 pb-3 overflow-x-auto" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 whitespace-nowrap">Dashboard</a>
+        <a href="listing.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 whitespace-nowrap">Persons</a>
+        <a href="projects.html" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-ubt-green-50 text-ubt-green-400 whitespace-nowrap">Projects</a>
+        <a href="events.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 whitespace-nowrap">Events</a>
+        <a href="institutions.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 whitespace-nowrap">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="{
+    section: '',
+    report: '',
+    hasFilters() { return this.section || this.report; },
+    clearFilters() { this.section = ''; this.report = ''; }
+  }">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div class="flex items-center gap-3">
+        <h1 class="text-2xl font-semibold text-gray-900">Projects</h1>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">11</span>
+      </div>
+      <a href="#" class="inline-flex items-center gap-1.5 px-4 py-2 bg-ubt-green-400 text-white text-sm font-medium rounded-lg hover:bg-ubt-green-500 transition shadow-sm cursor-pointer self-start">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        New Project
+      </a>
+    </div>
+
+    <!-- Filter Row -->
+    <div class="bg-white rounded-xl shadow-sm p-4 mb-8">
+      <div class="flex flex-col md:flex-row gap-3 items-start md:items-center">
+        <select x-model="section" class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-ubt-green-400 cursor-pointer" :class="section ? 'border-ubt-green-400 ring-1 ring-ubt-green-400' : ''">
+          <option value="">Research Section</option>
+          <option value="Moralities">Moralities</option>
+          <option value="Mobilities">Mobilities</option>
+          <option value="Knowledges">Knowledges</option>
+          <option value="Aesthetics">Aesthetics</option>
+          <option value="Learning">Learning</option>
+        </select>
+        <select x-model="report" class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-ubt-green-400 cursor-pointer" :class="report ? 'border-ubt-green-400 ring-1 ring-ubt-green-400' : ''">
+          <option value="">Report Status</option>
+          <option value="requested">Report requested</option>
+          <option value="submitted">Report submitted</option>
+          <option value="pending">Report pending</option>
+        </select>
+        <button x-show="hasFilters()" @click="clearFilters()" class="text-sm text-gray-500 hover:text-gray-700 whitespace-nowrap cursor-pointer transition" x-transition>Clear Filters</button>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PROJECT LIST -->
+    <!-- ============================================ -->
+    <div class="space-y-4 mb-12">
+
+      <!-- Project 1: Transnational Migration Patterns in West Africa -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all">
+        <div class="flex flex-col gap-4">
+          <!-- Top Row: ID, Title, Section -->
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-001</span>
+            <a href="#" class="text-base font-semibold text-gray-900 hover:text-ubt-green-500 transition">Transnational Migration Patterns in West Africa</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-raspberry-50 text-raspberry-500 shrink-0">Mobilities</span>
+          </div>
+          <!-- Info Row -->
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-ubt-green-400 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">AO</div>
+                <a href="detail.html" class="text-gray-600 hover:text-ubt-green-500 transition">Dr. Amina Osei</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2023 &ndash; 2026</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">5 persons</span>
+          </div>
+          <!-- Funding & Report Row -->
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-700">&euro;180,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-ubt-green-500">&euro;165,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-700">2026-03-31</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ubt-green-50 text-ubt-green-500">Report submitted</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2: Decolonizing Knowledge Systems -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-002</span>
+            <a href="#" class="text-base font-semibold text-gray-900 hover:text-ubt-green-500 transition">Decolonizing Knowledge Systems</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ubt-green-50 text-ubt-green-500 shrink-0">Knowledges</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-azure-400 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">KA</div>
+                <a href="detail.html" class="text-gray-600 hover:text-ubt-green-500 transition">Prof. Kwame Asante</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2024 &ndash; 2027</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">4 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-700">&euro;250,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-ubt-green-500">&euro;230,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-700">2026-09-30</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-400">Report requested</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3: Climate Adaptation & Rural Livelihoods -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-003</span>
+            <a href="#" class="text-base font-semibold text-gray-900 hover:text-ubt-green-500 transition">Climate Adaptation &amp; Rural Livelihoods</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-400 shrink-0">Learning</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-purple-400 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">SM</div>
+                <a href="detail.html" class="text-gray-600 hover:text-ubt-green-500 transition">Dr. Samuel Mwangi</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2022 &ndash; 2025</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">6 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-700">&euro;120,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-ubt-green-500">&euro;120,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-700">2025-06-30</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ubt-green-50 text-ubt-green-500">Report submitted</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4: Visual Cultures of Resistance -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-004</span>
+            <a href="#" class="text-base font-semibold text-gray-900 hover:text-ubt-green-500 transition">Visual Cultures of Resistance</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-500 shrink-0">Aesthetics</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-ubt-green-300 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">CN</div>
+                <a href="detail.html" class="text-gray-600 hover:text-ubt-green-500 transition">Prof. Chidinma Nwosu</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2023 &ndash; 2026</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">3 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-700">&euro;95,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-ubt-green-500">&euro;85,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-700">2026-01-15</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-400">Report requested</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 5: Language & Power in Francophone Africa -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-005</span>
+            <a href="#" class="text-base font-semibold text-gray-900 hover:text-ubt-green-500 transition">Language &amp; Power in Francophone Africa</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-azure-50 text-azure-400 shrink-0">Moralities</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-raspberry-400 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">FD</div>
+                <a href="detail.html" class="text-gray-600 hover:text-ubt-green-500 transition">Dr. Fatima Diallo</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2024 &ndash; 2027</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">4 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-700">&euro;200,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-ubt-green-500">&euro;175,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-700">2027-03-31</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Report pending</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 6: Digital Heritage Archives -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-006</span>
+            <a href="#" class="text-base font-semibold text-gray-900 hover:text-ubt-green-500 transition">Digital Heritage Archives</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ubt-green-50 text-ubt-green-500 shrink-0">Knowledges</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-azure-300 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">JH</div>
+                <a href="detail.html" class="text-gray-600 hover:text-ubt-green-500 transition">Dr. Jean-Pierre Habimana</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2025 &ndash; 2028</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">7 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-700">&euro;310,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-ubt-green-500">&euro;280,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-700">2028-06-30</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Report pending</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 7: Ocean Economies of East Africa -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-007</span>
+            <a href="#" class="text-base font-semibold text-gray-900 hover:text-ubt-green-500 transition">Ocean Economies of East Africa</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-raspberry-50 text-raspberry-500 shrink-0">Mobilities</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-purple-400 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">SM</div>
+                <a href="detail.html" class="text-gray-600 hover:text-ubt-green-500 transition">Dr. Samuel Mwangi</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2026 &ndash; 2029</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">3 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-700">&euro;150,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-gray-400">&mdash;</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-400">&mdash;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 8: Pan-African Curriculum Reform -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-008</span>
+            <a href="#" class="text-base font-semibold text-gray-900 hover:text-ubt-green-500 transition">Pan-African Curriculum Reform</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-400 shrink-0">Learning</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-ubt-green-300 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">CN</div>
+                <a href="detail.html" class="text-gray-600 hover:text-ubt-green-500 transition">Prof. Chidinma Nwosu</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2027 &ndash; 2030</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-500">2 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-700">&euro;275,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-gray-400">&mdash;</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-400">&mdash;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 9: Mapping Linguistic Diversity -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all opacity-75">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-009</span>
+            <a href="#" class="text-base font-semibold text-gray-700 hover:text-ubt-green-500 transition">Mapping Linguistic Diversity</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ubt-green-50 text-ubt-green-500 shrink-0">Knowledges</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-gray-400 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">GA</div>
+                <a href="detail.html" class="text-gray-500 hover:text-ubt-green-500 transition">Dr. Grace Achieng</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-400">2020 &ndash; 2024</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-400">5 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-500">&euro;140,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-gray-500">&euro;140,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-500">2024-06-30</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ubt-green-50 text-ubt-green-500">Report submitted</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 10: Urban Transformation in West Africa -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all opacity-75">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-010</span>
+            <a href="#" class="text-base font-semibold text-gray-700 hover:text-ubt-green-500 transition">Urban Transformation in West Africa</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-raspberry-50 text-raspberry-500 shrink-0">Mobilities</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-purple-500 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">TM</div>
+                <a href="detail.html" class="text-gray-500 hover:text-ubt-green-500 transition">Prof. Thabo Molefe</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-400">2019 &ndash; 2023</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-400">4 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-500">&euro;160,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-gray-500">&euro;155,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-500">2023-12-31</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ubt-green-50 text-ubt-green-500">Report submitted</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 11: Religious Plurality & Ethics -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-ubt-green-200 transition-all opacity-75">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
+            <span class="text-xs font-mono text-gray-400 shrink-0 pt-0.5">P-011</span>
+            <a href="#" class="text-base font-semibold text-gray-700 hover:text-ubt-green-500 transition">Religious Plurality &amp; Ethics</a>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-azure-50 text-azure-400 shrink-0">Moralities</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Directors:</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-raspberry-300 text-white flex items-center justify-center text-[9px] font-semibold shrink-0">AM</div>
+                <a href="detail.html" class="text-gray-500 hover:text-ubt-green-500 transition">Dr. Aisha Mohammed</a>
+              </div>
+            </div>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-400">2020 &ndash; 2024</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-400">3 persons</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm border-t border-gray-100 pt-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Requested:</span>
+              <span class="font-medium text-gray-500">&euro;110,000</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Approved:</span>
+              <span class="font-medium text-gray-500">&euro;100,000</span>
+            </div>
+            <span class="text-gray-300">|</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-gray-500">2024-09-30</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-ubt-green-50 text-ubt-green-500">Report submitted</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SUMMARY STATS -->
+    <!-- ============================================ -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl shadow-sm border-l-4 border-ubt-green-400 p-5">
+        <p class="text-sm text-gray-500">Total Requested</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">&euro;1.99M</p>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border-l-4 border-ubt-green-300 p-5">
+        <p class="text-sm text-gray-500">Total Approved</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">&euro;1.45M</p>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border-l-4 border-azure-400 p-5">
+        <p class="text-sm text-gray-500">Involved Persons</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">42</p>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border-l-4 border-raspberry-400 p-5">
+        <p class="text-sm text-gray-500">Research Sections</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">5</p>
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Africa Multiple Cluster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 400: "#0d9462", 500: "#007b4b" },
+            "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+            "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+            "cream": { DEFAULT: "#faf5eb", 50: "#fdfbf7", 100: "#faf5eb", 200: "#f0e6d0", 300: "#e6d7b5" },
+            "coffee": { DEFAULT: "#6b4c3b", 100: "#d4c0a8", 200: "#b89e82", 300: "#9c7d5c", 400: "#6b4c3b", 500: "#4a3428" },
+            "rust": { DEFAULT: "#c45a3c", 100: "#f0c4b8", 200: "#e89880", 300: "#d4704e", 400: "#c45a3c", 500: "#a04030" },
+          },
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Georgia', 'Palatino', 'serif'],
+            mono: ['Courier New', 'monospace'],
+          },
+        }
+      }
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+      body { background-color: #faf5eb; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); }
+      .warm-shadow { box-shadow: 0 4px 12px rgba(107,76,59,0.15); }
+      .warm-shadow-lg { box-shadow: 0 8px 24px rgba(107,76,59,0.2); }
+      .stamp { text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; border: 3px double currentColor; border-radius: 4px; padding: 2px 10px; display: inline-block; transform: rotate(-3deg); }
+      .pin::before { content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 14px; height: 14px; background: radial-gradient(circle at 40% 40%, #d4704e, #a04030); border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10; }
+      .ruled-line { background-image: repeating-linear-gradient(transparent, transparent 27px, #e6d7b5 27px, #e6d7b5 28px); background-size: 100% 28px; line-height: 28px; }
+    </style>
+</head>
+<body class="min-h-screen font-body text-coffee-400" x-data="{ mobileMenu: false }">
+
+    <!-- Vintage Control Panel Top Bar -->
+    <nav class="bg-coffee-500 border-b-4 border-coffee-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-6">
+                    <a href="../index.html" class="text-cream-200 hover:text-cream text-xs font-mono tracking-wider flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        PROTOTYPES
+                    </a>
+                    <div class="hidden md:flex items-center gap-1">
+                        <svg class="w-5 h-5 text-rust-300" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        <span class="font-display text-cream text-lg tracking-wide">AFRICA MULTIPLE</span>
+                        <span class="text-coffee-200 text-xs font-mono ml-2">CLUSTER MANAGEMENT</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="dashboard.html" class="px-3 py-1.5 bg-rust-400 text-cream rounded text-sm font-mono tracking-wide">DASHBOARD</a>
+                    <a href="listing.html" class="px-3 py-1.5 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">PERSONS</a>
+                    <a href="projects.html" class="px-3 py-1.5 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">PROJECTS</a>
+                    <a href="events.html" class="px-3 py-1.5 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">EVENTS</a>
+                    <a href="institutions.html" class="px-3 py-1.5 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">INSTITUTIONS</a>
+                </div>
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden text-cream-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div x-show="mobileMenu" x-transition class="md:hidden bg-coffee-500 border-t border-coffee-400 px-4 pb-4">
+            <a href="dashboard.html" class="block px-3 py-2 bg-rust-400 text-cream rounded text-sm font-mono tracking-wide mb-1">DASHBOARD</a>
+            <a href="listing.html" class="block px-3 py-2 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide mb-1">PERSONS</a>
+            <a href="projects.html" class="block px-3 py-2 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide mb-1">PROJECTS</a>
+            <a href="events.html" class="block px-3 py-2 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide mb-1">EVENTS</a>
+            <a href="institutions.html" class="block px-3 py-2 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">INSTITUTIONS</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+        <!-- Header -->
+        <div class="mb-8 flex items-end justify-between">
+            <div>
+                <h1 class="font-display text-3xl text-coffee-500">Control Panel</h1>
+                <p class="text-coffee-300 font-mono text-sm mt-1">SYSTEM STATUS &mdash; LAST UPDATED: 18 FEB 2026, 14:32 CET</p>
+            </div>
+            <div class="stamp text-ubt-green text-xs hidden sm:inline-block">OPERATIONAL</div>
+        </div>
+
+        <!-- 4 Analog Gauge Widgets -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <!-- Persons Gauge -->
+            <div class="bg-cream-50 rounded-lg p-5 warm-shadow text-center border border-cream-300">
+                <p class="font-mono text-xs text-coffee-300 tracking-widest mb-3">PERSONS</p>
+                <svg viewBox="0 0 200 120" class="w-full max-w-[180px] mx-auto">
+                    <!-- Gauge background arc -->
+                    <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e6d7b5" stroke-width="14" stroke-linecap="round"/>
+                    <!-- Green zone 0-70% -->
+                    <path d="M 20 100 A 80 80 0 0 1 68.4 28.6" fill="none" stroke="#0d9462" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <!-- Yellow zone 70-90% -->
+                    <path d="M 68.4 28.6 A 80 80 0 0 1 148 32" fill="none" stroke="#d4a528" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <!-- Red zone 90-100% -->
+                    <path d="M 148 32 A 80 80 0 0 1 180 100" fill="none" stroke="#c45a3c" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <!-- Filled arc (84.7%) -->
+                    <path d="M 20 100 A 80 80 0 0 1 153.6 37.5" fill="none" stroke="#0d9462" stroke-width="14" stroke-linecap="round"/>
+                    <!-- Needle -->
+                    <line x1="100" y1="100" x2="153.6" y2="37.5" stroke="#4a3428" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="100" cy="100" r="6" fill="#4a3428"/>
+                    <circle cx="100" cy="100" r="3" fill="#c45a3c"/>
+                    <!-- Value -->
+                    <text x="100" y="92" text-anchor="middle" class="font-mono" fill="#4a3428" font-size="22" font-weight="700">847</text>
+                    <text x="100" y="115" text-anchor="middle" class="font-mono" fill="#9c7d5c" font-size="10">of 1,000</text>
+                </svg>
+            </div>
+
+            <!-- Projects Gauge -->
+            <div class="bg-cream-50 rounded-lg p-5 warm-shadow text-center border border-cream-300">
+                <p class="font-mono text-xs text-coffee-300 tracking-widest mb-3">PROJECTS</p>
+                <svg viewBox="0 0 200 120" class="w-full max-w-[180px] mx-auto">
+                    <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e6d7b5" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M 20 100 A 80 80 0 0 1 68.4 28.6" fill="none" stroke="#0d9462" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <path d="M 68.4 28.6 A 80 80 0 0 1 148 32" fill="none" stroke="#d4a528" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <path d="M 148 32 A 80 80 0 0 1 180 100" fill="none" stroke="#c45a3c" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <!-- Filled arc (76.7%) -->
+                    <path d="M 20 100 A 80 80 0 0 1 130 25" fill="none" stroke="#0d9462" stroke-width="14" stroke-linecap="round"/>
+                    <line x1="100" y1="100" x2="130" y2="25" stroke="#4a3428" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="100" cy="100" r="6" fill="#4a3428"/>
+                    <circle cx="100" cy="100" r="3" fill="#c45a3c"/>
+                    <text x="100" y="92" text-anchor="middle" fill="#4a3428" font-size="22" font-weight="700" font-family="Courier New">23</text>
+                    <text x="100" y="115" text-anchor="middle" fill="#9c7d5c" font-size="10" font-family="Courier New">of 30</text>
+                </svg>
+            </div>
+
+            <!-- Events Gauge -->
+            <div class="bg-cream-50 rounded-lg p-5 warm-shadow text-center border border-cream-300">
+                <p class="font-mono text-xs text-coffee-300 tracking-widest mb-3">EVENTS</p>
+                <svg viewBox="0 0 200 120" class="w-full max-w-[180px] mx-auto">
+                    <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e6d7b5" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M 20 100 A 80 80 0 0 1 68.4 28.6" fill="none" stroke="#0d9462" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <path d="M 68.4 28.6 A 80 80 0 0 1 148 32" fill="none" stroke="#d4a528" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <path d="M 148 32 A 80 80 0 0 1 180 100" fill="none" stroke="#c45a3c" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <!-- Filled arc (60%) -->
+                    <path d="M 20 100 A 80 80 0 0 1 100 20" fill="none" stroke="#d4a528" stroke-width="14" stroke-linecap="round"/>
+                    <line x1="100" y1="100" x2="100" y2="20" stroke="#4a3428" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="100" cy="100" r="6" fill="#4a3428"/>
+                    <circle cx="100" cy="100" r="3" fill="#c45a3c"/>
+                    <text x="100" y="92" text-anchor="middle" fill="#4a3428" font-size="22" font-weight="700" font-family="Courier New">12</text>
+                    <text x="100" y="115" text-anchor="middle" fill="#9c7d5c" font-size="10" font-family="Courier New">of 20</text>
+                </svg>
+            </div>
+
+            <!-- Institutions Gauge -->
+            <div class="bg-cream-50 rounded-lg p-5 warm-shadow text-center border border-cream-300">
+                <p class="font-mono text-xs text-coffee-300 tracking-widest mb-3">INSTITUTIONS</p>
+                <svg viewBox="0 0 200 120" class="w-full max-w-[180px] mx-auto">
+                    <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e6d7b5" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M 20 100 A 80 80 0 0 1 68.4 28.6" fill="none" stroke="#0d9462" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <path d="M 68.4 28.6 A 80 80 0 0 1 148 32" fill="none" stroke="#d4a528" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <path d="M 148 32 A 80 80 0 0 1 180 100" fill="none" stroke="#c45a3c" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+                    <!-- Filled arc (78%) -->
+                    <path d="M 20 100 A 80 80 0 0 1 135 26" fill="none" stroke="#0d9462" stroke-width="14" stroke-linecap="round"/>
+                    <line x1="100" y1="100" x2="135" y2="26" stroke="#4a3428" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="100" cy="100" r="6" fill="#4a3428"/>
+                    <circle cx="100" cy="100" r="3" fill="#c45a3c"/>
+                    <text x="100" y="92" text-anchor="middle" fill="#4a3428" font-size="22" font-weight="700" font-family="Courier New">156</text>
+                    <text x="100" y="115" text-anchor="middle" fill="#9c7d5c" font-size="10" font-family="Courier New">of 200</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+
+            <!-- Activity Log (left 2 cols) -->
+            <div class="lg:col-span-2">
+                <div class="bg-cream-50 rounded-lg warm-shadow border border-cream-300 overflow-hidden">
+                    <div class="bg-coffee-100 px-5 py-3 border-b border-cream-300 flex items-center justify-between">
+                        <h2 class="font-display text-lg text-coffee-500">Activity Log</h2>
+                        <span class="font-mono text-xs text-coffee-300">FORM NO. 4217-B</span>
+                    </div>
+                    <div class="p-5 ruled-line font-mono text-sm text-coffee-400 space-y-0">
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">14:32</span>
+                            <span class="text-ubt-green shrink-0">[ADD]</span>
+                            <span>New person record: <strong>Dr. Kwame Asante</strong> &mdash; Cluster member, Bayreuth</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">14:15</span>
+                            <span class="text-azure shrink-0">[UPD]</span>
+                            <span>Project "Transnational Narratives" report submitted, funding approved: &euro;245,000</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">13:48</span>
+                            <span class="text-ubt-green shrink-0">[ADD]</span>
+                            <span>Event created: "Decolonial Methodologies Workshop" &mdash; type: Workshop</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">13:22</span>
+                            <span class="text-azure shrink-0">[UPD]</span>
+                            <span>Fellowship updated: Dr. Nkrumah (fellow) hosted by Prof. Mensah, end date set</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">12:55</span>
+                            <span class="text-azure shrink-0">[UPD]</span>
+                            <span>Person: Dr. Fatima Nkrumah &mdash; membership category and location updated</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">12:30</span>
+                            <span class="text-ubt-green shrink-0">[ADD]</span>
+                            <span>New institution registered: Rhodes University (ACC: No) &mdash; Grahamstown</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">11:47</span>
+                            <span class="text-azure shrink-0">[UPD]</span>
+                            <span>Event "Pan-African Futures" guest confirmed: Dr. Osei (role: Keynote speaker)</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">11:15</span>
+                            <span class="text-raspberry shrink-0">[SYS]</span>
+                            <span>Expert Search sync completed &mdash; 12 person profiles updated</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">10:42</span>
+                            <span class="text-azure shrink-0">[UPD]</span>
+                            <span>Project PRJ-003: Directors updated, research section reassigned</span>
+                        </div>
+                        <div class="flex gap-3 py-0.5">
+                            <span class="text-coffee-200 shrink-0">09:30</span>
+                            <span class="text-azure shrink-0">[UPD]</span>
+                            <span>Persons: Signed Rights and Duties confirmed for 8 new cluster members</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Widget (right col) -->
+            <div>
+                <div class="bg-cream-50 rounded-lg warm-shadow border border-cream-300 overflow-hidden">
+                    <div class="bg-rust-400 px-5 py-3 text-center">
+                        <p class="font-display text-xl text-cream tracking-wide">February 2026</p>
+                    </div>
+                    <div class="p-4">
+                        <div class="grid grid-cols-7 text-center text-xs font-mono text-coffee-300 mb-2">
+                            <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                        </div>
+                        <div class="grid grid-cols-7 text-center text-sm font-mono gap-y-1">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span class="py-1 text-coffee-300">1</span>
+                            <span class="py-1">2</span>
+                            <span class="py-1">3</span>
+                            <span class="py-1">4</span>
+                            <span class="py-1 relative">5<span class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-ubt-green rounded-full"></span></span>
+                            <span class="py-1">6</span>
+                            <span class="py-1 text-coffee-300">7</span>
+                            <span class="py-1 text-coffee-300">8</span>
+                            <span class="py-1">9</span>
+                            <span class="py-1">10</span>
+                            <span class="py-1">11</span>
+                            <span class="py-1 relative">12<span class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-rust-400 rounded-full"></span></span>
+                            <span class="py-1">13</span>
+                            <span class="py-1 text-coffee-300">14</span>
+                            <span class="py-1 text-coffee-300">15</span>
+                            <span class="py-1">16</span>
+                            <span class="py-1">17</span>
+                            <span class="bg-rust-400 text-cream rounded-full py-1 font-bold">18</span>
+                            <span class="py-1">19</span>
+                            <span class="py-1 relative">20<span class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-azure rounded-full"></span></span>
+                            <span class="py-1 text-coffee-300">21</span>
+                            <span class="py-1 text-coffee-300">22</span>
+                            <span class="py-1">23</span>
+                            <span class="py-1 relative">24<span class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-ubt-green rounded-full"></span></span>
+                            <span class="py-1">25</span>
+                            <span class="py-1">26</span>
+                            <span class="py-1">27</span>
+                            <span class="py-1 text-coffee-300">28</span>
+                        </div>
+                        <div class="mt-4 space-y-2 text-xs font-mono">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 bg-ubt-green rounded-full"></span>
+                                <span class="text-coffee-300">5 Feb</span>
+                                <span>Workshop: Data Methods</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 bg-rust-400 rounded-full"></span>
+                                <span class="text-coffee-300">12 Feb</span>
+                                <span>Deadline: Proposals</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 bg-azure rounded-full"></span>
+                                <span class="text-coffee-300">20 Feb</span>
+                                <span>Seminar: Pan-African Lit</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 bg-ubt-green rounded-full"></span>
+                                <span class="text-coffee-300">24 Feb</span>
+                                <span>Colloquium: Oral Histories</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notice Board Section -->
+        <div class="mt-10">
+            <div class="flex items-center gap-3 mb-6">
+                <h2 class="font-display text-2xl text-coffee-500">Notice Board</h2>
+                <div class="flex-1 border-t-2 border-dashed border-cream-300"></div>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Notice 1 -->
+                <div class="relative bg-cream-50 border border-cream-300 rounded p-5 pt-6 warm-shadow transform -rotate-1 hover:rotate-0 transition-transform pin">
+                    <p class="font-display text-sm font-bold text-coffee-500 mb-2">Call for Papers</p>
+                    <p class="text-xs text-coffee-300 font-mono leading-relaxed">Annual conference on African Studies accepting abstracts until March 15. Theme: "Multiplicity in Motion."</p>
+                    <p class="text-xs text-rust-400 font-mono mt-3">Deadline: 15 Mar 2026</p>
+                </div>
+                <!-- Notice 2 -->
+                <div class="relative bg-cream-50 border border-cream-300 rounded p-5 pt-6 warm-shadow transform rotate-1 hover:rotate-0 transition-transform pin">
+                    <p class="font-display text-sm font-bold text-coffee-500 mb-2">System Maintenance</p>
+                    <p class="text-xs text-coffee-300 font-mono leading-relaxed">Scheduled downtime on Feb 22, 02:00-06:00 CET for database optimization and backup rotation.</p>
+                    <p class="text-xs text-azure font-mono mt-3">Info: IT Department</p>
+                </div>
+                <!-- Notice 3 -->
+                <div class="relative bg-cream-50 border border-cream-300 rounded p-5 pt-6 warm-shadow transform -rotate-1 hover:rotate-0 transition-transform pin">
+                    <p class="font-display text-sm font-bold text-coffee-500 mb-2">New Partnership</p>
+                    <p class="text-xs text-coffee-300 font-mono leading-relaxed">Memorandum of understanding signed with University of Cape Town for joint doctoral program.</p>
+                    <p class="text-xs text-ubt-green font-mono mt-3">Status: Confirmed</p>
+                </div>
+                <!-- Notice 4 -->
+                <div class="relative bg-cream-50 border border-cream-300 rounded p-5 pt-6 warm-shadow transform rotate-1 hover:rotate-0 transition-transform pin">
+                    <p class="font-display text-sm font-bold text-coffee-500 mb-2">Funding Approved</p>
+                    <p class="text-xs text-coffee-300 font-mono leading-relaxed">DFG approved continuation funding for 2026-2028 cycle. Budget allocation meeting scheduled for March.</p>
+                    <p class="text-xs text-ubt-green font-mono mt-3 stamp" style="transform: rotate(-2deg); font-size: 10px;">APPROVED</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t-2 border-cream-300 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="font-mono text-xs text-coffee-200">AFRICA MULTIPLE CLUSTER OF EXCELLENCE &mdash; UNIVERSITY OF BAYREUTH</p>
+            <p class="font-mono text-xs text-coffee-200">STYLE F: RETRO ANALOG DASHBOARD &mdash; PROTOTYPE</p>
+        </div>
+    </footer>
+
+</body>
+</html>

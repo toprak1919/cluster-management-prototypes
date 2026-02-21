@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Plan — Cluster Management Blueprint</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bp-base: #1a2744;
+      --bp-line: #e8f0ff;
+      --bp-cyan: #5bb8ff;
+      --bp-gold: #ffd700;
+      --bp-red: #ff4444;
+      --bp-grid: rgba(91,184,255,0.08);
+      --bp-grid-fine: rgba(91,184,255,0.04);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      color: var(--bp-line);
+      background-color: var(--bp-base);
+      background-image:
+        linear-gradient(var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(var(--bp-grid-fine) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid-fine) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      min-height: 100vh;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    a { color: var(--bp-cyan); text-decoration: none; }
+    a:hover { color: var(--bp-gold); }
+
+    /* Layout */
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 56px;
+      border-right: 1.5px solid rgba(232,240,255,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 6px;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      background-color: var(--bp-base);
+    }
+    .main { flex: 1; margin-left: 56px; padding: 32px 40px 120px; }
+
+    /* Section markers */
+    .section-marker {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan);
+      font-size: 12px; font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .section-marker:hover, .section-marker.active {
+      background: var(--bp-cyan);
+      color: var(--bp-base);
+    }
+    .section-marker.active {
+      border-color: var(--bp-gold);
+      background: var(--bp-gold);
+      color: var(--bp-base);
+    }
+
+    /* Drawing title */
+    .drawing-title {
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--bp-line);
+      margin-bottom: 4px;
+    }
+    .drawing-subtitle {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--bp-cyan);
+    }
+
+    /* Dimension line */
+    .dimension-line {
+      position: relative;
+      border-top: 1px solid var(--bp-cyan);
+      margin: 8px 0;
+    }
+    .dimension-line::before, .dimension-line::after {
+      content: ''; position: absolute; top: -4px;
+      width: 1px; height: 9px; background: var(--bp-cyan);
+    }
+    .dimension-line::before { left: 0; }
+    .dimension-line::after { right: 0; }
+    .dimension-label {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: var(--bp-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    /* Spec block */
+    .spec-block {
+      border: 1px solid rgba(232,240,255,0.2);
+      padding: 20px;
+      position: relative;
+    }
+    .spec-block-label {
+      position: absolute;
+      top: -8px; left: 16px;
+      background: var(--bp-base);
+      padding: 0 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--bp-cyan);
+    }
+    .spec-value {
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--bp-line);
+      letter-spacing: 2px;
+    }
+    .spec-unit {
+      font-size: 11px;
+      color: var(--bp-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Title block */
+    .title-block {
+      position: fixed;
+      bottom: 16px; right: 16px;
+      border: 1.5px solid var(--bp-line);
+      background: var(--bp-base);
+      z-index: 40;
+      font-size: 10px;
+    }
+    .title-block table { border-collapse: collapse; }
+    .title-block td {
+      border: 1px solid rgba(232,240,255,0.3);
+      padding: 3px 10px;
+      white-space: nowrap;
+    }
+    .title-block .tb-header {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--bp-cyan);
+      font-size: 9px;
+    }
+
+    /* Revision log table */
+    .rev-table { width: 100%; border-collapse: collapse; }
+    .rev-table th {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--bp-cyan);
+      text-align: left;
+      padding: 6px 10px;
+      border-bottom: 1.5px solid var(--bp-cyan);
+    }
+    .rev-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid rgba(232,240,255,0.1);
+      font-size: 12px;
+    }
+
+    /* Zone card */
+    .zone-card {
+      border: 1px solid rgba(232,240,255,0.15);
+      padding: 16px 20px;
+      position: relative;
+    }
+    .zone-card::before {
+      content: attr(data-zone);
+      position: absolute;
+      top: -10px; left: 16px;
+      background: var(--bp-base);
+      padding: 0 6px;
+      font-size: 10px;
+      color: var(--bp-gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .zone-title {
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--bp-line);
+      margin-bottom: 6px;
+    }
+    .zone-meta {
+      font-size: 11px;
+      color: var(--bp-cyan);
+    }
+
+    /* Callout annotation */
+    .callout {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--bp-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .callout-line {
+      width: 24px;
+      height: 1px;
+      background: var(--bp-cyan);
+    }
+
+    /* Animations */
+    @keyframes fadeInBlueprint {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeInBlueprint 0.6s ease forwards;
+      opacity: 0;
+    }
+    .fade-in-1 { animation-delay: 0.1s; }
+    .fade-in-2 { animation-delay: 0.2s; }
+    .fade-in-3 { animation-delay: 0.3s; }
+    .fade-in-4 { animation-delay: 0.4s; }
+    .fade-in-5 { animation-delay: 0.5s; }
+
+    /* Back link */
+    .back-link {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(232,240,255,0.4);
+    }
+    .back-link:hover { color: var(--bp-gold); }
+
+    /* Sidebar tooltip */
+    .sidebar-item { position: relative; }
+    .sidebar-item .tooltip {
+      display: none;
+      position: absolute;
+      left: 42px; top: 50%;
+      transform: translateY(-50%);
+      background: var(--bp-base);
+      border: 1px solid var(--bp-cyan);
+      padding: 3px 10px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--bp-cyan);
+      white-space: nowrap;
+      z-index: 60;
+    }
+    .sidebar-item:hover .tooltip { display: block; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar { width: 44px; }
+      .main { margin-left: 44px; padding: 20px 16px 140px; }
+      .section-marker { width: 28px; height: 28px; font-size: 10px; }
+      .drawing-title { font-size: 15px; letter-spacing: 2px; }
+      .spec-value { font-size: 22px; }
+      .title-block { right: 8px; bottom: 8px; font-size: 9px; }
+      .stats-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body x-data="{ currentPage: 'dashboard' }">
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <a href="../index.html" class="back-link" style="margin-bottom: 8px; font-size: 9px; writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 2px;">PROTO</a>
+    <div style="width: 24px; border-top: 1px solid rgba(232,240,255,0.2); margin: 4px 0 8px;"></div>
+
+    <div class="sidebar-item">
+      <a href="dashboard.html" class="section-marker active">A</a>
+      <span class="tooltip">Site Plan</span>
+    </div>
+    <div class="sidebar-item">
+      <a href="listing.html" class="section-marker">B</a>
+      <span class="tooltip">Occupant Register</span>
+    </div>
+    <div class="sidebar-item">
+      <a href="detail.html" class="section-marker">C</a>
+      <span class="tooltip">Occupant Detail</span>
+    </div>
+    <div class="sidebar-item">
+      <a href="projects.html" class="section-marker">D</a>
+      <span class="tooltip">Structural Schedule</span>
+    </div>
+    <div class="sidebar-item">
+      <a href="events.html" class="section-marker">E</a>
+      <span class="tooltip">Assembly Schedule</span>
+    </div>
+    <div class="sidebar-item">
+      <a href="institutions.html" class="section-marker">F</a>
+      <span class="tooltip">Partner Directory</span>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Drawing Header -->
+    <div class="fade-in fade-in-1" style="margin-bottom: 32px;">
+      <div class="drawing-subtitle">Drawing No. Q-001 &mdash; Rev 04</div>
+      <div class="drawing-title">Site Plan &mdash; Cluster Overview</div>
+      <div class="dimension-line" style="width: 300px; margin-top: 16px;">
+        <span class="dimension-label">Overview Span</span>
+      </div>
+    </div>
+
+    <!-- Specifications / Stats -->
+    <div class="fade-in fade-in-2" style="margin-bottom: 40px;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+        <span class="section-marker" style="width: 24px; height: 24px; font-size: 10px;">A1</span>
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-cyan);">Specifications</span>
+      </div>
+      <div class="stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+        <div class="spec-block">
+          <div class="spec-block-label">Occupancy</div>
+          <div class="spec-value">847</div>
+          <div class="spec-unit">Persons</div>
+          <div class="dimension-line" style="margin-top: 12px;">
+            <span class="dimension-label">Total Registered</span>
+          </div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-block-label">Structures</div>
+          <div class="spec-value">23</div>
+          <div class="spec-unit">Projects</div>
+          <div class="dimension-line" style="margin-top: 12px;">
+            <span class="dimension-label">Active Structures</span>
+          </div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-block-label">Assemblies</div>
+          <div class="spec-value">156</div>
+          <div class="spec-unit">Events</div>
+          <div class="dimension-line" style="margin-top: 12px;">
+            <span class="dimension-label">Scheduled Assemblies</span>
+          </div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-block-label">Partners</div>
+          <div class="spec-value">42</div>
+          <div class="spec-unit">Institutions</div>
+          <div class="dimension-line" style="margin-top: 12px;">
+            <span class="dimension-label">Affiliated Bodies</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Specs Row -->
+    <div class="fade-in fade-in-2" style="margin-bottom: 40px;">
+      <div class="stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+        <div class="spec-block">
+          <div class="spec-block-label">BIGSAS</div>
+          <div class="spec-value">312</div>
+          <div class="spec-unit">Members</div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-block-label">Cluster</div>
+          <div class="spec-value">489</div>
+          <div class="spec-unit">Members</div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-block-label">Countries</div>
+          <div class="spec-value">38</div>
+          <div class="spec-unit">Represented</div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-block-label">Locations</div>
+          <div class="spec-value">67</div>
+          <div class="spec-unit">Sites</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zones: Research Sections -->
+    <div class="fade-in fade-in-3" style="margin-bottom: 40px;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+        <span class="section-marker" style="width: 24px; height: 24px; font-size: 10px;">A2</span>
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-cyan);">Zone Allocation &mdash; Research Sections</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+        <div class="zone-card" data-zone="Zone 1">
+          <div class="zone-title">Moralities, Identities, Subjectivities</div>
+          <div class="zone-meta">Spokesperson: Prof. E. Kraus</div>
+          <div class="zone-meta">4 Projects &middot; 38 Active Persons</div>
+        </div>
+        <div class="zone-card" data-zone="Zone 2">
+          <div class="zone-title">Arts and Aesthetics</div>
+          <div class="zone-meta">Spokesperson: Prof. U. Bauer</div>
+          <div class="zone-meta">5 Projects &middot; 45 Active Persons</div>
+        </div>
+        <div class="zone-card" data-zone="Zone 3">
+          <div class="zone-title">Learning, Knowledge, Configuration</div>
+          <div class="zone-meta">Spokesperson: Prof. R. Tsogang</div>
+          <div class="zone-meta">4 Projects &middot; 32 Active Persons</div>
+        </div>
+        <div class="zone-card" data-zone="Zone 4">
+          <div class="zone-title">Mobilities, Transfers, Connectivity</div>
+          <div class="zone-meta">Spokesperson: Prof. D. Ndongo</div>
+          <div class="zone-meta">5 Projects &middot; 41 Active Persons</div>
+        </div>
+        <div class="zone-card" data-zone="Zone 5">
+          <div class="zone-title">Nature, Environment, Livelihood</div>
+          <div class="zone-meta">Spokesperson: Prof. M. Akinyemi</div>
+          <div class="zone-meta">3 Projects &middot; 29 Active Persons</div>
+        </div>
+        <div class="zone-card" data-zone="Zone 6">
+          <div class="zone-title">Digital Humanities</div>
+          <div class="zone-meta">Spokesperson: Prof. K. Mensah</div>
+          <div class="zone-meta">2 Projects &middot; 18 Active Persons</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revision Log -->
+    <div class="fade-in fade-in-4" style="margin-bottom: 40px;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+        <span class="section-marker" style="width: 24px; height: 24px; font-size: 10px;">A3</span>
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-cyan);">Revision Log &mdash; Recent Activity</span>
+      </div>
+      <div class="spec-block" style="padding: 0; overflow: hidden;">
+        <table class="rev-table">
+          <thead>
+            <tr>
+              <th style="width: 70px;">Rev</th>
+              <th>Description</th>
+              <th style="width: 100px;">Author</th>
+              <th style="width: 100px;">Date</th>
+              <th style="width: 80px;">Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color: var(--bp-gold);">REV 012</td>
+              <td>Updated membership status for Dr. Amina Osei</td>
+              <td>M. Schmidt</td>
+              <td>2026-02-18</td>
+              <td><span style="color: var(--bp-cyan);">PERSON</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--bp-gold);">REV 011</td>
+              <td>Added new project: "Afrofuturism and Digital Narratives"</td>
+              <td>K. Weber</td>
+              <td>2026-02-17</td>
+              <td><span style="color: var(--bp-cyan);">PROJECT</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--bp-gold);">REV 010</td>
+              <td>Event report submitted: BIGSAS Annual Conference 2026</td>
+              <td>L. Hoffmann</td>
+              <td>2026-02-16</td>
+              <td><span style="color: var(--bp-cyan);">EVENT</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--bp-gold);">REV 009</td>
+              <td>New institution registered: Lagos Institute for Advanced Study</td>
+              <td>M. Schmidt</td>
+              <td>2026-02-15</td>
+              <td><span style="color: var(--bp-cyan);">INST</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--bp-gold);">REV 008</td>
+              <td>Fellowship period updated for Dr. Felix Okonkwo</td>
+              <td>A. Becker</td>
+              <td>2026-02-14</td>
+              <td><span style="color: var(--bp-cyan);">PERSON</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--bp-gold);">REV 007</td>
+              <td>Project funding approved: "Multilingualism in West Africa"</td>
+              <td>K. Weber</td>
+              <td>2026-02-13</td>
+              <td><span style="color: var(--bp-cyan);">PROJECT</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--bp-gold);">REV 006</td>
+              <td>New cluster member added: Prof. Nia Asante</td>
+              <td>M. Schmidt</td>
+              <td>2026-02-12</td>
+              <td><span style="color: var(--bp-cyan);">PERSON</span></td>
+            </tr>
+            <tr>
+              <td style="color: var(--bp-gold);">REV 005</td>
+              <td>Workshop scheduled: "Decolonizing Methods" — Mar 2026</td>
+              <td>L. Hoffmann</td>
+              <td>2026-02-11</td>
+              <td><span style="color: var(--bp-cyan);">EVENT</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Quick Links / Callouts -->
+    <div class="fade-in fade-in-5" style="margin-bottom: 40px;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+        <span class="section-marker" style="width: 24px; height: 24px; font-size: 10px;">A4</span>
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-cyan);">Quick Reference Callouts</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="callout-line"></span>
+          <span class="callout">Reports Pending: <span style="color: var(--bp-gold); margin-left: 4px;">7</span></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="callout-line"></span>
+          <span class="callout">Upcoming Events: <span style="color: var(--bp-gold); margin-left: 4px;">12</span></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="callout-line"></span>
+          <span class="callout">Active Fellowships: <span style="color: var(--bp-gold); margin-left: 4px;">34</span></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="callout-line"></span>
+          <span class="callout">ACC Partners: <span style="color: var(--bp-gold); margin-left: 4px;">8</span></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="callout-line"></span>
+          <span class="callout">New This Month: <span style="color: var(--bp-gold); margin-left: 4px;">15</span></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="callout-line"></span>
+          <span class="callout">Expired Members: <span style="color: var(--bp-red); margin-left: 4px;">3</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title Block -->
+  <div class="title-block">
+    <table>
+      <tr>
+        <td class="tb-header">Project</td>
+        <td colspan="3" style="font-weight: 500;">AFRICA MULTIPLE CLUSTER MANAGEMENT</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Drawing</td>
+        <td>Site Plan</td>
+        <td class="tb-header">Rev</td>
+        <td>04</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Date</td>
+        <td>2026-02-18</td>
+        <td class="tb-header">Scale</td>
+        <td>NTS</td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>

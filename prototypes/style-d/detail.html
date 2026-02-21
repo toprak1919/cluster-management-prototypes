@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dr. Amina Osei - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+          "purple": { 50: "#ede0f1", 400: "#787acd" },
+        },
+        fontFamily: {
+          body: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Georgia', 'Times New Roman', 'serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+      }
+    }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .drop-cap::first-letter {
+      font-family: Georgia, serif;
+      font-size: 4rem;
+      font-weight: 900;
+      float: left;
+      line-height: 0.8;
+      margin-right: 0.4rem;
+      margin-top: 0.1rem;
+      color: #000;
+    }
+  </style>
+</head>
+<body class="bg-white font-body text-black min-h-screen">
+
+  <!-- Masthead Nav -->
+  <nav class="border-b-2 border-black sticky top-0 z-50 bg-white" x-data="{ mobileOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="dashboard.html" class="font-display text-3xl font-black uppercase tracking-tighter text-black hover:text-ubt-green transition-colors">AFRICA MULTIPLE</a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="dashboard.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Dashboard</a>
+          <a href="listing.html" class="text-xs font-bold uppercase tracking-widest text-ubt-green border-b-2 border-ubt-green pb-0.5">Persons</a>
+          <a href="projects.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Projects</a>
+          <a href="events.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Events</a>
+          <a href="institutions.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Institutions</a>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="text-xs font-mono text-gray-400 hover:text-black hidden lg:inline transition-colors">[ALL PROTOTYPES]</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-1 cursor-pointer" aria-label="Toggle menu">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden border-t-2 border-black py-3 space-y-2" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="block text-xs font-bold uppercase tracking-widest text-black">Dashboard</a>
+        <a href="listing.html" class="block text-xs font-bold uppercase tracking-widest text-ubt-green">Persons</a>
+        <a href="projects.html" class="block text-xs font-bold uppercase tracking-widest text-black">Projects</a>
+        <a href="events.html" class="block text-xs font-bold uppercase tracking-widest text-black">Events</a>
+        <a href="institutions.html" class="block text-xs font-bold uppercase tracking-widest text-black">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Breadcrumb -->
+    <div class="py-4 border-b border-gray-200">
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500">
+        <a href="listing.html" class="hover:text-black transition-colors border-b border-gray-300 hover:border-black">PERSONS</a>
+        <span class="mx-2">&gt;</span>
+        <span class="text-black font-bold">DR. AMINA OSEI</span>
+      </p>
+    </div>
+
+    <!-- Name Hero -->
+    <section class="py-8 border-b-2 border-black">
+      <h1 class="font-display text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">DR. AMINA OSEI</h1>
+      <div class="h-2 bg-ubt-green mt-4 w-64"></div>
+    </section>
+
+    <!-- Two Column Layout -->
+    <div class="flex flex-col lg:flex-row gap-8 py-8">
+
+      <!-- Left Column (2/3) -->
+      <div class="lg:w-2/3 space-y-8">
+
+        <!-- Contact & Identity (fields 1-6) -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase mb-4 border-b border-black pb-2">CONTACT &amp; IDENTITY</h3>
+          <div class="space-y-4">
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">EMAIL</p>
+              <p class="font-mono text-sm">a.osei@ug.edu.gh <span class="text-gray-400 text-xs">(primary)</span></p>
+              <p class="font-mono text-sm">amina.osei@africamultiple.uni-bayreuth.de <span class="text-gray-400 text-xs">(cluster)</span></p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">HOMEPAGE</p>
+              <p class="font-mono text-sm border-b border-black inline">ug.edu.gh/~aosei</p> <span class="font-body text-xs text-gray-400">Personal page</span>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">ORCID</p>
+              <p class="font-mono text-sm">0000-0002-1234-5678</p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">PHONE</p>
+              <p class="font-mono text-sm">+233 30 213 4567 <span class="text-gray-400 text-xs">(work)</span></p>
+              <p class="font-mono text-sm">+233 24 987 6543 <span class="text-gray-400 text-xs">(mobile)</span></p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">GENDER</p>
+              <p class="font-body text-sm font-bold">Female</p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">LANGUAGES</p>
+              <p class="font-body text-sm font-bold">English, French, Twi</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Fields (fields 7-9) -->
+        <div>
+          <h2 class="font-display text-2xl font-black uppercase border-b-2 border-black pb-2 mb-4">EXPERTISE</h2>
+          <div class="space-y-4">
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-2">GEOGRAPHIC FIELDS OF EXPERTISE</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="font-mono text-xs font-bold text-black bg-gray-100 border border-black px-2 py-1">[WEST AFRICA]</span>
+                <span class="font-mono text-xs font-bold text-black bg-gray-100 border border-black px-2 py-1">[GHANA]</span>
+                <span class="font-mono text-xs font-bold text-black bg-gray-100 border border-black px-2 py-1">[SENEGAL]</span>
+              </div>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-2">THEMATIC FIELDS OF EXPERTISE</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="font-mono text-xs font-bold text-black bg-gray-100 border border-black px-2 py-1">[TRANSNATIONAL MOBILITY]</span>
+                <span class="font-mono text-xs font-bold text-black bg-gray-100 border border-black px-2 py-1">[DIASPORA STUDIES]</span>
+              </div>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-2">FIELD OF STUDY</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="font-mono text-xs font-bold text-black bg-gray-100 border border-black px-2 py-1">[MIGRATION STUDIES]</span>
+                <span class="font-mono text-xs font-bold text-black bg-gray-100 border border-black px-2 py-1">[POSTCOLONIAL THEORY]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Membership & Status (fields 10-18) -->
+        <div class="border-2 border-black p-5 bg-gray-50">
+          <h3 class="font-display text-lg font-black uppercase mb-4 border-b border-black pb-2">MEMBERSHIP &amp; STATUS</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">BIGSAS</p>
+              <span class="inline-block w-3 h-3 bg-ubt-green border border-black mt-1"></span> <span class="font-body text-xs font-bold">Yes</span>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">CLUSTER</p>
+              <span class="inline-block w-3 h-3 bg-ubt-green border border-black mt-1"></span> <span class="font-body text-xs font-bold">Yes</span>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">ENTITLED TO VOTE</p>
+              <span class="inline-block w-3 h-3 bg-ubt-green border border-black mt-1"></span> <span class="font-body text-xs font-bold">Yes</span>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">SIGNED RIGHTS AND DUTIES</p>
+              <span class="inline-block w-3 h-3 bg-ubt-green border border-black mt-1"></span> <span class="font-body text-xs font-bold">Yes</span>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">MEMBERSHIP CATEGORY</p>
+              <p class="font-body text-sm font-bold">Senior Researcher</p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">MEMBERSHIP START</p>
+              <p class="font-body text-sm font-bold">January 2020</p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">MEMBERSHIP END</p>
+              <p class="font-body text-sm text-gray-400">&mdash;</p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">POSITION</p>
+              <p class="font-body text-sm font-bold">Associate Professor</p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">LOCATION</p>
+              <p class="font-body text-sm font-bold">Accra</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Managed & Involved Projects (fields 19-20) -->
+        <div>
+          <h2 class="font-display text-2xl font-black uppercase border-b-2 border-black pb-2 mb-4">PROJECTS</h2>
+          <div class="space-y-4">
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-2">MANAGED PROJECTS</p>
+              <a href="projects.html" class="block group py-2">
+                <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors leading-tight">Transnational Migration Patterns in West Africa</p>
+                <p class="font-mono text-xs text-gray-500 mt-0.5">Project Director &mdash; 2023&ndash;2026</p>
+              </a>
+            </div>
+            <div class="h-px bg-black"></div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-2">INVOLVED PROJECTS</p>
+              <a href="projects.html" class="block group py-2">
+                <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors leading-tight">Decolonizing Knowledge Systems</p>
+                <p class="font-mono text-xs text-gray-500 mt-0.5">Researcher &mdash; 2024&ndash;2027</p>
+              </a>
+              <div class="h-px bg-gray-200"></div>
+              <a href="projects.html" class="block group py-2">
+                <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors leading-tight">Gender &amp; Mobility in West Africa</p>
+                <p class="font-mono text-xs text-gray-500 mt-0.5">Researcher &mdash; 2022&ndash;2025</p>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Institutions (field 21) -->
+        <div>
+          <h2 class="font-display text-xl font-black uppercase border-b border-black pb-2 mb-3">INSTITUTIONS</h2>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between py-2">
+              <div>
+                <p class="font-body text-sm font-bold">University of Ghana</p>
+                <p class="font-mono text-xs text-gray-500">Role: Faculty Member &mdash; Department: Institute of African Studies</p>
+              </div>
+            </div>
+            <div class="h-px bg-gray-200"></div>
+            <div class="flex items-center justify-between py-2">
+              <div>
+                <p class="font-body text-sm font-bold">University of Bayreuth</p>
+                <p class="font-mono text-xs text-gray-500">Role: Visiting Researcher &mdash; Department: Africa Multiple Cluster</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Research Sections (field 22) -->
+        <div>
+          <h2 class="font-display text-xl font-black uppercase border-b border-black pb-2 mb-3">RESEARCH SECTIONS</h2>
+          <div class="flex gap-4">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-black"></div>
+              <span class="font-body text-sm font-bold">Mobilities</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-ubt-green"></div>
+              <span class="font-body text-sm font-bold">Knowledges</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remark (field 23) -->
+        <div>
+          <h2 class="font-display text-xl font-black uppercase border-b border-black pb-2 mb-3">REMARK</h2>
+          <p class="font-body text-sm leading-relaxed text-gray-700">Coordinating the West African fieldwork component for the migration project. Visiting Bayreuth each summer semester for teaching and collaboration.</p>
+        </div>
+
+      </div>
+
+      <!-- Right Column (1/3) -->
+      <aside class="lg:w-1/3 space-y-6">
+
+        <!-- Events (as host) -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">EVENTS (AS HOST)</h3>
+          <div class="space-y-3">
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">APR 2026</p>
+              <p class="font-body text-sm font-bold group-hover:text-ubt-green transition-colors">Research Section Meeting</p>
+              <p class="font-mono text-xs text-gray-400">Accra, Ghana</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Events (as guest) -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">EVENTS (AS GUEST)</h3>
+          <div class="space-y-3">
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">OCT 2025</p>
+              <p class="font-body text-sm font-bold group-hover:text-ubt-green transition-colors">Annual Conference 2025</p>
+              <p class="font-mono text-xs text-gray-400">Bayreuth, Germany</p>
+            </a>
+            <div class="h-px bg-gray-200"></div>
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">MAR 2026</p>
+              <p class="font-body text-sm font-bold group-hover:text-ubt-green transition-colors">Fellows Workshop</p>
+              <p class="font-mono text-xs text-gray-400">Bayreuth, Germany</p>
+            </a>
+            <div class="h-px bg-gray-200"></div>
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">JUN 2026</p>
+              <p class="font-body text-sm font-bold group-hover:text-ubt-green transition-colors">Annual Conference 2026</p>
+              <p class="font-mono text-xs text-gray-400">Eldoret, Kenya</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Fellowships (as fellow) -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">FELLOWSHIPS (AS FELLOW)</h3>
+          <div class="space-y-4">
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-1">START &mdash; END</p>
+              <p class="font-body text-sm font-bold">Oct 2018 &mdash; Sep 2020</p>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mt-2 mb-1">HOST</p>
+              <p class="font-body text-sm">Prof. Ibrahim Toure</p>
+            </div>
+            <div class="h-px bg-black"></div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-1">START &mdash; END</p>
+              <p class="font-body text-sm font-bold">Jan 2021 &mdash; Dec 2023</p>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mt-2 mb-1">HOST</p>
+              <p class="font-body text-sm">Prof. Kwame Asante</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fellowships (as host) -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">FELLOWSHIPS (AS HOST)</h3>
+          <div class="space-y-4">
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-1">START &mdash; END</p>
+              <p class="font-body text-sm font-bold">Mar 2025 &mdash; Aug 2025</p>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mt-2 mb-1">FELLOW</p>
+              <p class="font-body text-sm">Dr. Grace Achebe</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expert Search -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">EXPERT SEARCH</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm">Consent given</span>
+              <span class="inline-block w-3 h-3 bg-ubt-green border border-black"></span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm">Visible in search</span>
+              <span class="inline-block w-3 h-3 bg-ubt-green border border-black"></span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm">Highest academic degree</span>
+              <span class="font-body text-sm font-bold">PhD</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Addresses -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">ADDRESSES</h3>
+          <div class="space-y-4">
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-1">WORK</p>
+              <p class="font-body text-sm">Institute of African Studies<br>University of Ghana<br>P.O. Box LG 73<br>Legon, Accra, Ghana</p>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- Publications Banner (project-linked: year/planned/achieved/costs) -->
+    <section class="border-t-4 border-black py-8">
+      <h2 class="font-display text-3xl font-black uppercase mb-6">PUBLICATIONS</h2>
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-4">LINKED TO PROJECTS &mdash; YEAR / PLANNED / ACHIEVED / COSTS</p>
+      <div class="space-y-0">
+        <div class="flex items-start gap-6 py-4 border-b border-gray-200">
+          <span class="font-display text-2xl font-black text-ubt-green shrink-0 w-16">2025</span>
+          <div class="flex-1">
+            <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">Transnational Migration Patterns</p>
+            <div class="grid grid-cols-3 gap-4 mt-1">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">PLANNED</p>
+                <p class="font-body text-sm">2 journal articles, 1 book chapter</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">ACHIEVED</p>
+                <p class="font-body text-sm">1 journal article</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">COSTS</p>
+                <p class="font-mono text-sm font-bold">&euro;2,400</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-start gap-6 py-4 border-b border-gray-200">
+          <span class="font-display text-2xl font-black text-black shrink-0 w-16">2024</span>
+          <div class="flex-1">
+            <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">Transnational Migration Patterns</p>
+            <div class="grid grid-cols-3 gap-4 mt-1">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">PLANNED</p>
+                <p class="font-body text-sm">1 journal article, 1 conference paper</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">ACHIEVED</p>
+                <p class="font-body text-sm">1 journal article, 1 conference paper</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">COSTS</p>
+                <p class="font-mono text-sm font-bold">&euro;1,800</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-start gap-6 py-4">
+          <span class="font-display text-2xl font-black text-black shrink-0 w-16">2023</span>
+          <div class="flex-1">
+            <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-0.5">Gender &amp; Mobility in West Africa</p>
+            <div class="grid grid-cols-3 gap-4 mt-1">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">PLANNED</p>
+                <p class="font-body text-sm">1 edited volume chapter</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">ACHIEVED</p>
+                <p class="font-body text-sm">1 edited volume chapter</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">COSTS</p>
+                <p class="font-mono text-sm font-bold">&euro;950</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t-4 border-black bg-white py-6 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500">Africa Multiple Cluster of Excellence &mdash; University of Bayreuth</p>
+      <p class="font-mono text-xs text-gray-400">&copy; 2026</p>
+    </div>
+  </footer>
+
+</body>
+</html>

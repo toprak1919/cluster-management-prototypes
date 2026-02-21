@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+          "purple": { 50: "#ede0f1", 400: "#787acd" },
+        },
+        fontFamily: {
+          body: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Georgia', 'Times New Roman', 'serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+      }
+    }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .columns-layout { columns: 3; column-gap: 2rem; }
+    .columns-layout > * { break-inside: avoid; margin-bottom: 1.5rem; }
+    @media (max-width: 768px) { .columns-layout { columns: 1; } }
+    @media (min-width: 769px) and (max-width: 1024px) { .columns-layout { columns: 2; } }
+    .drop-cap::first-letter {
+      font-family: Georgia, serif;
+      font-size: 5rem;
+      font-weight: 900;
+      float: left;
+      line-height: 0.8;
+      margin-right: 0.5rem;
+      margin-top: 0.1rem;
+      color: #0d9462;
+    }
+    .hard-shadow { box-shadow: 4px 4px 0 #000; }
+    .hard-shadow-green { box-shadow: 4px 4px 0 #0d9462; }
+  </style>
+</head>
+<body class="bg-white font-body text-black min-h-screen">
+
+  <!-- Masthead Nav -->
+  <nav class="border-b-2 border-black sticky top-0 z-50 bg-white" x-data="{ mobileOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="dashboard.html" class="font-display text-3xl font-black uppercase tracking-tighter text-black hover:text-ubt-green transition-colors">AFRICA MULTIPLE</a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="dashboard.html" class="text-xs font-bold uppercase tracking-widest text-ubt-green border-b-2 border-ubt-green pb-0.5">Dashboard</a>
+          <a href="listing.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Persons</a>
+          <a href="projects.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Projects</a>
+          <a href="events.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Events</a>
+          <a href="institutions.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Institutions</a>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="text-xs font-mono text-gray-400 hover:text-black hidden lg:inline transition-colors">[ALL PROTOTYPES]</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-1 cursor-pointer" aria-label="Toggle menu">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden border-t-2 border-black py-3 space-y-2" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="block text-xs font-bold uppercase tracking-widest text-ubt-green">Dashboard</a>
+        <a href="listing.html" class="block text-xs font-bold uppercase tracking-widest text-black">Persons</a>
+        <a href="projects.html" class="block text-xs font-bold uppercase tracking-widest text-black">Projects</a>
+        <a href="events.html" class="block text-xs font-bold uppercase tracking-widest text-black">Events</a>
+        <a href="institutions.html" class="block text-xs font-bold uppercase tracking-widest text-black">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Hero -->
+    <section class="py-8 border-b-2 border-black">
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-2">FEBRUARY 18, 2026 &mdash; WEDNESDAY EDITION</p>
+      <h1 class="font-display text-6xl md:text-8xl font-black uppercase leading-none tracking-tighter text-black">CLUSTER<br>MANAGEMENT</h1>
+      <div class="h-1 bg-ubt-green mt-4 w-48"></div>
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mt-3">THE AFRICA MULTIPLE CLUSTER OF EXCELLENCE &mdash; UNIVERSITY OF BAYREUTH</p>
+    </section>
+
+    <!-- Newspaper Columns -->
+    <section class="py-8 border-b-2 border-black">
+      <div class="columns-layout">
+
+        <!-- Column 1: Lead Story -->
+        <div>
+          <h2 class="font-display text-2xl font-black uppercase border-b-2 border-black pb-2 mb-4">LEAD STORY</h2>
+          <p class="drop-cap font-body text-sm leading-relaxed text-gray-800">847 persons across 38 countries form the backbone of the Africa Multiple Cluster of Excellence. This unprecedented network of scholars spans disciplines from migration studies to postcolonial theory, united by a shared commitment to rethinking African multiplicities and their global interconnections.</p>
+          <p class="font-body text-sm leading-relaxed text-gray-800 mt-3">The cluster continues to grow with 12 new members joining this quarter alone, bringing fresh perspectives from institutions across West Africa, East Africa, and the diaspora. Three new research projects have been submitted for funding approval this month.</p>
+          <div class="border-2 border-black p-4 mt-4 bg-gray-50">
+            <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-1">BY THE NUMBERS</p>
+            <p class="font-display text-5xl font-black text-ubt-green leading-none">847</p>
+            <p class="font-body text-sm font-bold uppercase mt-1">Persons</p>
+            <p class="font-display text-3xl font-black text-black leading-none mt-2">38</p>
+            <p class="font-body text-sm font-bold uppercase mt-1">Countries</p>
+          </div>
+        </div>
+
+        <!-- Column 2: Active Projects -->
+        <div>
+          <h2 class="font-display text-2xl font-black uppercase border-b-2 border-black pb-2 mb-4">ACTIVE PROJECTS</h2>
+          <div class="space-y-3">
+            <a href="projects.html" class="block group">
+              <p class="font-display text-lg font-bold leading-tight group-hover:text-ubt-green transition-colors">Transnational Migration Patterns in West Africa</p>
+              <p class="font-body text-xs italic text-gray-500 mt-0.5">Directors: Dr. Amina Osei &mdash; 2023&ndash;2026</p>
+            </a>
+            <div class="h-px bg-black"></div>
+            <a href="projects.html" class="block group">
+              <p class="font-display text-lg font-bold leading-tight group-hover:text-ubt-green transition-colors">Decolonizing Knowledge Systems</p>
+              <p class="font-body text-xs italic text-gray-500 mt-0.5">Directors: Prof. Kwame Asante &mdash; 2024&ndash;2027</p>
+            </a>
+            <div class="h-px bg-black"></div>
+            <a href="projects.html" class="block group">
+              <p class="font-display text-lg font-bold leading-tight group-hover:text-ubt-green transition-colors">Gender &amp; Mobility in West Africa</p>
+              <p class="font-body text-xs italic text-gray-500 mt-0.5">Directors: Dr. Fatima Diallo &mdash; 2022&ndash;2025</p>
+            </a>
+            <div class="h-px bg-black"></div>
+            <a href="projects.html" class="block group">
+              <p class="font-display text-lg font-bold leading-tight group-hover:text-ubt-green transition-colors">Digital Humanities in African Studies</p>
+              <p class="font-body text-xs italic text-gray-500 mt-0.5">Directors: Dr. Samuel Mwangi &mdash; 2024&ndash;2026</p>
+            </a>
+            <div class="h-px bg-black"></div>
+            <a href="projects.html" class="block group">
+              <p class="font-display text-lg font-bold leading-tight group-hover:text-ubt-green transition-colors">Urban Aesthetics of Lagos</p>
+              <p class="font-body text-xs italic text-gray-500 mt-0.5">Directors: Prof. Chidinma Nwosu &mdash; 2025&ndash;2028</p>
+            </a>
+            <div class="h-px bg-black"></div>
+            <a href="projects.html" class="block group">
+              <p class="font-display text-lg font-bold leading-tight group-hover:text-ubt-green transition-colors">Moralities of Exchange in East Africa</p>
+              <p class="font-body text-xs italic text-gray-500 mt-0.5">Directors: Dr. Joseph Habimana &mdash; 2023&ndash;2026</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 3: Upcoming Events -->
+        <div>
+          <h2 class="font-display text-2xl font-black uppercase border-b-2 border-black pb-2 mb-4">UPCOMING EVENTS</h2>
+          <div class="space-y-3">
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">FEB 28, 2026</p>
+              <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors">Fellows Workshop</p>
+              <p class="font-body text-xs text-gray-500">Bayreuth, Germany</p>
+            </a>
+            <div class="h-px bg-gray-300"></div>
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">MAR 15, 2026</p>
+              <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors">Public Lecture Series</p>
+              <p class="font-body text-xs text-gray-500">Online</p>
+            </a>
+            <div class="h-px bg-gray-300"></div>
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">APR 02, 2026</p>
+              <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors">Research Section Meeting</p>
+              <p class="font-body text-xs text-gray-500">Accra, Ghana</p>
+            </a>
+            <div class="h-px bg-gray-300"></div>
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">MAY 10, 2026</p>
+              <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors">BIGSAS Colloquium</p>
+              <p class="font-body text-xs text-gray-500">Bayreuth, Germany</p>
+            </a>
+            <div class="h-px bg-gray-300"></div>
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">JUN 20, 2026</p>
+              <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors">Annual Conference 2026</p>
+              <p class="font-body text-xs text-gray-500">Eldoret, Kenya</p>
+            </a>
+            <div class="h-px bg-gray-300"></div>
+            <a href="events.html" class="block group">
+              <p class="font-mono text-xs font-bold text-ubt-green">SEP 05, 2026</p>
+              <p class="font-display text-base font-bold group-hover:text-ubt-green transition-colors">Doctoral Workshop</p>
+              <p class="font-body text-xs text-gray-500">Lagos, Nigeria</p>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="bg-black text-white py-6 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-0">
+        <div class="flex items-center gap-4 px-6 py-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-gray-400">Persons</span>
+          <span class="font-display text-3xl font-black">847</span>
+        </div>
+        <div class="hidden sm:block w-px h-10 bg-white/30"></div>
+        <div class="flex items-center gap-4 px-6 py-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-gray-400">Projects</span>
+          <span class="font-display text-3xl font-black">23</span>
+        </div>
+        <div class="hidden sm:block w-px h-10 bg-white/30"></div>
+        <div class="flex items-center gap-4 px-6 py-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-gray-400">Events</span>
+          <span class="font-display text-3xl font-black">12</span>
+        </div>
+        <div class="hidden sm:block w-px h-10 bg-white/30"></div>
+        <div class="flex items-center gap-4 px-6 py-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-gray-400">Institutions</span>
+          <span class="font-display text-3xl font-black">156</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latest Activity -->
+    <section class="py-8">
+      <h2 class="font-display text-3xl font-black uppercase border-b-4 border-black pb-2 mb-6">LATEST ACTIVITY</h2>
+      <div class="space-y-0">
+        <div class="flex gap-4 py-4 border-b border-gray-200 group hover:bg-gray-50 transition-colors px-2">
+          <span class="font-mono text-xs font-bold text-ubt-green whitespace-nowrap min-w-[120px]">2 HOURS AGO</span>
+          <p class="font-body text-sm"><a href="detail.html" class="font-bold hover:text-ubt-green transition-colors border-b border-black hover:border-ubt-green">Dr. Amina Osei</a> added as Director to Project: <span class="font-bold">Transnational Migration Patterns</span></p>
+        </div>
+        <div class="flex gap-4 py-4 border-b border-gray-200 group hover:bg-gray-50 transition-colors px-2">
+          <span class="font-mono text-xs font-bold text-ubt-green whitespace-nowrap min-w-[120px]">3 HOURS AGO</span>
+          <p class="font-body text-sm">Event <span class="font-bold">'Annual Conference 2026'</span> locations and countries updated</p>
+        </div>
+        <div class="flex gap-4 py-4 border-b border-gray-200 group hover:bg-gray-50 transition-colors px-2">
+          <span class="font-mono text-xs font-bold text-ubt-green whitespace-nowrap min-w-[120px]">5 HOURS AGO</span>
+          <p class="font-body text-sm">Publication entry added for <span class="font-bold">Prof. Kwame Asante</span> &mdash; Year: 2025, Planned: 2 articles</p>
+        </div>
+        <div class="flex gap-4 py-4 border-b border-gray-200 group hover:bg-gray-50 transition-colors px-2">
+          <span class="font-mono text-xs font-bold text-ubt-green whitespace-nowrap min-w-[120px]">YESTERDAY</span>
+          <p class="font-body text-sm"><span class="font-bold">Dr. Fatima Diallo</span> &mdash; Membership category updated, Signed Rights and Duties set to <span class="font-bold uppercase bg-black text-white px-1.5 py-0.5 text-xs">Yes</span></p>
+        </div>
+        <div class="flex gap-4 py-4 border-b border-gray-200 group hover:bg-gray-50 transition-colors px-2">
+          <span class="font-mono text-xs font-bold text-ubt-green whitespace-nowrap min-w-[120px]">YESTERDAY</span>
+          <p class="font-body text-sm">New institution added: <span class="font-bold">University of Rwanda</span> &mdash; ACC: No, Location: Kigali</p>
+        </div>
+        <div class="flex gap-4 py-4 border-b border-gray-200 group hover:bg-gray-50 transition-colors px-2">
+          <span class="font-mono text-xs font-bold text-ubt-green whitespace-nowrap min-w-[120px]">2 DAYS AGO</span>
+          <p class="font-body text-sm">Project <span class="font-bold">'Gender &amp; Mobility in West Africa'</span> &mdash; Report submitted, Funding approved: &euro;520,000</p>
+        </div>
+        <div class="flex gap-4 py-4 border-b border-gray-200 group hover:bg-gray-50 transition-colors px-2">
+          <span class="font-mono text-xs font-bold text-ubt-green whitespace-nowrap min-w-[120px]">2 DAYS AGO</span>
+          <p class="font-body text-sm">New fellowship created: <span class="font-bold">Dr. Samuel Mwangi</span> as fellow, host: Prof. Ibrahim Toure &mdash; Start: Mar 2026</p>
+        </div>
+        <div class="flex gap-4 py-4 group hover:bg-gray-50 transition-colors px-2">
+          <span class="font-mono text-xs font-bold text-ubt-green whitespace-nowrap min-w-[120px]">3 DAYS AGO</span>
+          <p class="font-body text-sm"><span class="font-bold">Prof. Chidinma Nwosu</span> added as guest to event: Fellows Workshop (Feb 28, 2026)</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t-4 border-black bg-white py-6 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500">Africa Multiple Cluster of Excellence &mdash; University of Bayreuth</p>
+      <p class="font-mono text-xs text-gray-400">&copy; 2026</p>
+    </div>
+  </footer>
+
+</body>
+</html>

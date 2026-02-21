@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalogue of Research Expeditions | Africa Multiple</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --parchment: #faf6ee;
+      --ink: #2c2416;
+      --green: #3d6b4f;
+      --gold: #b8860b;
+      --red: #8b3a3a;
+      --blue: #4a6b8a;
+      --gold-light: rgba(184,134,11,0.15);
+      --gold-faint: rgba(184,134,11,0.3);
+    }
+
+    body {
+      font-family: 'Crimson Pro', serif;
+      background-color: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .running-header {
+      border-bottom: 1px solid var(--gold);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--parchment);
+    }
+    .running-header::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 0.5px;
+      background: var(--gold-faint);
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+    .header-title a { color: inherit; text-decoration: none; }
+    .header-nav { display: flex; align-items: baseline; gap: 24px; }
+    .header-nav a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: -12px;
+      background: var(--parchment); border: 1px solid var(--gold);
+      padding: 8px 0; min-width: 180px; z-index: 200; margin-top: 8px;
+    }
+    .nav-dropdown-menu::before {
+      content: ''; position: absolute; inset: 3px;
+      border: 0.5px solid var(--gold-faint); pointer-events: none;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 4px 16px; font-size: 10px; letter-spacing: 0.12em;
+    }
+    .nav-dropdown-menu a:hover { background: var(--gold-light); }
+
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .plate-heading { text-align: center; margin-bottom: 40px; }
+    .plate-no {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--red);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .plate-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 2rem;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .plate-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1rem;
+      color: var(--green);
+    }
+
+    .ornamental-rule {
+      border: none; height: 1px; background: var(--gold);
+      position: relative; margin: 32px 0;
+    }
+    .ornamental-rule::after {
+      content: '\2726'; position: absolute; left: 50%; top: -8px;
+      transform: translateX(-50%); background: var(--parchment);
+      padding: 0 8px; color: var(--gold); font-size: 12px;
+    }
+
+    /* Search */
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .search-input {
+      flex: 1;
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      padding: 10px 16px;
+      border: 1px solid var(--gold);
+      background: var(--parchment);
+      color: var(--ink);
+      outline: none;
+    }
+    .search-input::placeholder { color: var(--gold); opacity: 0.7; }
+    .search-input:focus { border-color: var(--green); }
+    .filter-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 10px 16px;
+      border: 1px solid var(--gold);
+      background: var(--parchment);
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .filter-btn:hover { background: var(--gold-light); }
+    .filter-btn.active { background: var(--green); color: var(--parchment); border-color: var(--green); }
+
+    .results-meta {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--ink);
+      opacity: 0.6;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    /* Expedition cards */
+    .expedition-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .expedition-card {
+      border: 1px solid var(--gold);
+      padding: 24px;
+      position: relative;
+      background: var(--parchment);
+      animation: fadeInSpecimen 0.5s ease-out both;
+    }
+    .expedition-card:nth-child(1) { animation-delay: 0.05s; }
+    .expedition-card:nth-child(2) { animation-delay: 0.1s; }
+    .expedition-card:nth-child(3) { animation-delay: 0.15s; }
+    .expedition-card:nth-child(4) { animation-delay: 0.2s; }
+    .expedition-card::after {
+      content: attr(data-specimen-no);
+      position: absolute;
+      top: -10px;
+      right: 12px;
+      background: var(--parchment);
+      padding: 0 6px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--gold);
+    }
+    .expedition-id {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .expedition-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .expedition-title a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .expedition-title a:hover { color: var(--green); }
+
+    .expedition-meta {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 4px 12px;
+      margin-bottom: 12px;
+    }
+    .meta-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--ink);
+      opacity: 0.6;
+    }
+    .meta-value {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+    .meta-value a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .meta-value a:hover { border-bottom: 0.5px solid var(--blue); }
+    .taxonomy-tag {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .expedition-footer {
+      display: flex;
+      gap: 24px;
+      padding-top: 12px;
+      border-top: 0.5px solid var(--gold-faint);
+      margin-top: 12px;
+    }
+    .exp-stat {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--ink);
+      opacity: 0.7;
+    }
+    .exp-stat strong {
+      color: var(--green);
+      opacity: 1;
+    }
+
+    /* Status badges */
+    .status-badge {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 2px 8px;
+      display: inline-block;
+    }
+    .status-active { border: 0.5px solid var(--green); color: var(--green); }
+    .status-completed { border: 0.5px solid var(--gold); color: var(--gold); }
+    .status-pending { border: 0.5px solid var(--red); color: var(--red); }
+
+    @keyframes fadeInSpecimen {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 32px;
+    }
+    .pagination a, .pagination span {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      padding: 4px 10px;
+      text-decoration: none;
+      color: var(--ink);
+      border: 0.5px solid transparent;
+    }
+    .pagination a:hover { border-color: var(--gold); background: var(--gold-light); }
+    .pagination .current { border-color: var(--green); color: var(--green); }
+
+    .page-footer {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px;
+      text-align: center;
+    }
+    .page-footer a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .page-footer a:hover { color: var(--green); }
+
+    @media (max-width: 768px) {
+      .plate-title { font-size: 1.5rem; }
+      .expedition-meta { grid-template-columns: 1fr; }
+      .expedition-footer { flex-wrap: wrap; gap: 12px; }
+    }
+    @media (max-width: 480px) {
+      .header-inner { flex-direction: column; gap: 8px; text-align: center; }
+      .header-nav { justify-content: center; flex-wrap: wrap; }
+      .search-bar { flex-direction: column; }
+    }
+  </style>
+</head>
+<body x-data="{
+  search: '',
+  filter: 'all',
+  projects: [
+    { id: 'AM-P-042', title: 'Decolonial Mobilities in West Africa', directors: 'Dr. Amina Osei, Prof. E. Sandoval', sections: 'Mobilities', start: '01 Jan 2022', end: '31 Dec 2025', deadline: '31 Mar 2026', reportReq: true, reportSub: false, fundReq: 245000, fundApp: 218000, status: 'active' },
+    { id: 'AM-P-038', title: 'Transnational Networks & Diaspora', directors: 'Prof. K. Mensah', sections: 'Affiliations, Mobilities', start: '01 Apr 2021', end: '31 Mar 2024', deadline: '30 Jun 2024', reportReq: true, reportSub: true, fundReq: 180000, fundApp: 175000, status: 'completed' },
+    { id: 'AM-P-056', title: 'Linguistic Cartographies of the Sahel', directors: 'Prof. N. Diallo, Dr. L. Achieng, Prof. T. Okoro', sections: 'Knowledges, Learning', start: '01 Jul 2024', end: '30 Jun 2027', deadline: '30 Sep 2027', reportReq: false, reportSub: false, fundReq: 310000, fundApp: 285000, status: 'active' },
+    { id: 'AM-P-061', title: 'Digital Heritage & Memory Archives', directors: 'Dr. F. Adeyemi', sections: 'Aesthetics', start: '15 Sep 2025', end: '14 Sep 2028', deadline: '14 Dec 2028', reportReq: false, reportSub: false, fundReq: 195000, fundApp: 0, status: 'pending' },
+    { id: 'AM-P-029', title: 'Urban Migration Patterns', directors: 'Prof. T. Okoro, Dr. A. Osei', sections: 'Mobilities, Affiliations', start: '01 Oct 2020', end: '30 Sep 2023', deadline: '31 Dec 2023', reportReq: true, reportSub: true, fundReq: 155000, fundApp: 152000, status: 'completed' }
+  ],
+  get filtered() {
+    let list = this.projects;
+    if (this.search) {
+      const s = this.search.toLowerCase();
+      list = list.filter(p => p.title.toLowerCase().includes(s) || p.directors.toLowerCase().includes(s) || p.sections.toLowerCase().includes(s));
+    }
+    if (this.filter === 'active') list = list.filter(p => p.status === 'active');
+    if (this.filter === 'completed') list = list.filter(p => p.status === 'completed');
+    return list;
+  },
+  fmt(n) { return n.toLocaleString('en-GB'); }
+}">
+
+  <header class="running-header">
+    <div class="header-inner">
+      <div class="header-title"><a href="dashboard.html">The Africa Multiple Compendium</a></div>
+      <nav class="header-nav">
+        <a href="dashboard.html">Index</a>
+        <div class="nav-dropdown">
+          <a href="listing.html">Persons</a>
+          <div class="nav-dropdown-menu">
+            <a href="listing.html">Register of Persons</a>
+            <a href="#">Employees</a>
+            <a href="#">Cluster Members</a>
+            <a href="#">BIGSAS Members</a>
+            <a href="#">Fellows</a>
+            <a href="#">Guests</a>
+          </div>
+        </div>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="events.html">Events</a>
+        <a href="institutions.html">Institutions</a>
+        <a href="detail.html">Specimen</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-body">
+
+    <div class="plate-heading">
+      <span class="plate-no">Plate III</span>
+      <h1 class="plate-title">Catalogue of Research Expeditions</h1>
+      <p class="plate-subtitle">A record of all sanctioned projects and their particulars</p>
+    </div>
+
+    <hr class="ornamental-rule">
+
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Search expeditions by title, director, or section..." x-model="search">
+      <button class="filter-btn" :class="{ active: filter === 'all' }" @click="filter = 'all'">All</button>
+      <button class="filter-btn" :class="{ active: filter === 'active' }" @click="filter = 'active'">Active</button>
+      <button class="filter-btn" :class="{ active: filter === 'completed' }" @click="filter = 'completed'">Completed</button>
+    </div>
+
+    <div class="results-meta">
+      Displaying <span x-text="filtered.length"></span> expeditions
+    </div>
+
+    <!-- Expedition List -->
+    <div class="expedition-list">
+      <template x-for="project in filtered" :key="project.id">
+        <div class="expedition-card" :data-specimen-no="project.id">
+          <div class="expedition-id" x-text="project.id"></div>
+          <h2 class="expedition-title"><a href="#" x-text="project.title"></a></h2>
+
+          <div class="expedition-meta">
+            <span class="meta-label">Directors</span>
+            <span class="meta-value" x-text="project.directors"></span>
+
+            <span class="meta-label">Research Sections</span>
+            <span class="meta-value taxonomy-tag" x-text="project.sections"></span>
+
+            <span class="meta-label">Duration</span>
+            <span class="meta-value" x-text="project.start + ' \u2014 ' + project.end"></span>
+
+            <span class="meta-label">Report deadline</span>
+            <span class="meta-value" x-text="project.deadline"></span>
+
+            <span class="meta-label">Report requested</span>
+            <span class="meta-value" x-text="project.reportReq ? 'Yes' : '\u2014'"></span>
+
+            <span class="meta-label">Report submitted</span>
+            <span class="meta-value" x-text="project.reportSub ? 'Yes' : '\u2014'"></span>
+
+            <span class="meta-label">Status</span>
+            <span class="meta-value">
+              <span class="status-badge"
+                :class="{
+                  'status-active': project.status === 'active',
+                  'status-completed': project.status === 'completed',
+                  'status-pending': project.status === 'pending'
+                }"
+                x-text="project.status"></span>
+            </span>
+          </div>
+
+          <div class="expedition-footer">
+            <span class="exp-stat">Funding Requested: <strong>&euro;<span x-text="fmt(project.fundReq)"></span></strong></span>
+            <span class="exp-stat">Funding Approved: <strong>&euro;<span x-text="fmt(project.fundApp)"></span></strong></span>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="pagination">
+      <span class="current">1</span>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <span>&hellip;</span>
+      <a href="#">13</a>
+    </div>
+
+  </main>
+
+  <footer class="page-footer">
+    <hr class="ornamental-rule">
+    <a href="../index.html">&larr; Back to all prototypes</a>
+  </footer>
+
+</body>
+</html>

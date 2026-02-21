@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Occupant Register — Cluster Management Blueprint</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bp-base: #1a2744;
+      --bp-line: #e8f0ff;
+      --bp-cyan: #5bb8ff;
+      --bp-gold: #ffd700;
+      --bp-red: #ff4444;
+      --bp-grid: rgba(91,184,255,0.08);
+      --bp-grid-fine: rgba(91,184,255,0.04);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      color: var(--bp-line);
+      background-color: var(--bp-base);
+      background-image:
+        linear-gradient(var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(var(--bp-grid-fine) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid-fine) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      min-height: 100vh;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    a { color: var(--bp-cyan); text-decoration: none; }
+    a:hover { color: var(--bp-gold); }
+
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 56px;
+      border-right: 1.5px solid rgba(232,240,255,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 6px;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      background-color: var(--bp-base);
+    }
+    .main { flex: 1; margin-left: 56px; padding: 32px 40px 120px; }
+
+    .section-marker {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan);
+      font-size: 12px; font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .section-marker:hover, .section-marker.active {
+      background: var(--bp-cyan);
+      color: var(--bp-base);
+    }
+    .section-marker.active {
+      border-color: var(--bp-gold);
+      background: var(--bp-gold);
+      color: var(--bp-base);
+    }
+
+    .drawing-title {
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--bp-line);
+      margin-bottom: 4px;
+    }
+    .drawing-subtitle {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--bp-cyan);
+    }
+
+    .dimension-line {
+      position: relative;
+      border-top: 1px solid var(--bp-cyan);
+      margin: 8px 0;
+    }
+    .dimension-line::before, .dimension-line::after {
+      content: ''; position: absolute; top: -4px;
+      width: 1px; height: 9px; background: var(--bp-cyan);
+    }
+    .dimension-line::before { left: 0; }
+    .dimension-line::after { right: 0; }
+    .dimension-label {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: var(--bp-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    /* Search / filter bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      border: 1px solid rgba(232,240,255,0.15);
+    }
+    .filter-bar label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--bp-cyan);
+    }
+    .filter-bar input, .filter-bar select {
+      background: transparent;
+      border: 1px solid rgba(232,240,255,0.2);
+      color: var(--bp-line);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      padding: 4px 10px;
+      outline: none;
+    }
+    .filter-bar input:focus, .filter-bar select:focus {
+      border-color: var(--bp-cyan);
+    }
+    .filter-bar select option { background: var(--bp-base); }
+
+    /* Register table */
+    .register-wrap {
+      border: 1px solid rgba(232,240,255,0.15);
+      overflow-x: auto;
+    }
+    .register-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1100px;
+    }
+    .register-table th {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--bp-cyan);
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1.5px solid var(--bp-cyan);
+      position: relative;
+      white-space: nowrap;
+    }
+    .register-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid rgba(232,240,255,0.08);
+      font-size: 12px;
+      vertical-align: top;
+    }
+    .register-table tbody tr:hover {
+      background: rgba(91,184,255,0.06);
+    }
+    .register-table tbody tr:hover td:first-child {
+      color: var(--bp-gold);
+    }
+    .row-num {
+      color: rgba(232,240,255,0.3);
+      font-size: 10px;
+      text-align: right;
+      padding-right: 8px;
+      width: 36px;
+    }
+    .tag {
+      display: inline-block;
+      border: 1px solid rgba(91,184,255,0.3);
+      padding: 1px 6px;
+      font-size: 10px;
+      margin: 1px 2px;
+      color: var(--bp-cyan);
+    }
+    .bigsas-yes { color: var(--bp-gold); }
+    .name-link { color: var(--bp-line); }
+    .name-link:hover { color: var(--bp-gold); }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: 11px;
+    }
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(232,240,255,0.2);
+      color: var(--bp-cyan);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.2s;
+    }
+    .page-btn:hover { border-color: var(--bp-cyan); color: var(--bp-line); }
+    .page-btn.active { background: var(--bp-gold); color: var(--bp-base); border-color: var(--bp-gold); }
+
+    /* Title block */
+    .title-block {
+      position: fixed;
+      bottom: 16px; right: 16px;
+      border: 1.5px solid var(--bp-line);
+      background: var(--bp-base);
+      z-index: 40;
+      font-size: 10px;
+    }
+    .title-block table { border-collapse: collapse; }
+    .title-block td {
+      border: 1px solid rgba(232,240,255,0.3);
+      padding: 3px 10px;
+      white-space: nowrap;
+    }
+    .title-block .tb-header {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--bp-cyan);
+      font-size: 9px;
+    }
+
+    .back-link {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(232,240,255,0.4);
+    }
+    .back-link:hover { color: var(--bp-gold); }
+
+    .sidebar-item { position: relative; }
+    .sidebar-item .tooltip {
+      display: none;
+      position: absolute;
+      left: 42px; top: 50%;
+      transform: translateY(-50%);
+      background: var(--bp-base);
+      border: 1px solid var(--bp-cyan);
+      padding: 3px 10px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--bp-cyan);
+      white-space: nowrap;
+      z-index: 60;
+    }
+    .sidebar-item:hover .tooltip { display: block; }
+
+    @keyframes fadeInBlueprint {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeInBlueprint 0.6s ease forwards;
+      opacity: 0;
+    }
+    .fade-in-1 { animation-delay: 0.1s; }
+    .fade-in-2 { animation-delay: 0.2s; }
+    .fade-in-3 { animation-delay: 0.3s; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 44px; }
+      .main { margin-left: 44px; padding: 20px 12px 140px; }
+      .section-marker { width: 28px; height: 28px; font-size: 10px; }
+      .drawing-title { font-size: 14px; letter-spacing: 2px; }
+      .title-block { right: 8px; bottom: 8px; font-size: 9px; }
+      .filter-bar { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body x-data="{
+  search: '',
+  genderFilter: 'all',
+  bigsasFilter: 'all',
+  persons: [
+    { num: '001', title: 'Dr.', last: 'Osei', first: 'Amina', middle: '', pseudo: '', gender: 'Female', bigsas: true, location: 'Bayreuth', languages: ['English','French','Twi'], thematic: ['Postcolonial Studies','Gender'], geographic: ['West Africa'] },
+    { num: '002', title: 'Prof.', last: 'Mbeki', first: 'Thabo', middle: 'J.', pseudo: '', gender: 'Male', bigsas: false, location: 'Nairobi', languages: ['English','Swahili'], thematic: ['Political Science','Governance'], geographic: ['East Africa'] },
+    { num: '003', title: 'Dr.', last: 'Ndiaye', first: 'Fatou', middle: '', pseudo: '', gender: 'Female', bigsas: true, location: 'Dakar', languages: ['French','Wolof','English'], thematic: ['Linguistics','Multilingualism'], geographic: ['West Africa','Sahel'] },
+    { num: '004', title: 'Prof.', last: 'Asante', first: 'Kofi', middle: '', pseudo: '', gender: 'Male', bigsas: true, location: 'Accra', languages: ['English','Akan'], thematic: ['History','Cultural Studies'], geographic: ['West Africa'] },
+    { num: '005', title: '', last: 'Diallo', first: 'Mariama', middle: '', pseudo: '', gender: 'Female', bigsas: false, location: 'Bamako', languages: ['French','Bambara'], thematic: ['Sociology','Migration'], geographic: ['West Africa','Sahel'] },
+    { num: '006', title: 'Dr.', last: 'Okonkwo', first: 'Felix', middle: 'C.', pseudo: '', gender: 'Male', bigsas: true, location: 'Bayreuth', languages: ['English','Igbo'], thematic: ['Literature','Narrative Studies'], geographic: ['West Africa','Nigeria'] },
+    { num: '007', title: 'Prof.', last: 'Kamau', first: 'Wanjiku', middle: '', pseudo: '', gender: 'Female', bigsas: false, location: 'Nairobi', languages: ['English','Swahili','Kikuyu'], thematic: ['Environmental Studies'], geographic: ['East Africa'] },
+    { num: '008', title: 'Dr.', last: 'Mensah', first: 'Kweku', middle: '', pseudo: '', gender: 'Male', bigsas: true, location: 'Bayreuth', languages: ['English','Twi','German'], thematic: ['Digital Humanities','Data Science'], geographic: ['West Africa'] },
+    { num: '009', title: '', last: 'Toure', first: 'Aissatou', middle: '', pseudo: '', gender: 'Female', bigsas: true, location: 'Bamako', languages: ['French','Bambara','English'], thematic: ['Education','Pedagogy'], geographic: ['West Africa'] },
+    { num: '010', title: 'Prof.', last: 'Ndongo', first: 'Daniel', middle: 'A.', pseudo: '', gender: 'Male', bigsas: false, location: 'Yaounde', languages: ['French','English','Ewondo'], thematic: ['Anthropology','Mobility'], geographic: ['Central Africa'] },
+    { num: '011', title: 'Dr.', last: 'Abiodun', first: 'Yemi', middle: '', pseudo: '', gender: 'Male', bigsas: true, location: 'Lagos', languages: ['English','Yoruba'], thematic: ['Arts','Visual Culture'], geographic: ['West Africa','Nigeria'] },
+    { num: '012', title: '', last: 'Mwangi', first: 'Grace', middle: '', pseudo: '', gender: 'Female', bigsas: false, location: 'Bayreuth', languages: ['English','Swahili','German'], thematic: ['Economics','Development'], geographic: ['East Africa'] }
+  ],
+  get filtered() {
+    return this.persons.filter(p => {
+      const q = this.search.toLowerCase();
+      const matchSearch = !q || p.last.toLowerCase().includes(q) || p.first.toLowerCase().includes(q) || p.location.toLowerCase().includes(q);
+      const matchGender = this.genderFilter === 'all' || p.gender.toLowerCase() === this.genderFilter;
+      const matchBigsas = this.bigsasFilter === 'all' || (this.bigsasFilter === 'yes' ? p.bigsas : !p.bigsas);
+      return matchSearch && matchGender && matchBigsas;
+    });
+  }
+}">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <a href="../index.html" class="back-link" style="margin-bottom: 8px; font-size: 9px; writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 2px;">PROTO</a>
+    <div style="width: 24px; border-top: 1px solid rgba(232,240,255,0.2); margin: 4px 0 8px;"></div>
+    <div class="sidebar-item"><a href="dashboard.html" class="section-marker">A</a><span class="tooltip">Site Plan</span></div>
+    <div class="sidebar-item"><a href="listing.html" class="section-marker active">B</a><span class="tooltip">Occupant Register</span></div>
+    <div class="sidebar-item"><a href="detail.html" class="section-marker">C</a><span class="tooltip">Occupant Detail</span></div>
+    <div class="sidebar-item"><a href="projects.html" class="section-marker">D</a><span class="tooltip">Structural Schedule</span></div>
+    <div class="sidebar-item"><a href="events.html" class="section-marker">E</a><span class="tooltip">Assembly Schedule</span></div>
+    <div class="sidebar-item"><a href="institutions.html" class="section-marker">F</a><span class="tooltip">Partner Directory</span></div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Header -->
+    <div class="fade-in fade-in-1" style="margin-bottom: 24px;">
+      <div class="drawing-subtitle">Drawing No. Q-002 &mdash; Rev 03</div>
+      <div class="drawing-title">Occupant Register &mdash; All Persons</div>
+      <div class="dimension-line" style="width: 300px; margin-top: 16px;">
+        <span class="dimension-label">Register Span</span>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="fade-in fade-in-2 filter-bar">
+      <label>Search:</label>
+      <input type="text" x-model="search" placeholder="Name or location..." style="width: 200px;">
+      <label style="margin-left: 12px;">Gender:</label>
+      <select x-model="genderFilter">
+        <option value="all">ALL</option>
+        <option value="female">FEMALE</option>
+        <option value="male">MALE</option>
+        <option value="diverse">DIVERSE</option>
+      </select>
+      <label style="margin-left: 12px;">BIGSAS:</label>
+      <select x-model="bigsasFilter">
+        <option value="all">ALL</option>
+        <option value="yes">YES</option>
+        <option value="no">NO</option>
+      </select>
+      <span style="margin-left: auto; font-size: 10px; color: var(--bp-cyan); text-transform: uppercase; letter-spacing: 1px;">
+        Showing <span x-text="filtered.length" style="color: var(--bp-gold);"></span> of <span x-text="persons.length"></span> records
+      </span>
+    </div>
+
+    <!-- Table -->
+    <div class="fade-in fade-in-3 register-wrap">
+      <table class="register-table">
+        <thead>
+          <tr>
+            <th style="width: 36px;">#</th>
+            <th>Title</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Pseudonym</th>
+            <th>Gender</th>
+            <th>BIGSAS</th>
+            <th>Location</th>
+            <th>Languages</th>
+            <th>Thematic Fields</th>
+            <th>Geographic Fields</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="p in filtered" :key="p.num">
+            <tr>
+              <td class="row-num" x-text="p.num"></td>
+              <td x-text="p.title" style="white-space: nowrap;"></td>
+              <td><a href="detail.html" class="name-link" x-text="p.last"></a></td>
+              <td x-text="p.first"></td>
+              <td x-text="p.middle" style="color: rgba(232,240,255,0.5);"></td>
+              <td x-text="p.pseudo" style="color: rgba(232,240,255,0.5);"></td>
+              <td x-text="p.gender" style="font-size: 11px;"></td>
+              <td :class="p.bigsas ? 'bigsas-yes' : ''" x-text="p.bigsas ? 'YES' : '—'" style="font-size: 11px; text-align: center;"></td>
+              <td x-text="p.location"></td>
+              <td><template x-for="l in p.languages" :key="l"><span class="tag" x-text="l"></span></template></td>
+              <td><template x-for="t in p.thematic" :key="t"><span class="tag" x-text="t"></span></template></td>
+              <td><template x-for="g in p.geographic" :key="g"><span class="tag" x-text="g"></span></template></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" style="margin-top: 16px;">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <span style="color: rgba(232,240,255,0.3);">...</span>
+      <button class="page-btn">42</button>
+      <span style="margin-left: 12px; font-size: 10px; color: var(--bp-cyan); text-transform: uppercase; letter-spacing: 1px;">Page 1 of 42 &mdash; 847 Records Total</span>
+    </div>
+  </div>
+
+  <!-- Title Block -->
+  <div class="title-block">
+    <table>
+      <tr>
+        <td class="tb-header">Project</td>
+        <td colspan="3" style="font-weight: 500;">AFRICA MULTIPLE CLUSTER MANAGEMENT</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Drawing</td>
+        <td>Occupant Register</td>
+        <td class="tb-header">Rev</td>
+        <td>03</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Date</td>
+        <td>2026-02-18</td>
+        <td class="tb-header">Scale</td>
+        <td>NTS</td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>

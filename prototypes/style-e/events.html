@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" class="font-body">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+          "purple": { 50: "#ede0f1", 400: "#787acd", 500: "#5d64b5" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .aurora-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;
+      background: #f0f4f8;
+    }
+    .aurora-blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3;
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+    .aurora-blob:nth-child(2) { animation-delay: -5s; animation-duration: 25s; }
+    .aurora-blob:nth-child(3) { animation-delay: -10s; animation-duration: 22s; }
+    .aurora-blob:nth-child(4) { animation-delay: -15s; animation-duration: 28s; }
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(10px, -10px) scale(1.05); }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeSlideUp 0.6s ease-out forwards; }
+    .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.80);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .glass-sidebar {
+      background: rgba(255, 255, 255, 0.60);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .event-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .event-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.12);
+    }
+    .cal-day-has-event {
+      position: relative;
+    }
+    .cal-day-has-event::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d9462, #008f9c);
+    }
+  </style>
+</head>
+<body class="font-body text-gray-900 min-h-screen">
+
+  <!-- Aurora Background -->
+  <div class="aurora-bg">
+    <div class="aurora-blob" style="width: 600px; height: 600px; top: -10%; left: -5%; background: linear-gradient(135deg, #0d9462, #008f9c);"></div>
+    <div class="aurora-blob" style="width: 500px; height: 500px; top: 40%; right: -10%; background: linear-gradient(135deg, #bd62a0, #787acd);"></div>
+    <div class="aurora-blob" style="width: 450px; height: 450px; bottom: -5%; left: 30%; background: linear-gradient(135deg, #008f9c, #0d9462);"></div>
+    <div class="aurora-blob" style="width: 350px; height: 350px; top: 20%; left: 50%; background: linear-gradient(135deg, #787acd, #bd62a0); opacity: 0.2;"></div>
+  </div>
+
+  <div class="flex min-h-screen" x-data="{
+    mobileSidebar: false,
+    type: '',
+    calMonth: 1,
+    calYear: 2026,
+    get monthName() { return ['January','February','March','April','May','June','July','August','September','October','November','December'][this.calMonth]; },
+    get daysInMonth() { return new Date(this.calYear, this.calMonth + 1, 0).getDate(); },
+    get firstDay() { return new Date(this.calYear, this.calMonth, 1).getDay(); },
+    prevMonth() { if (this.calMonth === 0) { this.calMonth = 11; this.calYear--; } else { this.calMonth--; } },
+    nextMonth() { if (this.calMonth === 11) { this.calMonth = 0; this.calYear++; } else { this.calMonth++; } },
+    eventDays: { '2026-1': [28], '2026-2': [15], '2026-3': [3], '2026-4': [22], '2026-5': [10], '2026-6': [20], '2026-8': [18], '2026-10': [25] },
+    hasEvent(day) { return (this.eventDays[this.calYear + '-' + this.calMonth] || []).includes(day); }
+  }">
+
+    <!-- Sidebar -->
+    <aside class="glass-sidebar hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-40">
+      <div class="flex items-center gap-3 px-6 py-5 border-b border-white/20">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-ubt-green-400 to-azure-400 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.5"/><path d="M10 20 Q16 8 22 20" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="16" cy="14" r="3" fill="currentColor"/></svg>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-gray-900">Africa Multiple</h1>
+          <p class="text-xs text-gray-500">Cluster Management</p>
+        </div>
+      </div>
+      <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Dashboard</a>
+        <div class="px-3 pt-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Persons</div>
+        <a href="listing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>All Persons</a>
+        <a href="projects.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Projects</a>
+        <a href="events.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-gradient-to-r from-ubt-green-400/10 to-azure-400/10 text-ubt-green-400 font-medium text-sm"><div class="w-2 h-2 rounded-full bg-gradient-to-r from-ubt-green-400 to-azure-400"></div>Events</a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Countries</a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Locations</a>
+        <a href="institutions.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Institutions</a>
+        <div class="px-3 pt-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Admin</div>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Administration</a>
+      </nav>
+      <div class="px-4 py-4 border-t border-white/20">
+        <a href="../index.html" class="flex items-center gap-2 px-3 py-2 text-xs text-gray-500 hover:text-gray-700 transition rounded-lg hover:bg-white/30">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Back to all prototypes
+        </a>
+        <div class="flex items-center gap-3 px-3 py-3 mt-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white flex items-center justify-center text-xs font-bold">AD</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-900 truncate">Admin User</p>
+            <p class="text-xs text-gray-500 truncate">admin@africa-multiple.org</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Sidebar -->
+    <div x-show="mobileSidebar" @click="mobileSidebar = false" class="fixed inset-0 bg-black/30 z-40 lg:hidden" x-transition.opacity></div>
+    <aside x-show="mobileSidebar" x-transition:enter="transition transform ease-out duration-200" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition transform ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" class="glass-sidebar fixed inset-y-0 left-0 z-50 w-64 lg:hidden">
+      <div class="flex items-center justify-between px-6 py-5 border-b border-white/20">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-ubt-green-400 to-azure-400 flex items-center justify-center"><svg class="w-5 h-5 text-white" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.5"/><path d="M10 20 Q16 8 22 20" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="16" cy="14" r="3" fill="currentColor"/></svg></div>
+          <span class="text-sm font-bold text-gray-900">Africa Multiple</span>
+        </div>
+        <button @click="mobileSidebar = false" class="p-1 rounded-lg hover:bg-white/30 cursor-pointer"><svg class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+      <nav class="px-4 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Dashboard</a>
+        <a href="listing.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Persons</a>
+        <a href="projects.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Projects</a>
+        <a href="events.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gradient-to-r from-ubt-green-400/10 to-azure-400/10 text-ubt-green-400 font-medium text-sm"><div class="w-2 h-2 rounded-full bg-gradient-to-r from-ubt-green-400 to-azure-400"></div>Events</a>
+        <a href="institutions.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Institutions</a>
+      </nav>
+      <div class="px-4 py-4 border-t border-white/20 mt-auto">
+        <a href="../index.html" class="flex items-center gap-2 px-3 py-2 text-xs text-gray-500 hover:text-gray-700 transition"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>Back to all prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-64 min-h-screen">
+      <!-- Top Bar -->
+      <header class="glass-card sticky top-0 z-30 px-6 py-4 flex items-center justify-between border-b border-white/30">
+        <div class="flex items-center gap-4">
+          <button @click="mobileSidebar = true" class="lg:hidden p-2 rounded-xl hover:bg-white/50 transition cursor-pointer">
+            <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <h2 class="text-lg font-semibold text-gray-900">Events</h2>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-ubt-green-400 to-azure-400 text-white">12</span>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white flex items-center justify-center text-xs font-bold lg:hidden">AD</div>
+      </header>
+
+      <div class="p-6 space-y-6">
+        <!-- Featured Event -->
+        <div class="rounded-2xl shadow-xl overflow-hidden fade-in" style="background: linear-gradient(135deg, #bd62a0 0%, #787acd 50%, #5d64b5 100%);">
+          <div class="p-6 sm:p-8">
+            <div class="flex flex-col lg:flex-row lg:items-center gap-6">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/20 text-white backdrop-blur-sm">Featured</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/20 text-white backdrop-blur-sm">Conference</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Annual Conference 2026</h2>
+                <p class="text-white/70 text-sm mb-4 max-w-xl">The flagship event bringing together researchers, fellows, and partners from across the Africa Multiple network for three days of panels, workshops, and keynotes.</p>
+                <div class="flex flex-wrap items-center gap-4 text-sm text-white/80">
+                  <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    February 28, 2026
+                  </span>
+                  <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Bayreuth, Germany
+                  </span>
+                  <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    Hybrid
+                  </span>
+                  <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Applying body: Africa Multiple Cluster
+                  </span>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <div class="bg-white/15 backdrop-blur-sm rounded-2xl p-5 text-center">
+                  <p class="text-4xl font-extrabold text-white">28</p>
+                  <p class="text-sm font-medium text-white/80">Feb 2026</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="flex flex-wrap gap-2 fade-in fade-in-delay-1">
+          <button @click="type = ''" :class="!type ? 'bg-gradient-to-r from-ubt-green-400 to-azure-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">All Types</button>
+          <button @click="type = 'Conference'" :class="type === 'Conference' ? 'bg-gradient-to-r from-ubt-green-400 to-azure-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Conference</button>
+          <button @click="type = 'Workshop'" :class="type === 'Workshop' ? 'bg-gradient-to-r from-raspberry-400 to-purple-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Workshop</button>
+          <button @click="type = 'Lecture'" :class="type === 'Lecture' ? 'bg-gradient-to-r from-azure-400 to-ubt-green-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Lecture</button>
+          <button @click="type = 'Seminar'" :class="type === 'Seminar' ? 'bg-gradient-to-r from-purple-400 to-raspberry-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Seminar</button>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <!-- Calendar -->
+          <div class="glass-card rounded-2xl shadow-lg p-5 fade-in fade-in-delay-2">
+            <div class="flex items-center justify-between mb-4">
+              <button @click="prevMonth()" class="p-1.5 rounded-lg hover:bg-white/50 transition cursor-pointer">
+                <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <h3 class="text-sm font-semibold text-gray-900" x-text="monthName + ' ' + calYear"></h3>
+              <button @click="nextMonth()" class="p-1.5 rounded-lg hover:bg-white/50 transition cursor-pointer">
+                <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+            <div class="grid grid-cols-7 gap-1 text-center">
+              <template x-for="d in ['Su','Mo','Tu','We','Th','Fr','Sa']">
+                <div class="text-[10px] font-medium text-gray-400 py-1" x-text="d"></div>
+              </template>
+              <template x-for="i in firstDay">
+                <div></div>
+              </template>
+              <template x-for="day in daysInMonth">
+                <div class="relative py-1.5 text-xs rounded-lg cursor-default"
+                     :class="hasEvent(day) ? 'font-bold text-ubt-green-400 bg-gradient-to-br from-ubt-green-400/10 to-azure-400/10 cal-day-has-event' : 'text-gray-600 hover:bg-white/40'"
+                     x-text="day"></div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Event List -->
+          <div class="xl:col-span-2 space-y-4 fade-in fade-in-delay-3">
+            <!-- Event 1 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-ubt-green-400 to-azure-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-ubt-green-400 to-azure-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">28</span>
+                      <span class="text-[10px] font-medium">FEB</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Annual Conference 2026</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Bayreuth, Germany</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-ubt-green-400/15 to-azure-400/15 text-ubt-green-400">Conference</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-400">Hybrid</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 2 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-raspberry-400 to-purple-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-raspberry-400 to-purple-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">15</span>
+                      <span class="text-[10px] font-medium">MAR</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Digital Humanities Workshop</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Nairobi, Kenya</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-raspberry-400/15 to-purple-400/15 text-raspberry-400">Workshop</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-400">Online</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 3 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-azure-400 to-ubt-green-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-azure-400 to-ubt-green-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">3</span>
+                      <span class="text-[10px] font-medium">APR</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Guest Lecture: Migration Patterns</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Accra, Ghana</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-azure-400/15 to-ubt-green-400/15 text-azure-400">Lecture</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-ubt-green-50 text-ubt-green-400">In-person</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 4 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-purple-400 to-raspberry-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-purple-400 to-raspberry-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">22</span>
+                      <span class="text-[10px] font-medium">MAY</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Ethics in African Scholarship</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Lagos, Nigeria</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-purple-400/15 to-raspberry-400/15 text-purple-500">Seminar</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-400">Hybrid</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 5 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-ubt-green-400 to-azure-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-ubt-green-400 to-azure-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">10</span>
+                      <span class="text-[10px] font-medium">JUN</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Summer School: African Studies Methods</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Bayreuth, Germany</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-ubt-green-400/15 to-azure-400/15 text-ubt-green-400">Workshop</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-ubt-green-50 text-ubt-green-400">In-person</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 6 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-raspberry-400 to-ubt-green-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-raspberry-400 to-ubt-green-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">20</span>
+                      <span class="text-[10px] font-medium">JUL</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Pan-African Knowledge Exchange</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Dakar, Senegal</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-raspberry-400/15 to-ubt-green-400/15 text-raspberry-400">Conference</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-400">Hybrid</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 7 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-azure-400 to-purple-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-azure-400 to-purple-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">18</span>
+                      <span class="text-[10px] font-medium">SEP</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">African Art Biennale Symposium</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Cape Town, South Africa</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-azure-400/15 to-purple-400/15 text-azure-400">Conference</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-ubt-green-50 text-ubt-green-400">In-person</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 8 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-purple-400 to-ubt-green-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-purple-400 to-ubt-green-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">5</span>
+                      <span class="text-[10px] font-medium">OCT</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Decolonizing Curricula Workshop</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Addis Ababa, Ethiopia</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-purple-400/15 to-ubt-green-400/15 text-purple-500">Workshop</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-400">Online</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 9 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-ubt-green-300 to-azure-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-ubt-green-300 to-azure-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">14</span>
+                      <span class="text-[10px] font-medium">OCT</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Public Lecture: Future of African Universities</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Kampala, Uganda</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-ubt-green-300/15 to-azure-400/15 text-ubt-green-400">Lecture</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-400">Hybrid</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 10 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-raspberry-400 to-purple-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-raspberry-400 to-purple-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">25</span>
+                      <span class="text-[10px] font-medium">NOV</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">Year-End Research Colloquium</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Bayreuth, Germany</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-raspberry-400/15 to-purple-400/15 text-raspberry-400">Seminar</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-ubt-green-50 text-ubt-green-400">In-person</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 11 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-azure-400 to-raspberry-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-azure-400 to-raspberry-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">8</span>
+                      <span class="text-[10px] font-medium">DEC</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">African Languages in Digital Spaces</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Dar es Salaam, Tanzania</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-azure-400/15 to-raspberry-400/15 text-azure-400">Workshop</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-400">Online</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 12 -->
+            <div class="event-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="flex">
+                <div class="w-2 bg-gradient-to-b from-ubt-green-400 to-purple-400 flex-shrink-0"></div>
+                <div class="flex-1 p-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-ubt-green-400 to-purple-400 flex flex-col items-center justify-center text-white">
+                      <span class="text-lg font-bold leading-none">18</span>
+                      <span class="text-[10px] font-medium">DEC</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900">End-of-Year Fellows Gathering</h4>
+                      <p class="text-xs text-gray-500 mt-0.5">Bayreuth, Germany</p>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-ubt-green-400/15 to-purple-400/15 text-ubt-green-400">Seminar</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-ubt-green-50 text-ubt-green-400">In-person</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dr. Amina Osei | Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "ubt-green": { DEFAULT: "#0d9462", 50: "#edfaf3", 100: "#cceadc", 200: "#7abf9f", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+            "azure": { DEFAULT: "#008f9c", 50: "#edf8f9", 400: "#008f9c", 500: "#007683" },
+            "raspberry": { DEFAULT: "#bd62a0", 50: "#fdf2fa", 400: "#bd62a0", 500: "#a54988" },
+            "purple": { DEFAULT: "#787acd", 50: "#f0f0fb", 400: "#787acd", 500: "#5d64b5" },
+          },
+          fontFamily: { body: ['DM Sans', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    [x-cloak] { display: none !important; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: fadeSlideIn 0.4s ease-out both; }
+    .delay-1 { animation-delay: 50ms; }
+    .delay-2 { animation-delay: 100ms; }
+    .delay-3 { animation-delay: 150ms; }
+    .delay-4 { animation-delay: 200ms; }
+    .delay-5 { animation-delay: 250ms; }
+    .delay-6 { animation-delay: 300ms; }
+  </style>
+</head>
+<body class="bg-[#f8fafb] text-slate-800">
+  <div class="h-screen flex overflow-hidden" x-data="{ sidebarOpen: false, persons: true, projects: false, admin: false, tab: 'overview' }">
+
+    <!-- Mobile sidebar overlay -->
+    <div x-show="sidebarOpen" x-cloak class="fixed inset-0 z-40 md:hidden">
+      <div class="fixed inset-0 bg-black/30" @click="sidebarOpen = false"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="hidden md:flex md:flex-col md:w-56 bg-slate-50 border-r border-slate-200 shrink-0">
+      <div class="h-14 flex items-center px-4 border-b border-slate-200 bg-white">
+        <a href="dashboard.html" class="flex items-center">
+          <span class="text-sm font-bold text-ubt-green tracking-tight">Africa Multiple</span>
+          <span class="ml-1 text-xs text-slate-400 font-medium">Cluster</span>
+        </a>
+      </div>
+      <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 text-[13px]">
+        <a href="#" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-500 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Advanced search
+        </a>
+        <div class="!mt-3 !mb-2 border-t border-slate-200"></div>
+        <a href="dashboard.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Dashboard
+        </a>
+        <div class="!mt-3 !mb-2 border-t border-slate-200"></div>
+        <button @click="persons = !persons" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md bg-ubt-green-50 text-ubt-green font-medium">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Persons
+          </span>
+          <svg class="w-3.5 h-3.5 text-ubt-green/50 transition-transform" :class="persons ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="persons" x-collapse class="ml-5 space-y-0.5">
+          <a href="listing.html" class="block px-2.5 py-1.5 rounded-md text-ubt-green bg-ubt-green-50 font-medium border-l-2 border-ubt-green">All Persons</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Employees</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Cluster members</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">BIGSAS members</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Fellows</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Guests</a>
+        </div>
+        <button @click="projects = !projects" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-azure" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Projects
+          </span>
+          <svg class="w-3.5 h-3.5 text-slate-400 transition-transform" :class="projects ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="projects" x-collapse x-cloak class="ml-5 space-y-0.5">
+          <a href="projects.html" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-azure-50 hover:text-azure transition-colors">All Projects</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-azure-50 hover:text-azure transition-colors">Research sections</a>
+        </div>
+        <a href="events.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-raspberry" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Events
+        </a>
+        <a href="institutions.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Institutions
+        </a>
+      </nav>
+      <div class="border-t border-slate-200 px-3 py-3">
+        <a href="../index.html" class="text-[11px] text-slate-400 hover:text-slate-600 transition-colors">Back to all prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex flex-col flex-1 overflow-hidden">
+      <!-- Top bar -->
+      <header class="h-14 bg-white border-b border-slate-200 flex items-center px-6 shrink-0">
+        <button @click="sidebarOpen = true" class="md:hidden mr-4 text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="text-sm text-slate-500">
+          <a href="dashboard.html" class="hover:text-slate-700 transition-colors">Dashboard</a>
+          <span class="mx-1.5 text-slate-300">/</span>
+          <a href="listing.html" class="hover:text-slate-700 transition-colors">Persons</a>
+          <span class="mx-1.5 text-slate-300">/</span>
+          <span class="font-medium text-slate-800">Dr. Amina Osei</span>
+        </div>
+        <div class="flex-1"></div>
+        <div class="hidden sm:flex items-center bg-slate-50 rounded-lg px-3 py-1.5 text-sm text-slate-400 border border-slate-200 w-64">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search persons, projects...
+        </div>
+        <div class="ml-4 flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-ubt-green-100 flex items-center justify-center text-ubt-green text-xs font-semibold">TT</div>
+        </div>
+      </header>
+
+      <main class="flex-1 overflow-y-auto">
+        <div class="max-w-5xl mx-auto px-6 py-6">
+
+          <!-- Header card -->
+          <div class="bg-white rounded-lg border border-slate-200 p-5 mb-5 animate-in">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div>
+                <h1 class="text-xl font-semibold text-slate-800">Dr. Amina Osei</h1>
+                <p class="text-sm text-slate-500 mt-0.5">University of Ghana, Accra &middot; Senior Researcher</p>
+                <div class="flex flex-wrap items-center gap-2 mt-3">
+                  <span class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium rounded-full bg-ubt-green/10 text-ubt-green">Fellow</span>
+                  <span class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium rounded-full bg-ubt-green-50 text-ubt-green">BIGSAS</span>
+                  <span class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium rounded-full bg-ubt-green-50 text-ubt-green">Cluster</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-end gap-2">
+                <div class="flex items-center gap-2">
+                  <button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    Find Duplicates
+                  </button>
+                  <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-white bg-azure rounded-lg hover:bg-azure-500 transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    Edit
+                  </a>
+                  <button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    Delete
+                  </button>
+                </div>
+                <span class="text-[11px] text-slate-400">Created 15 Jan 2020 &middot; Updated 10 Feb 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab bar -->
+          <div class="border-b border-slate-200 mb-5 animate-in delay-1">
+            <nav class="flex gap-6 -mb-px">
+              <button @click="tab = 'overview'" :class="tab === 'overview' ? 'border-ubt-green text-ubt-green font-medium' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'" class="pb-3 text-[13px] border-b-2 transition-colors">Overview</button>
+              <button @click="tab = 'academic'" :class="tab === 'academic' ? 'border-ubt-green text-ubt-green font-medium' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'" class="pb-3 text-[13px] border-b-2 transition-colors">Academic</button>
+              <button @click="tab = 'membership'" :class="tab === 'membership' ? 'border-ubt-green text-ubt-green font-medium' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'" class="pb-3 text-[13px] border-b-2 transition-colors">Membership</button>
+              <button @click="tab = 'relations'" :class="tab === 'relations' ? 'border-ubt-green text-ubt-green font-medium' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'" class="pb-3 text-[13px] border-b-2 transition-colors">Relations</button>
+              <button @click="tab = 'expert'" :class="tab === 'expert' ? 'border-ubt-green text-ubt-green font-medium' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'" class="pb-3 text-[13px] border-b-2 transition-colors">Expert Search</button>
+            </nav>
+          </div>
+
+          <!-- Overview Tab -->
+          <div x-show="tab === 'overview'" class="space-y-4 animate-in delay-2">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <!-- Contact card -->
+              <div class="bg-white rounded-lg border border-slate-200 p-5">
+                <h3 class="text-sm font-semibold text-slate-800 mb-4">Contact</h3>
+                <dl class="space-y-3">
+                  <div class="flex items-start">
+                    <dt class="w-28 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Email</dt>
+                    <dd class="text-[13px] text-slate-700"><a href="mailto:a.osei@ug.edu.gh" class="text-ubt-green hover:underline">a.osei@ug.edu.gh</a></dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-28 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Homepage</dt>
+                    <dd class="text-[13px] text-slate-700"><a href="#" class="text-ubt-green hover:underline">Personal Page</a></dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-28 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">ORCID</dt>
+                    <dd class="text-[13px] text-slate-700 font-mono">0000-0002-1234-5678</dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-28 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Phone</dt>
+                    <dd class="text-[13px] text-slate-700">+233 30 213 4567 <span class="text-[11px] text-slate-400 ml-1">(work)</span></dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-28 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Gender</dt>
+                    <dd class="text-[13px] text-slate-700">female</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <!-- Personal card -->
+              <div class="bg-white rounded-lg border border-slate-200 p-5">
+                <h3 class="text-sm font-semibold text-slate-800 mb-4">Personal</h3>
+                <dl class="space-y-3">
+                  <div class="flex items-start">
+                    <dt class="w-28 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Languages</dt>
+                    <dd class="text-[13px] text-slate-700">English, French, Twi</dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-28 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Location</dt>
+                    <dd class="text-[13px] text-slate-700"><a href="#" class="text-ubt-green hover:underline">Accra, Ghana, Africa</a></dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+
+            <!-- Addresses card -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Addresses</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50/80">
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Remark</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Street</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Postcode</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">City</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Country</th>
+                      <th class="text-center px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Expert Search</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-ubt-green-50/30 transition-colors">
+                      <td class="px-4 py-3 text-[13px] text-slate-700">Main</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-700">P.O. Box LG 12</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500"></td>
+                      <td class="px-4 py-3 text-[13px] text-slate-700">Accra</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-700">Ghana</td>
+                      <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">&#10003;</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Academic Tab -->
+          <div x-show="tab === 'academic'" x-cloak class="space-y-4 animate-in delay-2">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div class="bg-white rounded-lg border border-slate-200 p-5">
+                <h3 class="text-sm font-semibold text-slate-800 mb-4">Academic Profile</h3>
+                <dl class="space-y-3">
+                  <div class="flex items-start">
+                    <dt class="w-36 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Highest degree</dt>
+                    <dd class="text-[13px] text-slate-700">PhD</dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-36 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Fields of study</dt>
+                    <dd class="text-[13px] text-slate-700">Migration Studies, Postcolonial Theory</dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-36 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Geographic fields</dt>
+                    <dd class="text-[13px] text-slate-700">West Africa, Ghana, Senegal</dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-36 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Thematic fields</dt>
+                    <dd class="text-[13px] text-slate-700">Transnational Mobility, Diaspora Studies</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div class="bg-white rounded-lg border border-slate-200 p-5">
+                <h3 class="text-sm font-semibold text-slate-800 mb-4">Research &amp; Notes</h3>
+                <dl class="space-y-3">
+                  <div class="flex items-start">
+                    <dt class="w-36 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Research Sections</dt>
+                    <dd class="text-[13px] text-slate-700"><a href="#" class="text-ubt-green hover:underline">Mobilities</a></dd>
+                  </div>
+                  <div class="flex items-start">
+                    <dt class="w-36 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Remark</dt>
+                    <dd class="text-[13px] text-slate-400 italic">No remark</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          <!-- Membership Tab -->
+          <div x-show="tab === 'membership'" x-cloak class="animate-in delay-2">
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Membership Details</h3>
+              <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">BIGSAS</dt>
+                  <dd class="text-[13px]"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ubt-green-50 text-ubt-green text-[11px] font-medium">&#10003; Yes</span></dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Cluster</dt>
+                  <dd class="text-[13px]"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ubt-green-50 text-ubt-green text-[11px] font-medium">&#10003; Yes</span></dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Entitled to vote</dt>
+                  <dd class="text-[13px]"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ubt-green-50 text-ubt-green text-[11px] font-medium">&#10003; Yes</span></dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Signed R &amp; D</dt>
+                  <dd class="text-[13px]"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ubt-green-50 text-ubt-green text-[11px] font-medium">&#10003; Yes</span></dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Category</dt>
+                  <dd class="text-[13px] text-slate-700">Senior Researcher</dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Membership Start</dt>
+                  <dd class="text-[13px] text-slate-700 font-mono">15 Jan 2020</dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Membership End</dt>
+                  <dd class="text-[13px] text-slate-400">&mdash;</dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Position</dt>
+                  <dd class="text-[13px] text-slate-700">Visiting Scholar</dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-40 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Report to HR</dt>
+                  <dd class="text-[13px]"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ubt-green-50 text-ubt-green text-[11px] font-medium">&#10003; Yes</span></dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+
+          <!-- Relations Tab -->
+          <div x-show="tab === 'relations'" x-cloak class="space-y-4 animate-in delay-2">
+
+            <!-- Managed projects -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Managed Projects</h3>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between p-3 rounded-md bg-slate-50/50 hover:bg-azure-50/30 transition-colors">
+                  <div>
+                    <a href="#" class="text-[13px] font-medium text-azure hover:underline">Transnational Migration Patterns in West Africa</a>
+                    <span class="text-[11px] text-slate-400 ml-2">Project Director</span>
+                  </div>
+                  <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Involved projects -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Involved Projects</h3>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between p-3 rounded-md bg-slate-50/50 hover:bg-azure-50/30 transition-colors">
+                  <div>
+                    <a href="#" class="text-[13px] font-medium text-azure hover:underline">Decolonizing Knowledge Systems</a>
+                    <span class="text-[11px] text-slate-400 ml-2">Researcher</span>
+                  </div>
+                  <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Institutions -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Institutions</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50/80">
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Institution</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Role</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Department</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-purple-50/30 transition-colors">
+                      <td class="px-4 py-3 text-[13px] font-medium text-purple"><a href="#" class="hover:underline">University of Ghana</a></td>
+                      <td class="px-4 py-3 text-[13px] text-slate-700">Senior Lecturer</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500">African Studies</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Events (as host) -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Events (as host)</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50/80">
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Title</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Start</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">End</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Type</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-raspberry-50/30 transition-colors">
+                      <td class="px-4 py-3 text-[13px] font-medium text-raspberry"><a href="#" class="hover:underline">Annual Conference 2025</a></td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">20.11.2025</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">22.11.2025</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500">Conference</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Events (as guest) -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Events (as guest)</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50/80">
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Title</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Role</th>
+                      <th class="text-center px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Invited</th>
+                      <th class="text-center px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Confirmed</th>
+                      <th class="text-center px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Attended</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Start</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">End</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Type</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-raspberry-50/30 transition-colors">
+                      <td class="px-4 py-3 text-[13px] font-medium text-raspberry"><a href="#" class="hover:underline">Fellows Workshop</a></td>
+                      <td class="px-4 py-3 text-[13px] text-slate-700">Organizer</td>
+                      <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">&#10003;</span></td>
+                      <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">&#10003;</span></td>
+                      <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">15.03.2026</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">17.03.2026</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500">Research workshop</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Fellowships (as fellow) -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Fellowships (as fellow)</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50/80">
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Start</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">End</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Host</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Created</th>
+                      <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Updated</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-ubt-green-50/30 transition-colors">
+                      <td class="px-4 py-3 text-[13px] text-slate-700 font-mono">01.03.2021</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-700 font-mono">28.02.2023</td>
+                      <td class="px-4 py-3 text-[13px] font-medium text-ubt-green"><a href="#" class="hover:underline">Prof. Kwame Asante</a></td>
+                      <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">15.01.2021</td>
+                      <td class="px-4 py-3 text-[13px] text-slate-400">&mdash;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Fellowships (as host) -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Fellowships (as host)</h3>
+              <div class="py-6 text-center">
+                <p class="text-[13px] text-slate-400">No hosted fellowships</p>
+              </div>
+            </div>
+
+            <!-- Files -->
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Files</h3>
+              <div class="py-6 text-center">
+                <p class="text-[13px] text-slate-400">No files uploaded</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expert Search Tab -->
+          <div x-show="tab === 'expert'" x-cloak class="animate-in delay-2">
+            <div class="bg-white rounded-lg border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-800 mb-4">Expert Search Settings</h3>
+              <dl class="space-y-3">
+                <div class="flex items-start">
+                  <dt class="w-44 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Visible in Expert Search</dt>
+                  <dd class="text-[13px]"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ubt-green-50 text-ubt-green text-[11px] font-medium">&#10003; Yes</span></dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-44 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Notification sent at</dt>
+                  <dd class="text-[13px] text-slate-400">&mdash;</dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-44 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Date inquired</dt>
+                  <dd class="text-[13px] text-slate-700 font-mono">15 Jun 2024</dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-44 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Consent denied?</dt>
+                  <dd class="text-[13px]"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-50 text-red-600 text-[11px] font-medium">&#10007; No</span></dd>
+                </div>
+                <div class="flex items-start">
+                  <dt class="w-44 shrink-0 text-[11px] font-semibold text-slate-500 uppercase tracking-wider pt-0.5">Expert Search State</dt>
+                  <dd class="text-[13px] text-slate-700 font-mono">consent_given</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

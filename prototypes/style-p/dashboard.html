@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Africa Multiple — Risograph</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --pink: #ff0066;
+      --teal: #008080;
+      --black: #1a1a1a;
+      --paper: #f5f0e8;
+      --overprint: #4a0040;
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: var(--paper);
+      color: var(--black);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      min-height: 100vh;
+    }
+
+    /* --- HEADER / NAV --- */
+    .site-header {
+      background: var(--black);
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+    }
+    .site-title {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--pink);
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      border-right: 2px solid #333;
+      display: flex;
+      align-items: center;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      list-style: none;
+      flex: 1;
+    }
+    .nav-links li { position: relative; }
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      transition: color 0.15s, background 0.15s;
+      height: 100%;
+    }
+    .nav-links a:hover { color: #fff; background: #333; }
+    .nav-links a.active { color: var(--pink); background: #2a2a2a; }
+    .nav-links .has-sub:hover .sub-nav { display: flex; }
+    .sub-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--black);
+      border: 2px solid #333;
+      flex-direction: column;
+      min-width: 180px;
+      z-index: 200;
+    }
+    .sub-nav a {
+      padding: 0.5rem 1rem;
+      font-size: 0.65rem;
+      border-bottom: 1px solid #333;
+    }
+    .sub-nav a:last-child { border-bottom: none; }
+
+    /* --- HALFTONE OVERLAY --- */
+    .halftone { position: relative; }
+    .halftone::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--black) 1px, transparent 1px);
+      background-size: 4px 4px;
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    /* --- MISREGISTRATION --- */
+    .misregister {
+      text-shadow: 2px 1px 0 rgba(255,0,102,0.3), -1px -1px 0 rgba(0,128,128,0.3);
+    }
+
+    /* --- INK STAMP --- */
+    .ink-stamp {
+      border: 2px solid currentColor;
+      transform: rotate(-2deg);
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes stampIn {
+      from { opacity: 0; transform: scale(1.3) rotate(-5deg); }
+      to { opacity: 1; transform: scale(1) rotate(-2deg); }
+    }
+    @keyframes typeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes inkBleed {
+      from { filter: blur(2px); opacity: 0; }
+      to { filter: blur(0); opacity: 1; }
+    }
+
+    /* --- MAIN LAYOUT --- */
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* --- HERO --- */
+    .hero {
+      position: relative;
+      padding: 3rem 0 2rem;
+      overflow: hidden;
+      border-bottom: 3px solid var(--black);
+      margin-bottom: 2.5rem;
+    }
+    .hero-title {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      line-height: 0.9;
+      text-transform: uppercase;
+      transform: rotate(-1.5deg);
+      margin-left: -0.5rem;
+      animation: inkBleed 0.8s ease-out;
+    }
+    .hero-sub {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--teal);
+      margin-top: 1rem;
+      transform: rotate(-1.5deg);
+    }
+
+    /* --- STAT STAMPS --- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .stat-card {
+      border: 3px solid var(--black);
+      padding: 1.5rem;
+      position: relative;
+      animation: stampIn 0.5s ease-out both;
+    }
+    .stat-card:nth-child(1) { transform: rotate(-1.5deg); animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { transform: rotate(0.8deg); animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { transform: rotate(-0.5deg); animation-delay: 0.3s; }
+    .stat-card:nth-child(4) { transform: rotate(1.2deg); animation-delay: 0.4s; background: var(--pink); color: #fff; border-color: var(--pink); }
+    .stat-number {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 0.25rem;
+    }
+
+    /* --- SECTION HEADER --- */
+    .section-bar {
+      background: var(--teal);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: inline-block;
+      transform: rotate(-0.5deg);
+    }
+    .section-bar--black { background: var(--black); }
+    .section-bar--pink { background: var(--pink); }
+
+    /* --- ACTIVITY FEED --- */
+    .activity-section { margin-bottom: 3rem; }
+    .activity-list { list-style: none; }
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(26,26,26,0.15);
+      font-size: 0.8rem;
+      animation: typeIn 0.3s ease-out both;
+    }
+    .activity-item:nth-child(1) { animation-delay: 0.1s; }
+    .activity-item:nth-child(2) { animation-delay: 0.15s; }
+    .activity-item:nth-child(3) { animation-delay: 0.2s; }
+    .activity-item:nth-child(4) { animation-delay: 0.25s; }
+    .activity-item:nth-child(5) { animation-delay: 0.3s; }
+    .activity-item:nth-child(6) { animation-delay: 0.35s; }
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--pink);
+      flex-shrink: 0;
+      margin-top: 0.35rem;
+    }
+    .activity-dot--old { background: var(--teal); }
+    .activity-time {
+      font-size: 0.65rem;
+      color: var(--teal);
+      white-space: nowrap;
+      min-width: 80px;
+    }
+    .activity-text { flex: 1; }
+
+    /* --- RESEARCH SECTIONS STRIP --- */
+    .rs-strip {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    .rs-card {
+      background: var(--teal);
+      color: #fff;
+      padding: 1rem 1.25rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      border: 2px solid var(--black);
+      flex: 1 1 200px;
+      min-width: 180px;
+      position: relative;
+      transition: transform 0.2s;
+    }
+    .rs-card:nth-child(odd) { transform: rotate(-0.5deg); }
+    .rs-card:nth-child(even) { transform: rotate(0.5deg); }
+    .rs-card:hover { transform: rotate(0deg) scale(1.02); }
+    .rs-card-name {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-transform: none;
+      letter-spacing: 0;
+      margin-bottom: 0.25rem;
+    }
+    .rs-card-meta { opacity: 0.8; }
+
+    /* --- QUICK LINKS --- */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .quick-link {
+      border: 2px solid var(--black);
+      padding: 1rem;
+      text-decoration: none;
+      color: var(--black);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .quick-link:hover {
+      background: var(--black);
+      color: var(--paper);
+    }
+    .quick-link-arrow {
+      font-size: 1.2rem;
+      color: var(--pink);
+    }
+    .quick-link:hover .quick-link-arrow { color: var(--pink); }
+
+    /* --- FOOTER --- */
+    .site-footer {
+      border-top: 3px solid var(--black);
+      padding: 1.5rem 0;
+      margin-top: 2rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .site-footer a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      .header-inner { flex-direction: column; }
+      .site-title { border-right: none; border-bottom: 2px solid #333; }
+      .nav-links { flex-wrap: wrap; }
+      .hero-title { font-size: 2.5rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .rs-strip { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="dashboard.html" class="site-title">AFRICA MULTIPLE</a>
+      <ul class="nav-links">
+        <li class="has-sub">
+          <a href="listing.html">Persons</a>
+          <div class="sub-nav">
+            <a href="listing.html">Employees</a>
+            <a href="listing.html">Cluster members</a>
+            <a href="listing.html">BIGSAS members</a>
+            <a href="listing.html">Fellows</a>
+            <a href="listing.html">Guests</a>
+          </div>
+        </li>
+        <li class="has-sub">
+          <a href="projects.html">Projects</a>
+          <div class="sub-nav">
+            <a href="projects.html">Research sections</a>
+          </div>
+        </li>
+        <li><a href="#">Publications</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="#">Countries</a></li>
+        <li><a href="#">Locations</a></li>
+        <li class="has-sub">
+          <a href="institutions.html">Institutions</a>
+          <div class="sub-nav">
+            <a href="institutions.html">ACC</a>
+          </div>
+        </li>
+        <li><a href="#">Filtered Views</a></li>
+        <li><a href="#">Administration</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-content" x-data="{ loaded: true }">
+
+    <!-- HERO -->
+    <section class="hero halftone">
+      <h1 class="hero-title misregister">Cluster<br>Management</h1>
+      <p class="hero-sub">University of Bayreuth &mdash; Collaborative Research Centre</p>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-grid">
+      <div class="stat-card halftone">
+        <div class="stat-number">847</div>
+        <div class="stat-label">Persons</div>
+      </div>
+      <div class="stat-card halftone">
+        <div class="stat-number">23</div>
+        <div class="stat-label">Projects</div>
+      </div>
+      <div class="stat-card halftone">
+        <div class="stat-number">12</div>
+        <div class="stat-label">Events</div>
+      </div>
+      <div class="stat-card halftone">
+        <div class="stat-number">156</div>
+        <div class="stat-label">Institutions</div>
+      </div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section class="activity-section">
+      <div class="section-bar">Recent Activity</div>
+      <ul class="activity-list">
+        <li class="activity-item">
+          <span class="activity-dot"></span>
+          <span class="activity-time">14:23</span>
+          <span class="activity-text">Dr. Amina Osei updated profile &mdash; added new publication entry</span>
+        </li>
+        <li class="activity-item">
+          <span class="activity-dot"></span>
+          <span class="activity-time">13:48</span>
+          <span class="activity-text">Project "Mobility &amp; Belonging" report submitted</span>
+        </li>
+        <li class="activity-item">
+          <span class="activity-dot"></span>
+          <span class="activity-time">11:02</span>
+          <span class="activity-text">New fellow registered &mdash; Dr. Kofi Mensah from University of Ghana</span>
+        </li>
+        <li class="activity-item">
+          <span class="activity-dot--old activity-dot"></span>
+          <span class="activity-time">Yesterday</span>
+          <span class="activity-text">Event "Decolonial Futures Workshop" dates confirmed (Mar 15&ndash;17)</span>
+        </li>
+        <li class="activity-item">
+          <span class="activity-dot--old activity-dot"></span>
+          <span class="activity-time">Yesterday</span>
+          <span class="activity-text">Institution "IFRA-Nigeria" marked as ACC partner</span>
+        </li>
+        <li class="activity-item">
+          <span class="activity-dot--old activity-dot"></span>
+          <span class="activity-time">Feb 15</span>
+          <span class="activity-text">Research section "Arts" spokesperson updated to Prof. Diallo</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- RESEARCH SECTIONS -->
+    <section>
+      <div class="section-bar section-bar--black">Research Sections</div>
+      <div class="rs-strip">
+        <div class="rs-card">
+          <div class="rs-card-name">Learning</div>
+          <div class="rs-card-meta">4 Projects &middot; 38 Members</div>
+        </div>
+        <div class="rs-card">
+          <div class="rs-card-name">Arts</div>
+          <div class="rs-card-meta">5 Projects &middot; 42 Members</div>
+        </div>
+        <div class="rs-card">
+          <div class="rs-card-name">Affiliations</div>
+          <div class="rs-card-meta">3 Projects &middot; 29 Members</div>
+        </div>
+        <div class="rs-card">
+          <div class="rs-card-name">Moralities</div>
+          <div class="rs-card-meta">4 Projects &middot; 35 Members</div>
+        </div>
+        <div class="rs-card">
+          <div class="rs-card-name">Knowledge</div>
+          <div class="rs-card-meta">7 Projects &middot; 51 Members</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK LINKS -->
+    <section>
+      <div class="section-bar section-bar--pink">Quick Access</div>
+      <div class="quick-grid">
+        <a href="listing.html" class="quick-link"><span class="quick-link-arrow">&rarr;</span> All Persons</a>
+        <a href="projects.html" class="quick-link"><span class="quick-link-arrow">&rarr;</span> All Projects</a>
+        <a href="events.html" class="quick-link"><span class="quick-link-arrow">&rarr;</span> Upcoming Events</a>
+        <a href="institutions.html" class="quick-link"><span class="quick-link-arrow">&rarr;</span> Institutions &amp; ACC</a>
+        <a href="#" class="quick-link"><span class="quick-link-arrow">&rarr;</span> Filtered Views</a>
+        <a href="#" class="quick-link"><span class="quick-link-arrow">&rarr;</span> Administration</a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <span>&copy; 2026 Africa Multiple Cluster of Excellence</span>
+      <a href="../index.html">&larr; Back to all prototypes</a>
+    </footer>
+
+  </main>
+
+</body>
+</html>

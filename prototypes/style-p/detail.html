@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dr. Amina Osei | Africa Multiple — Risograph</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --pink: #ff0066;
+      --teal: #008080;
+      --black: #1a1a1a;
+      --paper: #f5f0e8;
+      --overprint: #4a0040;
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: var(--paper);
+      color: var(--black);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: var(--black);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+    }
+    .site-title {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--pink);
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      border-right: 2px solid #333;
+      display: flex;
+      align-items: center;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      list-style: none;
+      flex: 1;
+    }
+    .nav-links li { position: relative; }
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      transition: color 0.15s, background 0.15s;
+      height: 100%;
+    }
+    .nav-links a:hover { color: #fff; background: #333; }
+    .nav-links a.active { color: var(--pink); background: #2a2a2a; }
+    .nav-links .has-sub:hover .sub-nav { display: flex; }
+    .sub-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--black);
+      border: 2px solid #333;
+      flex-direction: column;
+      min-width: 180px;
+      z-index: 200;
+    }
+    .sub-nav a {
+      padding: 0.5rem 1rem;
+      font-size: 0.65rem;
+      border-bottom: 1px solid #333;
+    }
+    .sub-nav a:last-child { border-bottom: none; }
+
+    .halftone { position: relative; }
+    .halftone::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--black) 1px, transparent 1px);
+      background-size: 4px 4px;
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    .misregister {
+      text-shadow: 2px 1px 0 rgba(255,0,102,0.3), -1px -1px 0 rgba(0,128,128,0.3);
+    }
+
+    .ink-stamp {
+      border: 2px solid currentColor;
+      transform: rotate(-2deg);
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.6rem;
+      font-weight: 700;
+    }
+
+    @keyframes stampIn {
+      from { opacity: 0; transform: scale(1.3) rotate(-5deg); }
+      to { opacity: 1; transform: scale(1) rotate(var(--rot, -1deg)); }
+    }
+    @keyframes typeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes inkBleed {
+      from { filter: blur(2px); opacity: 0; }
+      to { filter: blur(0); opacity: 1; }
+    }
+
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { color: #999; }
+
+    /* PERSON HEADER */
+    .person-header {
+      border-bottom: 3px solid var(--black);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .person-name {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1;
+      transform: rotate(-0.5deg);
+      animation: inkBleed 0.6s ease-out;
+    }
+    .person-badges {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .badge-pink {
+      background: var(--pink);
+      color: #fff;
+      border-color: var(--pink);
+    }
+    .badge-teal {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal);
+    }
+
+    /* DETAIL CARDS */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .detail-card {
+      border: 3px solid var(--black);
+      padding: 1.25rem;
+      position: relative;
+      animation: stampIn 0.5s ease-out both;
+    }
+    .detail-card:nth-child(odd) { --rot: -0.8deg; transform: rotate(-0.8deg); }
+    .detail-card:nth-child(even) { --rot: 0.5deg; transform: rotate(0.5deg); }
+    .detail-card:nth-child(1) { animation-delay: 0.1s; }
+    .detail-card:nth-child(2) { animation-delay: 0.15s; }
+    .detail-card:nth-child(3) { animation-delay: 0.2s; }
+    .detail-card:nth-child(4) { animation-delay: 0.25s; }
+    .detail-card:nth-child(5) { animation-delay: 0.3s; }
+    .detail-card:nth-child(6) { animation-delay: 0.35s; }
+
+    .card-title {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid var(--teal);
+    }
+
+    .field-row {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.35rem 0;
+      font-size: 0.75rem;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+    }
+    .field-row:last-child { border-bottom: none; }
+    .field-label {
+      font-weight: 700;
+      min-width: 130px;
+      flex-shrink: 0;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-top: 0.05rem;
+    }
+    .field-value {
+      flex: 1;
+    }
+    .field-value a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .field-value a:hover { color: var(--pink); text-decoration: underline; }
+
+    .tag {
+      display: inline-block;
+      background: var(--teal);
+      color: #fff;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.6rem;
+      margin: 0.1rem;
+      letter-spacing: 0.05em;
+    }
+    .tag--pink { background: var(--pink); }
+
+    /* FULL-WIDTH CARD */
+    .detail-card--full {
+      grid-column: 1 / -1;
+    }
+
+    /* SECTION BAR */
+    .section-bar {
+      background: var(--black);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: inline-block;
+      transform: rotate(-0.5deg);
+    }
+    .section-bar--teal { background: var(--teal); }
+    .section-bar--pink { background: var(--pink); }
+
+    /* LIST TABLE INSIDE CARDS */
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.7rem;
+    }
+    .mini-table th {
+      text-align: left;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 0.5rem;
+      border-bottom: 2px solid var(--black);
+      font-weight: 700;
+    }
+    .mini-table td {
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+      vertical-align: top;
+    }
+    .mini-table a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .mini-table a:hover { color: var(--pink); }
+
+    .site-footer {
+      border-top: 3px solid var(--black);
+      padding: 1.5rem 0;
+      margin-top: 2rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .site-footer a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .header-inner { flex-direction: column; }
+      .site-title { border-right: none; border-bottom: 2px solid #333; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .person-name { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="dashboard.html" class="site-title">AFRICA MULTIPLE</a>
+      <ul class="nav-links">
+        <li class="has-sub">
+          <a href="listing.html" class="active">Persons</a>
+          <div class="sub-nav">
+            <a href="listing.html">Employees</a>
+            <a href="listing.html">Cluster members</a>
+            <a href="listing.html">BIGSAS members</a>
+            <a href="listing.html">Fellows</a>
+            <a href="listing.html">Guests</a>
+          </div>
+        </li>
+        <li class="has-sub">
+          <a href="projects.html">Projects</a>
+          <div class="sub-nav">
+            <a href="projects.html">Research sections</a>
+          </div>
+        </li>
+        <li><a href="#">Publications</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="#">Countries</a></li>
+        <li><a href="#">Locations</a></li>
+        <li class="has-sub">
+          <a href="institutions.html">Institutions</a>
+          <div class="sub-nav">
+            <a href="institutions.html">ACC</a>
+          </div>
+        </li>
+        <li><a href="#">Filtered Views</a></li>
+        <li><a href="#">Administration</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-content" x-data="{ activeTab: 'overview' }">
+
+    <div class="breadcrumb">
+      <a href="listing.html">Persons</a> <span>/</span> Dr. Amina Osei
+    </div>
+
+    <!-- PERSON HEADER -->
+    <div class="person-header halftone">
+      <h1 class="person-name misregister">Dr. Amina Osei</h1>
+      <div class="person-badges">
+        <span class="ink-stamp badge-pink">BIGSAS</span>
+        <span class="ink-stamp badge-teal">Cluster</span>
+        <span class="ink-stamp">Entitled to Vote</span>
+        <span class="ink-stamp">Signed Rights and Duties</span>
+      </div>
+    </div>
+
+    <!-- DETAIL CARDS -->
+    <div class="detail-grid">
+
+      <!-- CONTACT -->
+      <div class="detail-card halftone">
+        <div class="card-title">Contact Information</div>
+        <div class="field-row">
+          <span class="field-label">Email</span>
+          <span class="field-value">
+            <a href="#">amina.osei@uni-bayreuth.de</a> <em style="font-size:0.6rem;color:#999">(work)</em><br>
+            <a href="#">a.osei@gmail.com</a> <em style="font-size:0.6rem;color:#999">(personal)</em>
+          </span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Homepage</span>
+          <span class="field-value"><a href="#">uni-bayreuth.de/osei</a></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">ORCID</span>
+          <span class="field-value"><a href="#">0000-0002-1234-5678</a></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Phone</span>
+          <span class="field-value">
+            +49 921 55-1234 <em style="font-size:0.6rem;color:#999">(work)</em><br>
+            +233 24 987 6543 <em style="font-size:0.6rem;color:#999">(mobile)</em>
+          </span>
+        </div>
+      </div>
+
+      <!-- PERSONAL -->
+      <div class="detail-card halftone">
+        <div class="card-title">Personal Information</div>
+        <div class="field-row">
+          <span class="field-label">Gender</span>
+          <span class="field-value">Female</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Languages</span>
+          <span class="field-value">
+            <span class="tag">English</span>
+            <span class="tag">French</span>
+            <span class="tag">Twi</span>
+          </span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Geographic Fields</span>
+          <span class="field-value">
+            <span class="tag">West Africa</span>
+            <span class="tag">Central Africa</span>
+          </span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Thematic Fields</span>
+          <span class="field-value">
+            <span class="tag">Migration</span>
+            <span class="tag">Identity</span>
+            <span class="tag">Diaspora</span>
+          </span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Field of Study</span>
+          <span class="field-value">
+            <span class="tag">Social Anthropology</span>
+            <span class="tag">African Studies</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- MEMBERSHIP -->
+      <div class="detail-card halftone">
+        <div class="card-title">Membership</div>
+        <div class="field-row">
+          <span class="field-label">BIGSAS</span>
+          <span class="field-value" style="color:var(--pink);font-weight:700;">Yes</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Cluster</span>
+          <span class="field-value" style="color:var(--pink);font-weight:700;">Yes</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Entitled to vote</span>
+          <span class="field-value" style="color:var(--pink);font-weight:700;">Yes</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Signed Rights and Duties</span>
+          <span class="field-value" style="color:var(--pink);font-weight:700;">Yes</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Membership category</span>
+          <span class="field-value">Postdoctoral Researcher</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Membership Start</span>
+          <span class="field-value">2021-04-01</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Membership End</span>
+          <span class="field-value">&mdash;</span>
+        </div>
+      </div>
+
+      <!-- POSITION & LOCATION -->
+      <div class="detail-card halftone">
+        <div class="card-title">Position &amp; Location</div>
+        <div class="field-row">
+          <span class="field-label">Position</span>
+          <span class="field-value">Postdoctoral Researcher, Cluster of Excellence</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Location</span>
+          <span class="field-value"><a href="#">Bayreuth</a></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Remark</span>
+          <span class="field-value">Office: GW II, Room 1.07</span>
+        </div>
+      </div>
+
+      <!-- PROJECTS -->
+      <div class="detail-card detail-card--full halftone">
+        <div class="card-title">Projects</div>
+        <div class="section-bar section-bar--teal" style="margin-bottom:0.75rem;">Managed Projects</div>
+        <table class="mini-table">
+          <thead><tr><th>Project ID</th><th>Title</th><th>Role</th><th>Duration</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>A03</td>
+              <td><a href="projects.html">Mobility &amp; Belonging in African Cities</a></td>
+              <td>Project Director</td>
+              <td>2021 &ndash; 2025</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="section-bar" style="margin-top:1.25rem;margin-bottom:0.75rem;">Involved Projects</div>
+        <table class="mini-table">
+          <thead><tr><th>Project ID</th><th>Title</th><th>Position</th><th>Duration</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>B07</td>
+              <td><a href="projects.html">Diaspora Networks &amp; Knowledge Transfer</a></td>
+              <td>Researcher</td>
+              <td>2022 &ndash; 2026</td>
+            </tr>
+            <tr>
+              <td>C02</td>
+              <td><a href="projects.html">Digital Archives of Migration</a></td>
+              <td>Collaborator</td>
+              <td>2023 &ndash; 2025</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- INSTITUTIONS -->
+      <div class="detail-card halftone">
+        <div class="card-title">Institutions</div>
+        <table class="mini-table">
+          <thead><tr><th>Institution</th><th>Role</th><th>Department</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><a href="institutions.html">University of Bayreuth</a></td>
+              <td>Researcher</td>
+              <td>Institute of African Studies</td>
+            </tr>
+            <tr>
+              <td><a href="institutions.html">University of Ghana</a></td>
+              <td>Visiting Fellow</td>
+              <td>Dept. of Sociology</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RESEARCH SECTIONS -->
+      <div class="detail-card halftone">
+        <div class="card-title">Research Sections</div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem;">
+          <span class="ink-stamp badge-teal">Affiliations</span>
+          <span class="ink-stamp badge-teal">Knowledge</span>
+        </div>
+      </div>
+
+      <!-- FELLOWSHIPS -->
+      <div class="detail-card halftone">
+        <div class="card-title">Fellowships (as Fellow)</div>
+        <table class="mini-table">
+          <thead><tr><th>Start</th><th>End</th><th>Host</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>2022-06-01</td>
+              <td>2022-09-30</td>
+              <td><a href="#">Prof. Thabo Ndlovu</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PUBLICATIONS -->
+      <div class="detail-card halftone">
+        <div class="card-title">Publications</div>
+        <table class="mini-table">
+          <thead><tr><th>Year</th><th>Planned</th><th>Achieved</th><th>Costs</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>2024</td>
+              <td>2 journal articles</td>
+              <td>1 article in African Affairs</td>
+              <td>&euro; 1,200.00</td>
+            </tr>
+            <tr>
+              <td>2025</td>
+              <td>Edited volume chapter</td>
+              <td>&mdash;</td>
+              <td>&euro; 800.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EXPERT SEARCH -->
+      <div class="detail-card halftone">
+        <div class="card-title">Expert Search</div>
+        <div class="field-row">
+          <span class="field-label">Visibility</span>
+          <span class="field-value"><span class="ink-stamp badge-pink">Public</span></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Consent</span>
+          <span class="field-value" style="color:var(--pink);font-weight:700;">Granted</span>
+        </div>
+      </div>
+
+      <!-- ADDRESSES -->
+      <div class="detail-card halftone">
+        <div class="card-title">Addresses</div>
+        <div class="field-row">
+          <span class="field-label">Office</span>
+          <span class="field-value">
+            Universit&auml;tsstra&szlig;e 30<br>
+            95447 Bayreuth, Germany
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="site-footer">
+      <span>&copy; 2026 Africa Multiple Cluster of Excellence</span>
+      <a href="../index.html">&larr; Back to all prototypes</a>
+    </footer>
+
+  </main>
+
+</body>
+</html>

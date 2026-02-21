@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "ubt-green": { DEFAULT: "#0d9462", 50: "#edfaf3", 100: "#cceadc", 200: "#7abf9f", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+            "azure": { DEFAULT: "#008f9c", 50: "#edf8f9", 400: "#008f9c", 500: "#007683" },
+            "raspberry": { DEFAULT: "#bd62a0", 50: "#fdf2fa", 400: "#bd62a0", 500: "#a54988" },
+            "purple": { DEFAULT: "#787acd", 50: "#f0f0fb", 400: "#787acd", 500: "#5d64b5" },
+          },
+          fontFamily: { body: ['DM Sans', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    [x-cloak] { display: none !important; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: fadeSlideIn 0.4s ease-out both; }
+    @keyframes rowIn { from { opacity: 0; } to { opacity: 1; } }
+    .row-animate { animation: rowIn 0.3s ease-out both; }
+  </style>
+</head>
+<body class="bg-[#f8fafb] text-slate-800">
+  <div class="h-screen flex overflow-hidden" x-data="{ sidebarOpen: false, persons: false, projects: true, admin: false }">
+
+    <!-- Mobile sidebar overlay -->
+    <div x-show="sidebarOpen" x-cloak class="fixed inset-0 z-40 md:hidden">
+      <div class="fixed inset-0 bg-black/30" @click="sidebarOpen = false"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="hidden md:flex md:flex-col md:w-56 bg-slate-50 border-r border-slate-200 shrink-0">
+      <div class="h-14 flex items-center px-4 border-b border-slate-200 bg-white">
+        <a href="dashboard.html" class="flex items-center">
+          <span class="text-sm font-bold text-ubt-green tracking-tight">Africa Multiple</span>
+          <span class="ml-1 text-xs text-slate-400 font-medium">Cluster</span>
+        </a>
+      </div>
+      <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 text-[13px]">
+        <a href="#" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-500 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Advanced search
+        </a>
+        <div class="!mt-3 !mb-2 border-t border-slate-200"></div>
+        <a href="dashboard.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Dashboard
+        </a>
+        <div class="!mt-3 !mb-2 border-t border-slate-200"></div>
+        <button @click="persons = !persons" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-ubt-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Persons
+          </span>
+          <svg class="w-3.5 h-3.5 text-slate-400 transition-transform" :class="persons ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="persons" x-collapse x-cloak class="ml-5 space-y-0.5">
+          <a href="listing.html" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">All Persons</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Employees</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Cluster members</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">BIGSAS members</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Fellows</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Guests</a>
+        </div>
+        <button @click="projects = !projects" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md bg-azure-50 text-azure font-medium">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Projects
+          </span>
+          <svg class="w-3.5 h-3.5 text-azure/50 transition-transform" :class="projects ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="projects" x-collapse class="ml-5 space-y-0.5">
+          <a href="projects.html" class="block px-2.5 py-1.5 rounded-md text-azure bg-azure-50 font-medium border-l-2 border-azure">All Projects</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-azure-50 hover:text-azure transition-colors">Research sections</a>
+        </div>
+        <a href="events.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-raspberry" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Events
+        </a>
+        <a href="institutions.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Institutions
+        </a>
+      </nav>
+      <div class="border-t border-slate-200 px-3 py-3">
+        <a href="../index.html" class="text-[11px] text-slate-400 hover:text-slate-600 transition-colors">Back to all prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex flex-col flex-1 overflow-hidden">
+      <!-- Top bar -->
+      <header class="h-14 bg-white border-b border-slate-200 flex items-center px-6 shrink-0">
+        <button @click="sidebarOpen = true" class="md:hidden mr-4 text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="text-sm text-slate-500">
+          <a href="dashboard.html" class="hover:text-slate-700 transition-colors">Dashboard</a>
+          <span class="mx-1.5 text-slate-300">/</span>
+          <span class="font-medium text-slate-800">Projects</span>
+        </div>
+        <div class="flex-1"></div>
+        <div class="hidden sm:flex items-center bg-slate-50 rounded-lg px-3 py-1.5 text-sm text-slate-400 border border-slate-200 w-64">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search persons, projects...
+        </div>
+        <div class="ml-4 flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-ubt-green-100 flex items-center justify-center text-ubt-green text-xs font-semibold">TT</div>
+        </div>
+      </header>
+
+      <main class="flex-1 overflow-y-auto">
+        <div class="max-w-full mx-auto px-6 py-6">
+
+          <!-- Header row -->
+          <div class="flex items-center justify-between mb-4 animate-in">
+            <div class="flex items-center gap-3">
+              <h1 class="text-xl font-semibold text-slate-800">Projects</h1>
+              <span class="text-xs font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">23</span>
+              <a href="#" class="inline-flex items-center gap-1 px-2.5 py-1 text-[12px] font-medium text-white bg-azure rounded-md hover:bg-azure-500 transition-colors">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                New
+              </a>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="text-[12px] text-slate-500 hover:text-slate-700 px-2.5 py-1.5 border border-slate-200 rounded-md transition-colors">Export CSV</button>
+              <button class="text-[12px] text-slate-500 hover:text-slate-700 px-2.5 py-1.5 border border-slate-200 rounded-md transition-colors">PDF</button>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="bg-white rounded-lg border border-slate-200 overflow-hidden animate-in" style="animation-delay: 100ms">
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-slate-200 bg-slate-50/80">
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Project ID</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Title</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Directors</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Start</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">End</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Report Deadline</th>
+                    <th class="text-center px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Report Req.</th>
+                    <th class="text-center px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Report Sub.</th>
+                    <th class="text-right px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Requested</th>
+                    <th class="text-right px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Approved</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr class="hover:bg-azure-50/30 cursor-pointer transition-colors row-animate" style="animation-delay: 150ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">MOB-001</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="#" class="hover:text-azure transition-colors">Transnational Migration Patterns in West Africa</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Dr. Amina Osei</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">01.01.2023</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">31.12.2026</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">18.02.2026</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">&#10003;</span></td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;380,000</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;380,000</td>
+                  </tr>
+                  <tr class="hover:bg-azure-50/30 cursor-pointer transition-colors row-animate" style="animation-delay: 180ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">KNO-002</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="#" class="hover:text-azure transition-colors">Decolonizing Knowledge Systems</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Prof. Kwame Asante</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">01.06.2024</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">31.05.2027</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">01.06.2026</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;1,200,000</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;1,100,000</td>
+                  </tr>
+                  <tr class="hover:bg-azure-50/30 cursor-pointer transition-colors row-animate" style="animation-delay: 210ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">LRN-003</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="#" class="hover:text-azure transition-colors">Climate Adaptation &amp; Rural Livelihoods</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Dr. Samuel Mwangi</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">01.03.2022</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">28.02.2025</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">28.02.2025</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">&#10003;</span></td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">&#10003;</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;450,000</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;450,000</td>
+                  </tr>
+                  <tr class="hover:bg-azure-50/30 cursor-pointer transition-colors row-animate" style="animation-delay: 240ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">AES-004</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="#" class="hover:text-azure transition-colors">Visual Cultures of Resistance</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Prof. Chidinma Nwosu</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">01.09.2023</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">31.08.2026</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">31.08.2025</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;290,000</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;275,000</td>
+                  </tr>
+                  <tr class="hover:bg-azure-50/30 cursor-pointer transition-colors row-animate" style="animation-delay: 270ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">MOR-005</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="#" class="hover:text-azure transition-colors">Language &amp; Power in Francophone Africa</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Dr. Fatima Diallo</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">01.01.2024</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">31.12.2027</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-400">&mdash;</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;180,000</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;180,000</td>
+                  </tr>
+                  <tr class="hover:bg-azure-50/30 cursor-pointer transition-colors row-animate" style="animation-delay: 300ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">KNO-006</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="#" class="hover:text-azure transition-colors">Digital Heritage Archives</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Dr. Jean-Pierre Habimana</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">01.04.2025</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 font-mono">31.03.2028</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-400">&mdash;</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">&ndash;</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;890,000</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700 font-mono text-right">&euro;850,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50/50">
+              <span class="text-[12px] text-slate-500">Showing <span class="font-medium">1&ndash;6</span> of <span class="font-medium">23</span></span>
+              <div class="flex items-center gap-1">
+                <button class="px-2.5 py-1 text-[12px] text-slate-400 border border-slate-200 rounded bg-white cursor-not-allowed" disabled>Previous</button>
+                <button class="px-2.5 py-1 text-[12px] text-white bg-azure rounded font-medium">1</button>
+                <button class="px-2.5 py-1 text-[12px] text-slate-600 border border-slate-200 rounded bg-white hover:bg-slate-50">2</button>
+                <button class="px-2.5 py-1 text-[12px] text-slate-600 border border-slate-200 rounded bg-white hover:bg-slate-50">3</button>
+                <span class="px-1 text-slate-400">&hellip;</span>
+                <button class="px-2.5 py-1 text-[12px] text-slate-600 border border-slate-200 rounded bg-white hover:bg-slate-50">4</button>
+                <button class="px-2.5 py-1 text-[12px] text-slate-600 border border-slate-200 rounded bg-white hover:bg-slate-50">Next</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

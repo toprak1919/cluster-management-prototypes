@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institutions - AM Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 100: "#a5d2d5", 200: "#7bbcc1", 300: "#4ca6af", 400: "#008f9c", 500: "#007683", 600: "#005e6b", 700: "#004754", 800: "#00313d", 900: "#001d25" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 100: "#e3bfdd", 200: "#d6a1ca", 300: "#c982b5", 400: "#bd62a0", 500: "#a54988", 600: "#8c3271", 700: "#73195b", 800: "#590043", 900: "#390027" },
+          "purple": { 50: "#ede0f1", 100: "#d7c4e6", 400: "#787acd", 500: "#5d64b5", 700: "#293a85" },
+          "leaf-green": { 50: "#e5e6cb", 400: "#788a32" },
+          "yellow": { 50: "#ebe3ca", 400: "#af7532", 500: "#965e1a" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+    .member-bar { transition: width 0.3s ease; }
+  </style>
+</head>
+<body class="h-full bg-gray-100 text-gray-900 antialiased" x-data="institutionApp()">
+  <div class="flex h-full">
+
+    <!-- Mobile sidebar overlay -->
+    <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 bg-black/50 z-40 md:hidden" x-transition:enter="transition-opacity duration-200" x-transition:leave="transition-opacity duration-200"></div>
+
+    <!-- Sidebar -->
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed md:static md:translate-x-0 z-50 w-48 bg-gray-900 flex flex-col flex-shrink-0 h-screen overflow-y-auto transition-transform duration-200">
+      <div class="px-3 py-3 border-b border-gray-800 flex items-center justify-between">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-gray-400 font-semibold">AM Cluster</span>
+        <button @click="sidebarOpen = false" class="md:hidden text-gray-400 hover:text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <nav class="flex-1 py-2">
+        <a href="dashboard.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Dashboard
+          </span>
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search
+        </a>
+
+        <div class="px-3 pt-3 pb-1">
+          <span class="text-[11px] uppercase tracking-[0.2em] text-gray-500 font-medium">Records</span>
+        </div>
+        <a href="listing.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Persons
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">847</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Employees</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Cluster members</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">BIGSAS members</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Fellows</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Guests</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Similar names</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Compare with website</a>
+        </div>
+        <a href="projects.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Projects
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">23</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Research sections</a>
+        </div>
+        <a href="#" title="Coming soon" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            Publications
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">340</span>
+        </a>
+        <a href="events.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Events
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">12</span>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Countries
+          </span>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Locations
+          </span>
+        </a>
+        <a href="institutions.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-white bg-gray-800 border-l-2 border-ubt-green-400 transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            Institutions
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">156</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">ACC</a>
+        </div>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          Filtered Views
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+          Feedback
+        </a>
+
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[11px] uppercase tracking-[0.2em] text-gray-500 font-medium">Administration</span>
+        </div>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Emails
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Expert Sync
+        </a>
+      </nav>
+
+      <div class="px-3 py-2 border-t border-gray-800">
+        <a href="../index.html" class="text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">&larr; Back to prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+
+      <!-- Top Bar -->
+      <header class="bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-3 flex-shrink-0">
+        <button @click="sidebarOpen = true" class="md:hidden text-gray-500 hover:text-gray-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <!-- Search -->
+        <div class="flex-1 relative">
+          <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Search institutions..." class="w-full max-w-xs pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded bg-gray-50 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green" x-model="search">
+        </div>
+        <!-- Continent filter tabs -->
+        <div class="hidden md:flex items-center border border-gray-200 rounded overflow-hidden">
+          <template x-for="tab in continentTabs" :key="tab">
+            <button @click="filterContinent = tab" :class="filterContinent === tab ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'" class="px-2.5 py-1.5 text-[11px] font-medium border-r border-gray-200 last:border-r-0 transition-all duration-150" x-text="tab"></button>
+          </template>
+        </div>
+        <!-- Detail panel toggle -->
+        <button @click="detailPanel = !detailPanel" class="flex items-center gap-1 px-2 py-1.5 text-[11px] font-medium border border-gray-200 rounded transition-all duration-150" :class="detailPanel ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>
+          Detail
+        </button>
+        <!-- Export -->
+        <button class="flex items-center gap-1 px-2 py-1.5 text-[11px] font-medium text-gray-500 bg-white border border-gray-200 rounded hover:bg-gray-50 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Export
+        </button>
+        <!-- Record count -->
+        <span class="text-[11px] font-mono text-gray-400" x-text="filteredInstitutions.length + ' institutions'"></span>
+        <!-- User -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-500">Admin</span>
+          <div class="w-6 h-6 rounded-full bg-ubt-green text-white flex items-center justify-center text-[11px] font-medium">AD</div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="flex-1 overflow-hidden flex">
+
+        <!-- Table Area -->
+        <div class="flex-1 overflow-auto bg-white flex flex-col">
+          <!-- Spreadsheet Table -->
+          <div class="flex-1 overflow-auto">
+            <table class="w-full">
+              <thead class="sticky top-0 bg-gray-50 z-10">
+                <tr class="border-b border-gray-200">
+                  <th class="text-left text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150" @click="toggleSort('name')">
+                    Institution
+                    <span class="inline-block ml-0.5" x-show="sortKey==='name'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                  <th class="text-left text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150" @click="toggleSort('country')">
+                    Country
+                    <span class="inline-block ml-0.5" x-show="sortKey==='country'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                  <th class="text-left text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150" @click="toggleSort('city')">
+                    City
+                    <span class="inline-block ml-0.5" x-show="sortKey==='city'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                  <th class="text-left text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150" @click="toggleSort('continent')">
+                    Cont.
+                    <span class="inline-block ml-0.5" x-show="sortKey==='continent'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                  <th class="text-left text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150" @click="toggleSort('type')">
+                    Type
+                    <span class="inline-block ml-0.5" x-show="sortKey==='type'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                  <th class="text-right text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150 w-32" @click="toggleSort('members')">
+                    Members
+                    <span class="inline-block ml-0.5" x-show="sortKey==='members'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                  <th class="text-right text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150" @click="toggleSort('projects')">
+                    Proj.
+                    <span class="inline-block ml-0.5" x-show="sortKey==='projects'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                  <th class="text-right text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150" @click="toggleSort('since')">
+                    Since
+                    <span class="inline-block ml-0.5" x-show="sortKey==='since'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                  <th class="text-right text-[10px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-2 cursor-pointer hover:text-gray-700 transition-all duration-150" @click="toggleSort('lastActivity')">
+                    Last Active
+                    <span class="inline-block ml-0.5" x-show="sortKey==='lastActivity'" x-text="sortDir==='asc' ? '\u2191' : '\u2193'"></span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="(inst, idx) in sortedInstitutions" :key="inst.id">
+                  <tr class="border-b border-gray-50 cursor-pointer transition-all duration-150"
+                      :class="[idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50', selectedInstitution?.id === inst.id ? '!bg-ubt-green-50' : 'hover:bg-ubt-green-50']"
+                      @click="selectedInstitution = inst; detailPanel = true">
+                    <td class="text-[11px] font-medium text-gray-900 py-1 px-2 truncate max-w-[200px]" x-text="inst.name"></td>
+                    <td class="text-[11px] text-gray-600 py-1 px-2">
+                      <span x-text="inst.flag + ' ' + inst.country"></span>
+                    </td>
+                    <td class="text-[11px] text-gray-600 py-1 px-2" x-text="inst.city"></td>
+                    <td class="py-1 px-2">
+                      <span class="flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full flex-shrink-0" :class="inst.continentDot"></span>
+                        <span class="text-[11px] text-gray-500" x-text="inst.continent"></span>
+                      </span>
+                    </td>
+                    <td class="py-1 px-2">
+                      <span class="text-[10px] font-medium px-1.5 py-0.5 rounded" :class="inst.typeBadge" x-text="inst.typeShort"></span>
+                    </td>
+                    <td class="py-1 px-2">
+                      <div class="flex items-center gap-1.5 justify-end">
+                        <div class="w-16 h-2 bg-gray-100 rounded-full overflow-hidden flex-shrink-0">
+                          <div class="h-full rounded-full member-bar" :class="inst.continentDot.replace('rounded-full','')" :style="'width:' + (inst.members / maxMembers * 100) + '%'"></div>
+                        </div>
+                        <span class="text-[11px] font-mono text-gray-600 w-6 text-right" x-text="inst.members"></span>
+                      </div>
+                    </td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-2 text-right" x-text="inst.projects"></td>
+                    <td class="text-[11px] font-mono text-gray-500 py-1 px-2 text-right" x-text="inst.since"></td>
+                    <td class="text-[11px] font-mono text-gray-500 py-1 px-2 text-right" x-text="inst.lastActivity"></td>
+                  </tr>
+                </template>
+              </tbody>
+              <!-- Totals row -->
+              <tfoot class="sticky bottom-0 bg-gray-100 border-t-2 border-gray-300">
+                <tr>
+                  <td class="text-[11px] font-bold text-gray-700 py-1.5 px-2" x-text="'Total: ' + filteredInstitutions.length + ' institutions'"></td>
+                  <td class="py-1.5 px-2" colspan="4"></td>
+                  <td class="text-right py-1.5 px-2">
+                    <span class="text-[11px] font-mono font-bold text-gray-700" x-text="filteredInstitutions.reduce((s,i) => s + i.members, 0)"></span>
+                  </td>
+                  <td class="text-right py-1.5 px-2">
+                    <span class="text-[11px] font-mono font-bold text-gray-700" x-text="filteredInstitutions.reduce((s,i) => s + i.projects, 0)"></span>
+                  </td>
+                  <td class="py-1.5 px-2" colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <!-- Bottom Summary Bar -->
+          <div class="bg-white border-t border-gray-200 px-4 py-1.5 flex items-center text-[11px] divide-x divide-gray-200 flex-shrink-0">
+            <span class="pr-3 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-ubt-green"></span> Africa: <span class="font-mono font-bold" x-text="institutions.filter(i => i.continent==='Africa').length"></span></span>
+            <span class="px-3 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Europe: <span class="font-mono font-bold" x-text="institutions.filter(i => i.continent==='Europe').length"></span></span>
+            <span class="px-3 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Americas: <span class="font-mono font-bold" x-text="institutions.filter(i => i.continent==='Americas').length"></span></span>
+            <span class="px-3 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> Asia: <span class="font-mono font-bold" x-text="institutions.filter(i => i.continent==='Asia').length"></span></span>
+            <span class="pl-3 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-raspberry-400"></span> Oceania: <span class="font-mono font-bold" x-text="institutions.filter(i => i.continent==='Oceania').length"></span></span>
+          </div>
+        </div>
+
+        <!-- Right Detail Panel (toggleable) -->
+        <div x-show="detailPanel && selectedInstitution" x-cloak
+             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="translate-x-4 opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="translate-x-4 opacity-0"
+             class="w-[30%] border-l border-gray-200 bg-white overflow-y-auto flex-shrink-0">
+          <template x-if="selectedInstitution">
+            <div class="p-4">
+              <!-- Header -->
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <h2 class="text-sm font-bold text-gray-900" x-text="selectedInstitution.name"></h2>
+                  <div class="text-[11px] text-gray-500 mt-0.5" x-text="selectedInstitution.city + ', ' + selectedInstitution.country"></div>
+                </div>
+                <button @click="detailPanel = false" class="text-gray-400 hover:text-gray-600 flex-shrink-0">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+              </div>
+
+              <!-- Quick Stats -->
+              <div class="grid grid-cols-2 gap-2 mb-4">
+                <div class="bg-gray-50 rounded p-2 text-center">
+                  <div class="text-lg font-mono font-bold text-gray-900" x-text="selectedInstitution.members"></div>
+                  <div class="text-[10px] text-gray-400 uppercase tracking-wider">Members</div>
+                </div>
+                <div class="bg-gray-50 rounded p-2 text-center">
+                  <div class="text-lg font-mono font-bold text-gray-900" x-text="selectedInstitution.projects"></div>
+                  <div class="text-[10px] text-gray-400 uppercase tracking-wider">Projects</div>
+                </div>
+              </div>
+
+              <!-- Meta -->
+              <div class="space-y-2 mb-4 text-[11px]">
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-400">Type</span>
+                  <span class="px-1.5 py-0.5 rounded font-medium" :class="selectedInstitution.typeBadge" x-text="selectedInstitution.type"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-400">Continent</span>
+                  <span class="flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full" :class="selectedInstitution.continentDot"></span>
+                    <span class="text-gray-700" x-text="selectedInstitution.continent"></span>
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-400">Active Since</span>
+                  <span class="font-mono text-gray-700" x-text="selectedInstitution.since"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-400">Last Activity</span>
+                  <span class="font-mono text-gray-700" x-text="selectedInstitution.lastActivity"></span>
+                </div>
+              </div>
+
+              <!-- Key Researchers -->
+              <div class="mb-4">
+                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium block mb-1.5">Key Researchers</span>
+                <div class="space-y-1.5">
+                  <template x-for="person in selectedInstitution.researchers" :key="person.name">
+                    <div class="flex items-center gap-2">
+                      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-[9px] font-medium text-gray-600" x-text="person.initials"></span>
+                      <div class="min-w-0">
+                        <span class="text-[11px] text-gray-700 font-medium block truncate" x-text="person.name"></span>
+                        <span class="text-[10px] text-gray-400" x-text="person.role"></span>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Active Projects -->
+              <div class="mb-4">
+                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium block mb-1.5">Active Projects</span>
+                <div class="space-y-1">
+                  <template x-for="proj in selectedInstitution.activeProjects" :key="proj">
+                    <div class="text-[11px] text-gray-700 px-2 py-1 bg-gray-50 rounded truncate" x-text="proj"></div>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Partner Institutions -->
+              <div>
+                <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium block mb-1.5">Partner Institutions</span>
+                <div class="space-y-1">
+                  <template x-for="partner in selectedInstitution.partners" :key="partner">
+                    <div class="text-[11px] text-gray-600 px-2 py-1 bg-gray-50 rounded truncate cursor-pointer hover:bg-ubt-green-50 hover:text-ubt-green transition-all duration-150" x-text="partner"></div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <!-- Empty state -->
+          <template x-if="!selectedInstitution">
+            <div class="flex items-center justify-center h-full">
+              <div class="text-center">
+                <svg class="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <span class="text-[11px] text-gray-400">Select an institution</span>
+              </div>
+            </div>
+          </template>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+  function institutionApp() {
+    return {
+      sidebarOpen: false,
+      search: '',
+      filterContinent: 'All',
+      continentTabs: ['All', 'Africa', 'Europe', 'Americas', 'Asia', 'Oceania'],
+      detailPanel: false,
+      selectedInstitution: null,
+      sortKey: 'name',
+      sortDir: 'asc',
+      institutions: [
+        { id: 1, name: 'University of Ghana', flag: '\ud83c\uddec\ud83c\udded', country: 'Ghana', city: 'Accra', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 24, projects: 5, since: 2018, lastActivity: '2026-02-15', researchers: [{ name: 'Dr. Amina Osei', initials: 'AO', role: 'Senior Researcher' }, { name: 'Prof. Kofi Mensah', initials: 'KM', role: 'Department Head' }], activeProjects: ['Transnational Migration Patterns', 'Urban Informality & Governance'], partners: ['Univ. of Bayreuth', 'UCAD', 'Univ. of Cape Town'] },
+        { id: 2, name: 'University of Cape Town', flag: '\ud83c\uddff\ud83c\udde6', country: 'South Africa', city: 'Cape Town', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 18, projects: 4, since: 2018, lastActivity: '2026-02-10', researchers: [{ name: 'Prof. Kwame Asante', initials: 'KA', role: 'PI' }, { name: 'Dr. Thandi Ndlovu', initials: 'TN', role: 'Postdoc' }], activeProjects: ['Decolonizing Knowledge Systems', 'Visual Cultures of Resistance'], partners: ['Univ. of Ghana', 'Univ. of Bayreuth', 'Wits University'] },
+        { id: 3, name: 'UCAD (Cheikh Anta Diop)', flag: '\ud83c\uddf8\ud83c\uddf3', country: 'Senegal', city: 'Dakar', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 15, projects: 3, since: 2018, lastActivity: '2026-02-08', researchers: [{ name: 'Dr. Fatima Diallo', initials: 'FD', role: 'Researcher' }, { name: 'Prof. Ousmane Sow', initials: 'OS', role: 'Associate' }], activeProjects: ['Digital Heritage Archive', 'Religious Pluralism in the Sahel'], partners: ['Univ. of Ghana', 'Gaston Berger Univ.', 'Univ. of Bayreuth'] },
+        { id: 4, name: 'Kenyatta University', flag: '\ud83c\uddf0\ud83c\uddea', country: 'Kenya', city: 'Nairobi', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 12, projects: 3, since: 2019, lastActivity: '2026-01-28', researchers: [{ name: 'Dr. Samuel Mwangi', initials: 'SM', role: 'PI' }, { name: 'Dr. Mary Wanjiku', initials: 'MW', role: 'Postdoc' }], activeProjects: ['Climate Adaptation & Rural Livelihoods', 'Ocean Economies of East Africa'], partners: ['Univ. of Nairobi', 'Univ. of Bayreuth'] },
+        { id: 5, name: 'University of Lagos', flag: '\ud83c\uddf3\ud83c\uddec', country: 'Nigeria', city: 'Lagos', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 14, projects: 3, since: 2019, lastActivity: '2026-01-20', researchers: [{ name: 'Prof. Chidinma Nwosu', initials: 'CN', role: 'PI' }, { name: 'Dr. Emeka Obi', initials: 'EO', role: 'Research Fellow' }], activeProjects: ['Visual Cultures of Resistance', 'Pan-African Curriculum Reform'], partners: ['Ahmadu Bello Univ.', 'Univ. of Cape Town'] },
+        { id: 6, name: 'University of Rwanda', flag: '\ud83c\uddf7\ud83c\uddfc', country: 'Rwanda', city: 'Kigali', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 8, projects: 2, since: 2020, lastActivity: '2026-01-15', researchers: [{ name: 'Dr. Jean-Pierre Habimana', initials: 'JPH', role: 'PI' }], activeProjects: ['Conflict Memory in Great Lakes'], partners: ['Univ. of Bayreuth', 'Univ. of Nairobi'] },
+        { id: 7, name: 'USTTB (Bamako)', flag: '\ud83c\uddf2\ud83c\uddf1', country: 'Mali', city: 'Bamako', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 9, projects: 2, since: 2020, lastActivity: '2026-01-10', researchers: [{ name: 'Prof. Ibrahim Tour\u00e9', initials: 'IT', role: 'Senior Researcher' }], activeProjects: ['Religious Pluralism in the Sahel'], partners: ['UCAD', 'Univ. of Bayreuth'] },
+        { id: 8, name: 'Ahmadu Bello University', flag: '\ud83c\uddf3\ud83c\uddec', country: 'Nigeria', city: 'Zaria', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 11, projects: 2, since: 2019, lastActivity: '2026-01-05', researchers: [{ name: 'Dr. Aisha Mohammed', initials: 'AM', role: 'PI' }, { name: 'Prof. Yakubu Danladi', initials: 'YD', role: 'Collaborator' }], activeProjects: ['Gender & Market Systems'], partners: ['Univ. of Lagos', 'Univ. of Bayreuth'] },
+        { id: 9, name: 'University of Bayreuth', flag: '\ud83c\udde9\ud83c\uddea', country: 'Germany', city: 'Bayreuth', continent: 'Europe', continentDot: 'bg-blue-500', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 45, projects: 10, since: 2018, lastActivity: '2026-02-18', researchers: [{ name: 'Prof. Raji Abubakar', initials: 'RA', role: 'Cluster Director' }, { name: 'Dr. Anna M\u00fcller', initials: 'AM', role: 'Coordinator' }], activeProjects: ['Transnational Migration Patterns', 'Decolonizing Knowledge Systems', 'Climate Adaptation'], partners: ['Univ. of Ghana', 'Univ. of Cape Town', 'UCAD', 'Univ. of Lagos'] },
+        { id: 10, name: 'SOAS University of London', flag: '\ud83c\uddec\ud83c\udde7', country: 'United Kingdom', city: 'London', continent: 'Europe', continentDot: 'bg-blue-500', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 6, projects: 2, since: 2020, lastActivity: '2025-12-18', researchers: [{ name: 'Prof. Sarah Jenkins', initials: 'SJ', role: 'Collaborator' }], activeProjects: ['Decolonizing Knowledge Systems'], partners: ['Univ. of Bayreuth', 'Univ. of Cape Town'] },
+        { id: 11, name: 'Rhodes University', flag: '\ud83c\uddff\ud83c\udde6', country: 'South Africa', city: 'Makhanda', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 7, projects: 1, since: 2021, lastActivity: '2025-11-20', researchers: [{ name: 'Dr. Nomsa Dlamini', initials: 'ND', role: 'Research Fellow' }], activeProjects: ['Mapping Linguistic Diversity'], partners: ['Univ. of Cape Town', 'Wits University'] },
+        { id: 12, name: 'African Leadership University', flag: '\ud83c\uddf7\ud83c\uddfc', country: 'Rwanda', city: 'Kigali', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'Network', typeShort: 'Net.', typeBadge: 'bg-green-50 text-green-700', members: 5, projects: 1, since: 2022, lastActivity: '2025-10-15', researchers: [{ name: 'Dr. Patrick Mugisha', initials: 'PM', role: 'Program Lead' }], activeProjects: ['Pan-African Curriculum Reform'], partners: ['Univ. of Rwanda', 'Kenyatta University'] },
+        { id: 13, name: 'Wits University', flag: '\ud83c\uddff\ud83c\udde6', country: 'South Africa', city: 'Johannesburg', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 7, projects: 2, since: 2019, lastActivity: '2026-02-01', researchers: [{ name: 'Prof. Thabo Molefe', initials: 'TM', role: 'Senior Researcher' }, { name: 'Dr. Lebo Khumalo', initials: 'LK', role: 'Postdoc' }], activeProjects: ['Visual Cultures of Resistance', 'Mapping Linguistic Diversity'], partners: ['Univ. of Cape Town', 'Rhodes University', 'Univ. of Bayreuth'] },
+        { id: 14, name: 'University of Nairobi', flag: '\ud83c\uddf0\ud83c\uddea', country: 'Kenya', city: 'Nairobi', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 10, projects: 3, since: 2018, lastActivity: '2026-02-12', researchers: [{ name: 'Dr. Grace Achieng', initials: 'GA', role: 'PI' }, { name: 'Prof. James Ochieng', initials: 'JO', role: 'Department Head' }], activeProjects: ['Urban Informality & Governance', 'Climate Adaptation & Rural Livelihoods'], partners: ['Kenyatta University', 'Univ. of Bayreuth', 'Univ. of Ghana'] },
+        { id: 15, name: 'Gaston Berger University', flag: '\ud83c\uddf8\ud83c\uddf3', country: 'Senegal', city: 'Saint-Louis', continent: 'Africa', continentDot: 'bg-ubt-green', type: 'University', typeShort: 'Univ.', typeBadge: 'bg-blue-50 text-blue-700', members: 5, projects: 1, since: 2021, lastActivity: '2025-12-05', researchers: [{ name: 'Dr. Abdoulaye Ba', initials: 'AB', role: 'Researcher' }], activeProjects: ['Digital Heritage Archive'], partners: ['UCAD', 'Univ. of Bayreuth'] },
+      ],
+      get maxMembers() {
+        return Math.max(...this.institutions.map(i => i.members));
+      },
+      get filteredInstitutions() {
+        return this.institutions.filter(i => {
+          if (this.search && !i.name.toLowerCase().includes(this.search.toLowerCase()) && !i.country.toLowerCase().includes(this.search.toLowerCase()) && !i.city.toLowerCase().includes(this.search.toLowerCase())) return false;
+          if (this.filterContinent !== 'All' && i.continent !== this.filterContinent) return false;
+          return true;
+        });
+      },
+      get sortedInstitutions() {
+        const sorted = [...this.filteredInstitutions];
+        sorted.sort((a, b) => {
+          let va = a[this.sortKey];
+          let vb = b[this.sortKey];
+          if (typeof va === 'string') va = va.toLowerCase();
+          if (typeof vb === 'string') vb = vb.toLowerCase();
+          if (va < vb) return this.sortDir === 'asc' ? -1 : 1;
+          if (va > vb) return this.sortDir === 'asc' ? 1 : -1;
+          return 0;
+        });
+        return sorted;
+      },
+      toggleSort(key) {
+        if (this.sortKey === key) {
+          this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          this.sortKey = key;
+          this.sortDir = 'asc';
+        }
+      },
+    }
+  }
+  </script>
+</body>
+</html>

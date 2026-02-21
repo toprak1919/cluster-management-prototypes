@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events - Africa Multiple Research Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          charcoal: '#1a1a2e',
+          coral: { DEFAULT: '#e94560', 50: '#fef2f4', 100: '#fde6ea', 200: '#f9c0cb', 400: '#e94560', 500: '#d6334e', 600: '#b91d3a' },
+          'ubt-green': { DEFAULT: '#0d9462', 50: '#cceadc', 400: '#0d9462' },
+          azure: { DEFAULT: '#008f9c', 50: '#cee8e9', 400: '#008f9c' },
+          raspberry: { DEFAULT: '#bd62a0', 50: '#f0ddef', 400: '#bd62a0' },
+          purple: { DEFAULT: '#787acd', 50: '#ede0f1', 400: '#787acd' },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    @keyframes heroFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-fade { animation: heroFadeIn 0.8s ease-out forwards; }
+    .hero-fade-d1 { animation: heroFadeIn 0.8s ease-out 0.1s forwards; opacity: 0; }
+    .hero-fade-d2 { animation: heroFadeIn 0.8s ease-out 0.2s forwards; opacity: 0; }
+    .hero-fade-d3 { animation: heroFadeIn 0.8s ease-out 0.3s forwards; opacity: 0; }
+    .hero-fade-d4 { animation: heroFadeIn 0.8s ease-out 0.4s forwards; opacity: 0; }
+    .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    @keyframes nodeReveal { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .countdown-pulse { animation: pulse 2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-white text-gray-900 min-h-screen" x-data="{ scrolled: false, mobileOpen: false }" @scroll.window="scrolled = (window.scrollY > 50)">
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+       :class="scrolled ? 'bg-white shadow-md' : 'bg-transparent'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="dashboard.html" class="flex items-center gap-2">
+          <span class="text-lg font-bold tracking-tight transition-colors duration-300"
+                :class="scrolled ? 'text-charcoal' : 'text-white'">AFRICA MULTIPLE</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="dashboard.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Home</a>
+          <a href="listing.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Persons</a>
+          <a href="projects.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Projects</a>
+          <a href="events.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-coral' : 'text-white bg-white/10'">Events</a>
+          <a href="institutions.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Institutions</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../index.html" class="text-xs transition-colors duration-300 hidden lg:inline"
+             :class="scrolled ? 'text-gray-400 hover:text-gray-600' : 'text-gray-400 hover:text-white'">All Prototypes</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-2 rounded-lg transition-colors duration-300 cursor-pointer"
+                  :class="scrolled ? 'text-gray-600 hover:bg-gray-100' : 'text-white hover:bg-white/10'">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden pb-3 space-y-1" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Home</a>
+        <a href="listing.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Persons</a>
+        <a href="projects.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Projects</a>
+        <a href="events.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-coral' : 'text-white bg-white/10'">Events</a>
+        <a href="institutions.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero: Next Event with Countdown -->
+  <section class="bg-charcoal relative overflow-hidden"
+           x-data="{
+             targetDate: new Date('2026-03-15T09:00:00'),
+             days: 0, hours: 0, minutes: 0, seconds: 0,
+             init() {
+               this.update();
+               setInterval(() => this.update(), 1000);
+             },
+             update() {
+               const now = new Date();
+               const diff = this.targetDate - now;
+               if (diff > 0) {
+                 this.days = Math.floor(diff / (1000*60*60*24));
+                 this.hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+                 this.minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+                 this.seconds = Math.floor((diff % (1000*60)) / 1000);
+               }
+             }
+           }">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-1/3 left-1/3 w-96 h-96 bg-coral rounded-full filter blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 text-center">
+      <p class="text-sm font-semibold text-coral uppercase tracking-wider mb-4 hero-fade">Next Event</p>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-light text-white tracking-tight hero-fade-d1">
+        African Knowledge Systems<br>Symposium
+      </h1>
+      <p class="mt-6 text-lg text-gray-400 hero-fade-d2">March 15-17, 2026 &mdash; University of Bayreuth, Germany</p>
+
+      <!-- Countdown -->
+      <div class="mt-12 grid grid-cols-4 gap-4 sm:gap-8 max-w-xl mx-auto hero-fade-d3">
+        <div>
+          <div class="text-4xl sm:text-5xl font-light text-white tabular-nums" x-text="String(days).padStart(2,'0')">00</div>
+          <div class="mt-2 text-xs text-gray-500 uppercase tracking-wider">Days</div>
+        </div>
+        <div>
+          <div class="text-4xl sm:text-5xl font-light text-white tabular-nums" x-text="String(hours).padStart(2,'0')">00</div>
+          <div class="mt-2 text-xs text-gray-500 uppercase tracking-wider">Hours</div>
+        </div>
+        <div>
+          <div class="text-4xl sm:text-5xl font-light text-white tabular-nums" x-text="String(minutes).padStart(2,'0')">00</div>
+          <div class="mt-2 text-xs text-gray-500 uppercase tracking-wider">Minutes</div>
+        </div>
+        <div>
+          <div class="text-4xl sm:text-5xl font-light text-coral tabular-nums countdown-pulse" x-text="String(seconds).padStart(2,'0')">00</div>
+          <div class="mt-2 text-xs text-gray-500 uppercase tracking-wider">Seconds</div>
+        </div>
+      </div>
+
+      <div class="mt-12 flex flex-wrap justify-center gap-4 hero-fade-d4">
+        <span class="inline-flex items-center gap-2 px-6 py-3 bg-coral text-white font-medium rounded-full">
+          Register Now
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </span>
+        <span class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 text-gray-300 font-medium rounded-full border border-white/20">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Add to Calendar
+        </span>
+      </div>
+
+      <!-- Event Details -->
+      <div class="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto hero-fade-d4">
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+          <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Type of event</p>
+          <p class="text-sm text-white font-medium">Conference</p>
+        </div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+          <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Applying body</p>
+          <p class="text-sm text-white font-medium">Africa Multiple Cluster</p>
+        </div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+          <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Online / Hybrid</p>
+          <p class="text-sm text-white font-medium">Hybrid</p>
+        </div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+          <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Hosts</p>
+          <p class="text-sm text-white font-medium">Prof. Asante, Dr. Osei</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Events (White) -->
+  <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="scroll-reveal mb-12" :class="shown && 'visible'">
+        <p class="text-sm font-semibold text-coral uppercase tracking-wider mb-3">Coming Up</p>
+        <h2 class="text-3xl sm:text-4xl font-semibold text-charcoal">Upcoming Events</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Event 1 -->
+        <div class="scroll-reveal card-hover bg-white rounded-2xl border border-gray-100 overflow-hidden"
+             :class="shown && 'visible'" :style="shown && 'transition-delay: 0.1s'">
+          <div class="bg-charcoal p-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 text-xs font-medium bg-ubt-green/20 text-ubt-green rounded-full">Workshop</span>
+              <span class="text-xs text-gray-500">Apr 5, 2026</span>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Digital Methods for Cultural Heritage</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-2 text-xs text-gray-400 mb-4">
+              <div><span class="text-gray-500 font-medium">Applying body:</span> BIGSAS</div>
+              <div><span class="text-gray-500 font-medium">Online:</span> No &middot; <span class="text-gray-500 font-medium">Hybrid:</span> No</div>
+              <div><span class="text-gray-500 font-medium">Hosts:</span> Dr. Osei, Dr. Toure</div>
+              <div><span class="text-gray-500 font-medium">Guests:</span> 12</div>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              Accra, Ghana
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 2 -->
+        <div class="scroll-reveal card-hover bg-white rounded-2xl border border-gray-100 overflow-hidden"
+             :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="bg-charcoal p-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 text-xs font-medium bg-purple/20 text-purple rounded-full">Lecture</span>
+              <span class="text-xs text-gray-500">Apr 22, 2026</span>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Decolonizing Research Methodologies</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-2 text-xs text-gray-400 mb-4">
+              <div><span class="text-gray-500 font-medium">Applying body:</span> Africa Multiple Cluster</div>
+              <div><span class="text-gray-500 font-medium">Online:</span> Yes &middot; <span class="text-gray-500 font-medium">Hybrid:</span> No</div>
+              <div><span class="text-gray-500 font-medium">Hosts:</span> Prof. Asante</div>
+              <div><span class="text-gray-500 font-medium">Guests:</span> 5</div>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              Online (Zoom)
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 3 -->
+        <div class="scroll-reveal card-hover bg-white rounded-2xl border border-gray-100 overflow-hidden"
+             :class="shown && 'visible'" :style="shown && 'transition-delay: 0.3s'">
+          <div class="bg-charcoal p-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 text-xs font-medium bg-raspberry/20 text-raspberry rounded-full">Seminar</span>
+              <span class="text-xs text-gray-500">May 10, 2026</span>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Urban Africa: Contested Spaces</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-2 text-xs text-gray-400 mb-4">
+              <div><span class="text-gray-500 font-medium">Applying body:</span> Africa Multiple Cluster</div>
+              <div><span class="text-gray-500 font-medium">Online:</span> No &middot; <span class="text-gray-500 font-medium">Hybrid:</span> Yes</div>
+              <div><span class="text-gray-500 font-medium">Hosts:</span> Dr. Diallo, Dr. Kamau</div>
+              <div><span class="text-gray-500 font-medium">Guests:</span> 8</div>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              Nairobi, Kenya
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 4 -->
+        <div class="scroll-reveal card-hover bg-white rounded-2xl border border-gray-100 overflow-hidden"
+             :class="shown && 'visible'" :style="shown && 'transition-delay: 0.4s'">
+          <div class="bg-charcoal p-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 text-xs font-medium bg-azure/20 text-azure rounded-full">Conference</span>
+              <span class="text-xs text-gray-500">Jun 20-22, 2026</span>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Annual Cluster Conference 2026</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-2 text-xs text-gray-400 mb-4">
+              <div><span class="text-gray-500 font-medium">Applying body:</span> Africa Multiple Cluster</div>
+              <div><span class="text-gray-500 font-medium">Online:</span> No &middot; <span class="text-gray-500 font-medium">Hybrid:</span> Yes</div>
+              <div><span class="text-gray-500 font-medium">Hosts:</span> Prof. Asante, Prof. Ndlovu</div>
+              <div><span class="text-gray-500 font-medium">Guests:</span> 24</div>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              University of Bayreuth
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 5 -->
+        <div class="scroll-reveal card-hover bg-white rounded-2xl border border-gray-100 overflow-hidden"
+             :class="shown && 'visible'" :style="shown && 'transition-delay: 0.5s'">
+          <div class="bg-charcoal p-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 text-xs font-medium bg-coral/20 text-coral rounded-full">Symposium</span>
+              <span class="text-xs text-gray-500">Jul 8, 2026</span>
+            </div>
+            <h3 class="text-lg font-semibold text-white">African Futures: Art &amp; Science</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-2 text-xs text-gray-400 mb-4">
+              <div><span class="text-gray-500 font-medium">Applying body:</span> BIGSAS</div>
+              <div><span class="text-gray-500 font-medium">Online:</span> No &middot; <span class="text-gray-500 font-medium">Hybrid:</span> No</div>
+              <div><span class="text-gray-500 font-medium">Hosts:</span> Prof. Adichie-Okafor, Prof. Balogun</div>
+              <div><span class="text-gray-500 font-medium">Guests:</span> 6</div>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              Lagos, Nigeria
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 6 -->
+        <div class="scroll-reveal card-hover bg-white rounded-2xl border border-gray-100 overflow-hidden"
+             :class="shown && 'visible'" :style="shown && 'transition-delay: 0.6s'">
+          <div class="bg-charcoal p-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2 py-0.5 text-xs font-medium bg-ubt-green/20 text-ubt-green rounded-full">Workshop</span>
+              <span class="text-xs text-gray-500">Aug 25-27, 2026</span>
+            </div>
+            <h3 class="text-lg font-semibold text-white">Early Career Researchers Retreat</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-2 text-xs text-gray-400 mb-4">
+              <div><span class="text-gray-500 font-medium">Applying body:</span> Africa Multiple Cluster</div>
+              <div><span class="text-gray-500 font-medium">Online:</span> No &middot; <span class="text-gray-500 font-medium">Hybrid:</span> No</div>
+              <div><span class="text-gray-500 font-medium">Hosts:</span> Dr. Mohamed, Dr. Mensah</div>
+              <div><span class="text-gray-500 font-medium">Guests:</span> 3</div>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              University of Bayreuth
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Past Events Archive (Slate) -->
+  <section class="py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="scroll-reveal mb-12" :class="shown && 'visible'">
+        <p class="text-sm font-semibold text-coral uppercase tracking-wider mb-3">Archive</p>
+        <h2 class="text-3xl sm:text-4xl font-semibold text-charcoal">Past Events</h2>
+      </div>
+
+      <!-- Timeline -->
+      <div class="relative">
+        <!-- Horizontal line -->
+        <div class="hidden md:block absolute top-6 left-0 right-0 h-px bg-gray-300"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <!-- Past 1 -->
+          <div class="scroll-reveal relative" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.1s'">
+            <div class="hidden md:block absolute top-4 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-coral border-4 border-slate-50"
+                 style="animation: nodeReveal 0.5s ease-out 0.3s forwards; opacity: 0; transform: scale(0);"></div>
+            <div class="md:pt-12 bg-white rounded-xl p-5 shadow-sm">
+              <span class="text-xs text-coral font-medium">Nov 2025</span>
+              <h4 class="mt-2 font-semibold text-charcoal">Fieldwork Ethics Workshop</h4>
+              <p class="mt-1 text-xs text-gray-400">University of Bayreuth</p>
+              <p class="mt-2 text-sm text-gray-500">Workshop on ethical considerations for ethnographic research in community settings.</p>
+              <div class="mt-3 flex items-center gap-2 text-xs text-gray-400">
+                <span>Hosts: 2</span>
+                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                <span>Guests: 15</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past 2 -->
+          <div class="scroll-reveal relative" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+            <div class="hidden md:block absolute top-4 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-purple border-4 border-slate-50"
+                 style="animation: nodeReveal 0.5s ease-out 0.5s forwards; opacity: 0; transform: scale(0);"></div>
+            <div class="md:pt-12 bg-white rounded-xl p-5 shadow-sm">
+              <span class="text-xs text-purple font-medium">Sep 2025</span>
+              <h4 class="mt-2 font-semibold text-charcoal">ASA Annual Meeting Panel</h4>
+              <p class="mt-1 text-xs text-gray-400">Chicago, USA</p>
+              <p class="mt-2 text-sm text-gray-500">Panel on decolonizing methods in African Studies with 5 cluster researchers.</p>
+              <div class="mt-3 flex items-center gap-2 text-xs text-gray-400">
+                <span>Hosts: 5</span>
+                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                <span>Guests: 8</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past 3 -->
+          <div class="scroll-reveal relative" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.3s'">
+            <div class="hidden md:block absolute top-4 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-ubt-green border-4 border-slate-50"
+                 style="animation: nodeReveal 0.5s ease-out 0.7s forwards; opacity: 0; transform: scale(0);"></div>
+            <div class="md:pt-12 bg-white rounded-xl p-5 shadow-sm">
+              <span class="text-xs text-ubt-green font-medium">Jun 2025</span>
+              <h4 class="mt-2 font-semibold text-charcoal">Annual Cluster Conference 2025</h4>
+              <p class="mt-1 text-xs text-gray-400">University of Bayreuth</p>
+              <p class="mt-2 text-sm text-gray-500">Three-day conference with 48 presentations across all research sections.</p>
+              <div class="mt-3 flex items-center gap-2 text-xs text-gray-400">
+                <span>Hosts: 8</span>
+                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                <span>Guests: 32</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past 4 -->
+          <div class="scroll-reveal relative" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.4s'">
+            <div class="hidden md:block absolute top-4 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-azure border-4 border-slate-50"
+                 style="animation: nodeReveal 0.5s ease-out 0.9s forwards; opacity: 0; transform: scale(0);"></div>
+            <div class="md:pt-12 bg-white rounded-xl p-5 shadow-sm">
+              <span class="text-xs text-azure font-medium">Mar 2025</span>
+              <h4 class="mt-2 font-semibold text-charcoal">Digital Humanities Bootcamp</h4>
+              <p class="mt-1 text-xs text-gray-400">Dakar, Senegal</p>
+              <p class="mt-2 text-sm text-gray-500">Intensive training on digital tools for cultural research and archiving.</p>
+              <div class="mt-3 flex items-center gap-2 text-xs text-gray-400">
+                <span>Hosts: 3</span>
+                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                <span>Guests: 10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Event Stats (Charcoal) -->
+  <section class="py-16 bg-charcoal">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.1s'"
+             x-data="{ count: 0 }" x-intersect:enter="let i=setInterval(()=>{ if(count>=64){clearInterval(i);count=64}else{count+=1} }, 30)">
+          <div class="text-3xl sm:text-4xl font-light text-white" x-text="count">0</div>
+          <div class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Events in 2025</div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'"
+             x-data="{ count: 0 }" x-intersect:enter="let i=setInterval(()=>{ if(count>=12){clearInterval(i);count=12}else{count+=1} }, 80)">
+          <div class="text-3xl sm:text-4xl font-light text-white" x-text="count">0</div>
+          <div class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Countries Hosted</div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.3s'"
+             x-data="{ count: 0 }" x-intersect:enter="let i=setInterval(()=>{ if(count>=186){clearInterval(i);count=186}else{count+=Math.ceil((186-count)/8)} }, 30)">
+          <div class="text-3xl sm:text-4xl font-light text-white" x-text="count">0</div>
+          <div class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Total Hosts</div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.4s'"
+             x-data="{ count: 0 }" x-intersect:enter="let i=setInterval(()=>{ if(count>=420){clearInterval(i);count=420}else{count+=Math.ceil((420-count)/10)} }, 30)">
+          <div class="text-3xl sm:text-4xl font-light text-white" x-text="count">0</div>
+          <div class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Total Guests</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal py-12 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="text-lg font-bold text-white tracking-tight">AFRICA MULTIPLE</span>
+          <p class="mt-1 text-sm text-gray-500">Cluster of Excellence &mdash; University of Bayreuth</p>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          <a href="dashboard.html" class="hover:text-white transition-colors">Home</a>
+          <a href="listing.html" class="hover:text-white transition-colors">Persons</a>
+          <a href="projects.html" class="hover:text-white transition-colors">Projects</a>
+          <a href="events.html" class="hover:text-white transition-colors">Events</a>
+          <a href="institutions.html" class="hover:text-white transition-colors">Institutions</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-white/10 text-center text-xs text-gray-600">
+        Style N: Research Showcase Platform &mdash; Prototype
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

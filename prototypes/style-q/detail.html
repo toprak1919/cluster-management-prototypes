@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Occupant Detail — Dr. Amina Osei — Blueprint</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bp-base: #1a2744;
+      --bp-line: #e8f0ff;
+      --bp-cyan: #5bb8ff;
+      --bp-gold: #ffd700;
+      --bp-red: #ff4444;
+      --bp-grid: rgba(91,184,255,0.08);
+      --bp-grid-fine: rgba(91,184,255,0.04);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      color: var(--bp-line);
+      background-color: var(--bp-base);
+      background-image:
+        linear-gradient(var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(var(--bp-grid-fine) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid-fine) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      min-height: 100vh;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    a { color: var(--bp-cyan); text-decoration: none; }
+    a:hover { color: var(--bp-gold); }
+
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 56px;
+      border-right: 1.5px solid rgba(232,240,255,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 6px;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      background-color: var(--bp-base);
+    }
+    .main { flex: 1; margin-left: 56px; padding: 32px 40px 120px; }
+
+    .section-marker {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan);
+      font-size: 12px; font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .section-marker:hover, .section-marker.active {
+      background: var(--bp-cyan);
+      color: var(--bp-base);
+    }
+    .section-marker.active {
+      border-color: var(--bp-gold);
+      background: var(--bp-gold);
+      color: var(--bp-base);
+    }
+
+    .sm-small {
+      width: 26px; height: 26px; font-size: 10px;
+    }
+
+    .drawing-title {
+      font-size: 20px; font-weight: 300; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--bp-line); margin-bottom: 4px;
+    }
+    .drawing-subtitle {
+      font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--bp-cyan);
+    }
+
+    .dimension-line {
+      position: relative; border-top: 1px solid var(--bp-cyan); margin: 8px 0;
+    }
+    .dimension-line::before, .dimension-line::after {
+      content: ''; position: absolute; top: -4px;
+      width: 1px; height: 9px; background: var(--bp-cyan);
+    }
+    .dimension-line::before { left: 0; }
+    .dimension-line::after { right: 0; }
+    .dimension-label {
+      position: absolute; top: -18px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px; color: var(--bp-cyan);
+      text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
+    }
+
+    /* Room = data section */
+    .room {
+      border: 1px solid rgba(232,240,255,0.2);
+      padding: 20px 24px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .room-label {
+      position: absolute; top: -9px; left: 16px;
+      background: var(--bp-base); padding: 0 8px;
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--bp-cyan);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* Field rows */
+    .field-row {
+      display: flex;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(232,240,255,0.06);
+    }
+    .field-row:last-child { border-bottom: none; }
+    .field-label {
+      width: 220px; min-width: 220px;
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--bp-cyan);
+    }
+    .field-value {
+      flex: 1; font-size: 12px; color: var(--bp-line);
+    }
+    .tag {
+      display: inline-block;
+      border: 1px solid rgba(91,184,255,0.3);
+      padding: 1px 6px; font-size: 10px;
+      margin: 1px 2px; color: var(--bp-cyan);
+    }
+    .bool-yes { color: var(--bp-gold); }
+    .bool-no { color: rgba(232,240,255,0.3); }
+
+    /* Sub-table */
+    .sub-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+    .sub-table th {
+      text-transform: uppercase; letter-spacing: 1px;
+      font-size: 9px; font-weight: 500; color: var(--bp-cyan);
+      text-align: left; padding: 4px 8px;
+      border-bottom: 1px solid rgba(91,184,255,0.2);
+    }
+    .sub-table td {
+      padding: 4px 8px; font-size: 11px;
+      border-bottom: 1px solid rgba(232,240,255,0.06);
+    }
+
+    /* Callout */
+    .callout-annotation {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 9px; color: var(--bp-gold);
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-left: 8px;
+    }
+    .callout-annotation::before {
+      content: ''; display: inline-block;
+      width: 16px; height: 1px; background: var(--bp-gold);
+    }
+
+    /* Title block */
+    .title-block {
+      position: fixed; bottom: 16px; right: 16px;
+      border: 1.5px solid var(--bp-line);
+      background: var(--bp-base); z-index: 40; font-size: 10px;
+    }
+    .title-block table { border-collapse: collapse; }
+    .title-block td {
+      border: 1px solid rgba(232,240,255,0.3);
+      padding: 3px 10px; white-space: nowrap;
+    }
+    .title-block .tb-header {
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--bp-cyan); font-size: 9px;
+    }
+
+    .back-link {
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(232,240,255,0.4);
+    }
+    .back-link:hover { color: var(--bp-gold); }
+
+    .sidebar-item { position: relative; }
+    .sidebar-item .tooltip {
+      display: none; position: absolute;
+      left: 42px; top: 50%; transform: translateY(-50%);
+      background: var(--bp-base); border: 1px solid var(--bp-cyan);
+      padding: 3px 10px; font-size: 10px; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--bp-cyan);
+      white-space: nowrap; z-index: 60;
+    }
+    .sidebar-item:hover .tooltip { display: block; }
+
+    /* Section quick nav */
+    .section-nav {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 24px; align-items: center;
+    }
+    .section-nav-label {
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(232,240,255,0.4);
+      margin-right: 4px;
+    }
+
+    @keyframes fadeInBlueprint {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeInBlueprint 0.6s ease forwards; opacity: 0; }
+    .fade-in-1 { animation-delay: 0.1s; }
+    .fade-in-2 { animation-delay: 0.15s; }
+    .fade-in-3 { animation-delay: 0.2s; }
+    .fade-in-4 { animation-delay: 0.25s; }
+    .fade-in-5 { animation-delay: 0.3s; }
+    .fade-in-6 { animation-delay: 0.35s; }
+    .fade-in-7 { animation-delay: 0.4s; }
+    .fade-in-8 { animation-delay: 0.45s; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 44px; }
+      .main { margin-left: 44px; padding: 20px 14px 140px; }
+      .section-marker { width: 28px; height: 28px; font-size: 10px; }
+      .drawing-title { font-size: 14px; letter-spacing: 2px; }
+      .field-label { width: 140px; min-width: 140px; }
+      .title-block { right: 8px; bottom: 8px; }
+      .room-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <a href="../index.html" class="back-link" style="margin-bottom: 8px; font-size: 9px; writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 2px;">PROTO</a>
+    <div style="width: 24px; border-top: 1px solid rgba(232,240,255,0.2); margin: 4px 0 8px;"></div>
+    <div class="sidebar-item"><a href="dashboard.html" class="section-marker">A</a><span class="tooltip">Site Plan</span></div>
+    <div class="sidebar-item"><a href="listing.html" class="section-marker">B</a><span class="tooltip">Occupant Register</span></div>
+    <div class="sidebar-item"><a href="detail.html" class="section-marker active">C</a><span class="tooltip">Occupant Detail</span></div>
+    <div class="sidebar-item"><a href="projects.html" class="section-marker">D</a><span class="tooltip">Structural Schedule</span></div>
+    <div class="sidebar-item"><a href="events.html" class="section-marker">E</a><span class="tooltip">Assembly Schedule</span></div>
+    <div class="sidebar-item"><a href="institutions.html" class="section-marker">F</a><span class="tooltip">Partner Directory</span></div>
+  </nav>
+
+  <div class="main">
+    <!-- Header -->
+    <div class="fade-in fade-in-1" style="margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+        <a href="listing.html" style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(232,240,255,0.4);">&larr; Back to Register</a>
+      </div>
+      <div class="drawing-subtitle">Drawing No. Q-003 &mdash; Rev 02</div>
+      <div class="drawing-title">Occupant Detail &mdash; Dr. Amina Osei</div>
+      <div class="dimension-line" style="width: 360px; margin-top: 16px;">
+        <span class="dimension-label">Detail View</span>
+      </div>
+    </div>
+
+    <!-- Section quick navigation -->
+    <div class="fade-in fade-in-2 section-nav">
+      <span class="section-nav-label">Sections:</span>
+      <a href="#sec-a" class="section-marker sm-small">A</a>
+      <a href="#sec-b" class="section-marker sm-small">B</a>
+      <a href="#sec-c" class="section-marker sm-small">C</a>
+      <a href="#sec-d" class="section-marker sm-small">D</a>
+      <a href="#sec-e" class="section-marker sm-small">E</a>
+      <a href="#sec-f" class="section-marker sm-small">F</a>
+      <a href="#sec-g" class="section-marker sm-small">G</a>
+      <a href="#sec-h" class="section-marker sm-small">H</a>
+    </div>
+
+    <!-- Section A: Contact -->
+    <div id="sec-a" class="room fade-in fade-in-2">
+      <div class="room-label">
+        <span class="section-marker sm-small">A</span>
+        Contact Information
+      </div>
+      <div class="field-row">
+        <div class="field-label">Email(s)</div>
+        <div class="field-value">
+          amina.osei@uni-bayreuth.de <span style="color: rgba(232,240,255,0.4); font-size: 10px;">(primary)</span><br>
+          a.osei@ug.edu.gh <span style="color: rgba(232,240,255,0.4); font-size: 10px;">(University of Ghana)</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Homepage(s)</div>
+        <div class="field-value">
+          <a href="#">https://www.africanstudies.uni-bayreuth.de/osei</a> <span style="color: rgba(232,240,255,0.4); font-size: 10px;">— Academic Profile</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">ORCID(s)</div>
+        <div class="field-value">0000-0002-8834-1247</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Phone(s)</div>
+        <div class="field-value">
+          +49 921 55-4321 <span class="tag">work</span><br>
+          +233 24 456 7890 <span class="tag">mobile</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Gender</div>
+        <div class="field-value">Female</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Highest Academic Degree</div>
+        <div class="field-value">Dr. phil. (PhD)</div>
+      </div>
+    </div>
+
+    <!-- Section B: Expertise -->
+    <div id="sec-b" class="room fade-in fade-in-3">
+      <div class="room-label">
+        <span class="section-marker sm-small">B</span>
+        Expertise &amp; Languages
+      </div>
+      <div class="field-row">
+        <div class="field-label">Languages</div>
+        <div class="field-value">
+          <span class="tag">English</span>
+          <span class="tag">French</span>
+          <span class="tag">Twi</span>
+          <span class="tag">German</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Geographic Fields</div>
+        <div class="field-value">
+          <span class="tag">West Africa</span>
+          <span class="tag">Ghana</span>
+          <span class="tag">Francophone Africa</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Thematic Fields</div>
+        <div class="field-value">
+          <span class="tag">Postcolonial Studies</span>
+          <span class="tag">Gender Studies</span>
+          <span class="tag">Literary Theory</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Field of Study</div>
+        <div class="field-value">
+          <span class="tag">African Studies</span>
+          <span class="tag">Comparative Literature</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section C: Membership -->
+    <div id="sec-c" class="room fade-in fade-in-4">
+      <div class="room-label">
+        <span class="section-marker sm-small">C</span>
+        Membership
+      </div>
+      <div class="room-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px;">
+        <div class="field-row">
+          <div class="field-label">BIGSAS</div>
+          <div class="field-value bool-yes">YES <span class="callout-annotation">Active Member</span></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Cluster</div>
+          <div class="field-value bool-yes">YES</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Entitled to Vote</div>
+          <div class="field-value bool-yes">YES</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Signed Rights and Duties</div>
+          <div class="field-value bool-yes">YES</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Membership Category</div>
+          <div class="field-value">Postdoctoral Researcher</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Position</div>
+          <div class="field-value">Research Fellow</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Membership Start</div>
+          <div class="field-value">2021-03-01</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Membership End</div>
+          <div class="field-value bool-no">&mdash;</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Location</div>
+          <div class="field-value">Bayreuth</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Research Sections</div>
+          <div class="field-value">
+            <span class="tag">Moralities, Identities, Subjectivities</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-row" style="margin-top: 8px;">
+        <div class="field-label">Remark</div>
+        <div class="field-value" style="color: rgba(232,240,255,0.6);">Active BIGSAS alumna. Coordinator for Ghana exchange programme since 2023.</div>
+      </div>
+    </div>
+
+    <!-- Section D: Projects -->
+    <div id="sec-d" class="room fade-in fade-in-5">
+      <div class="room-label">
+        <span class="section-marker sm-small">D</span>
+        Projects
+      </div>
+      <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); margin-bottom: 8px;">Managed Projects</div>
+      <table class="sub-table">
+        <thead>
+          <tr><th>Project ID</th><th>Title</th><th>Role</th><th>Duration</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color: var(--bp-gold);">A04</td>
+            <td><a href="projects.html">Gendered Narratives in Postcolonial Ghana</a></td>
+            <td>Director</td>
+            <td>2022-01 &mdash; 2025-12</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); margin: 12px 0 8px;">Involved Projects</div>
+      <table class="sub-table">
+        <thead>
+          <tr><th>Project ID</th><th>Title</th><th>Position</th><th>Duration</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color: var(--bp-gold);">B02</td>
+            <td><a href="projects.html">Multilingualism and Identity in West Africa</a></td>
+            <td>Researcher</td>
+            <td>2023-04 &mdash; 2026-06</td>
+          </tr>
+          <tr>
+            <td style="color: var(--bp-gold);">C01</td>
+            <td><a href="projects.html">Digital Archives of Oral Traditions</a></td>
+            <td>Consultant</td>
+            <td>2024-01 &mdash; 2026-12</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section E: Institutions -->
+    <div id="sec-e" class="room fade-in fade-in-5">
+      <div class="room-label">
+        <span class="section-marker sm-small">E</span>
+        Institutions
+      </div>
+      <table class="sub-table">
+        <thead>
+          <tr><th>Institution</th><th>Role</th><th>Department</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="institutions.html">University of Bayreuth</a></td>
+            <td>Research Fellow</td>
+            <td>African Studies</td>
+          </tr>
+          <tr>
+            <td><a href="institutions.html">University of Ghana</a></td>
+            <td>Visiting Lecturer</td>
+            <td>Institute of African Studies</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section F: Events -->
+    <div id="sec-f" class="room fade-in fade-in-6">
+      <div class="room-label">
+        <span class="section-marker sm-small">F</span>
+        Events
+      </div>
+      <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); margin-bottom: 8px;">Events (as Host)</div>
+      <table class="sub-table">
+        <thead>
+          <tr><th>Title</th><th>Type</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="events.html">Workshop: Gender and Narrative in Africa</a></td>
+            <td>Workshop</td>
+            <td>2025-11-15 &mdash; 2025-11-17</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); margin: 12px 0 8px;">Events (as Guest)</div>
+      <table class="sub-table">
+        <thead>
+          <tr><th>Title</th><th>Role</th><th>Purpose of Stay</th><th>Date</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="events.html">BIGSAS Annual Conference 2025</a></td>
+            <td>Speaker</td>
+            <td>Keynote presentation</td>
+            <td>2025-06-10 &mdash; 2025-06-12</td>
+            <td><span class="bool-yes">Attended</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section G: Fellowships -->
+    <div id="sec-g" class="room fade-in fade-in-7">
+      <div class="room-label">
+        <span class="section-marker sm-small">G</span>
+        Fellowships
+      </div>
+      <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); margin-bottom: 8px;">Fellowships (as Fellow)</div>
+      <table class="sub-table">
+        <thead>
+          <tr><th>Start</th><th>End</th><th>Host</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2022-06-01</td>
+            <td>2022-11-30</td>
+            <td>Prof. E. Kraus (University of Bayreuth)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); margin: 12px 0 8px;">Fellowships (as Host)</div>
+      <table class="sub-table">
+        <thead>
+          <tr><th>Start</th><th>End</th><th>Fellow</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2025-09-01</td>
+            <td>2026-02-28</td>
+            <td>Dr. Kofi Mensah (University of Cape Coast)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section H: Expert Search -->
+    <div id="sec-h" class="room fade-in fade-in-8">
+      <div class="room-label">
+        <span class="section-marker sm-small">H</span>
+        Expert Search
+      </div>
+      <div class="room-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px;">
+        <div class="field-row">
+          <div class="field-label">Visible in Expert Search</div>
+          <div class="field-value bool-yes">YES</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Consent Given</div>
+          <div class="field-value bool-yes">YES</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Addresses -->
+    <div class="room fade-in fade-in-8" style="margin-top: 20px;">
+      <div class="room-label">
+        <span style="font-size: 10px; color: var(--bp-cyan); text-transform: uppercase; letter-spacing: 2px;">Addresses</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Office Address</div>
+        <div class="field-value">
+          Universitaetsstrasse 30<br>
+          95447 Bayreuth, Germany
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title Block -->
+  <div class="title-block">
+    <table>
+      <tr>
+        <td class="tb-header">Project</td>
+        <td colspan="3" style="font-weight: 500;">AFRICA MULTIPLE CLUSTER MANAGEMENT</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Drawing</td>
+        <td>Occupant Detail</td>
+        <td class="tb-header">Rev</td>
+        <td>02</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Date</td>
+        <td>2026-02-18</td>
+        <td class="tb-header">Scale</td>
+        <td>NTS</td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+          "purple": { 50: "#ede0f1", 400: "#787acd" },
+        },
+        fontFamily: {
+          body: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Georgia', 'Times New Roman', 'serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+      }
+    }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-white font-body text-black min-h-screen">
+
+  <!-- Masthead Nav -->
+  <nav class="border-b-2 border-black sticky top-0 z-50 bg-white" x-data="{ mobileOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="dashboard.html" class="font-display text-3xl font-black uppercase tracking-tighter text-black hover:text-ubt-green transition-colors">AFRICA MULTIPLE</a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="dashboard.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Dashboard</a>
+          <a href="listing.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Persons</a>
+          <a href="projects.html" class="text-xs font-bold uppercase tracking-widest text-ubt-green border-b-2 border-ubt-green pb-0.5">Projects</a>
+          <a href="events.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Events</a>
+          <a href="institutions.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Institutions</a>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="text-xs font-mono text-gray-400 hover:text-black hidden lg:inline transition-colors">[ALL PROTOTYPES]</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-1 cursor-pointer" aria-label="Toggle menu">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden border-t-2 border-black py-3 space-y-2" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="block text-xs font-bold uppercase tracking-widest text-black">Dashboard</a>
+        <a href="listing.html" class="block text-xs font-bold uppercase tracking-widest text-black">Persons</a>
+        <a href="projects.html" class="block text-xs font-bold uppercase tracking-widest text-ubt-green">Projects</a>
+        <a href="events.html" class="block text-xs font-bold uppercase tracking-widest text-black">Events</a>
+        <a href="institutions.html" class="block text-xs font-bold uppercase tracking-widest text-black">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Section Header -->
+    <section class="py-6 border-b-4 border-black">
+      <h1 class="font-display text-5xl md:text-7xl font-black uppercase tracking-tighter">PROJECTS</h1>
+      <div class="h-1 bg-ubt-green mt-3 w-32"></div>
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mt-2">23 RESEARCH PROJECTS</p>
+    </section>
+
+    <!-- Content: Projects + Sidebar -->
+    <div class="flex flex-col lg:flex-row gap-8 py-8">
+
+      <!-- Projects List -->
+      <div class="flex-1 space-y-10">
+
+        <!-- Project 1 -->
+        <article class="mb-8 pb-8 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-display text-2xl md:text-3xl font-bold leading-tight">Transnational Migration Patterns in West Africa</h3>
+            <span class="font-mono text-xs font-bold bg-black text-white px-2 py-1 shrink-0">TMP-001</span>
+          </div>
+          <p class="font-display text-sm italic text-gray-500 mt-1">Directors: <a href="detail.html" class="border-b border-gray-400 hover:text-ubt-green hover:border-ubt-green transition-colors">Dr. Amina Osei</a></p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[MOBILITIES]</span>
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[KNOWLEDGES]</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">START</p>
+              <p class="font-body text-sm font-bold">Jan 2023</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">END</p>
+              <p class="font-body text-sm font-bold">Dec 2026</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT DEADLINE</p>
+              <p class="font-body text-sm font-bold">Mar 2027</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT SUBMITTED</p>
+              <span class="inline-block w-3 h-3 bg-gray-200 border border-gray-300 mt-1"></span>
+            </div>
+          </div>
+          <div class="border-l-4 border-ubt-green bg-gray-50 p-3 mt-3">
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">REQUESTED</p>
+                <p class="font-body text-sm font-bold">&euro;480,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">APPROVED</p>
+                <p class="font-body text-sm font-bold">&euro;450,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">INVOLVED</p>
+                <p class="font-body text-sm font-bold">8 persons</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="mb-8 pb-8 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-display text-2xl md:text-3xl font-bold leading-tight">Decolonizing Knowledge Systems</h3>
+            <span class="font-mono text-xs font-bold bg-black text-white px-2 py-1 shrink-0">DKS-002</span>
+          </div>
+          <p class="font-display text-sm italic text-gray-500 mt-1">Directors: Prof. Kwame Asante</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[KNOWLEDGES]</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">START</p>
+              <p class="font-body text-sm font-bold">Apr 2024</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">END</p>
+              <p class="font-body text-sm font-bold">Mar 2027</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT DEADLINE</p>
+              <p class="font-body text-sm font-bold">Jun 2027</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT REQUESTED</p>
+              <span class="inline-block w-3 h-3 bg-gray-200 border border-gray-300 mt-1"></span>
+            </div>
+          </div>
+          <div class="border-l-4 border-ubt-green bg-gray-50 p-3 mt-3">
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">REQUESTED</p>
+                <p class="font-body text-sm font-bold">&euro;400,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">APPROVED</p>
+                <p class="font-body text-sm font-bold">&euro;380,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">INVOLVED</p>
+                <p class="font-body text-sm font-bold">6 persons</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="mb-8 pb-8 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-display text-2xl md:text-3xl font-bold leading-tight">Digital Humanities in African Studies</h3>
+            <span class="font-mono text-xs font-bold bg-black text-white px-2 py-1 shrink-0">DHA-003</span>
+          </div>
+          <p class="font-display text-sm italic text-gray-500 mt-1">Directors: Dr. Samuel Mwangi</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[KNOWLEDGES]</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">START</p>
+              <p class="font-body text-sm font-bold">Jan 2024</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">END</p>
+              <p class="font-body text-sm font-bold">Dec 2026</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT DEADLINE</p>
+              <p class="font-body text-sm font-bold">Mar 2027</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT SUBMITTED</p>
+              <span class="inline-block w-3 h-3 bg-gray-200 border border-gray-300 mt-1"></span>
+            </div>
+          </div>
+          <div class="border-l-4 border-ubt-green bg-gray-50 p-3 mt-3">
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">REQUESTED</p>
+                <p class="font-body text-sm font-bold">&euro;310,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">APPROVED</p>
+                <p class="font-body text-sm font-bold">&euro;290,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">INVOLVED</p>
+                <p class="font-body text-sm font-bold">5 persons</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 4 -->
+        <article class="mb-8 pb-8 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-display text-2xl md:text-3xl font-bold leading-tight">Moralities of Exchange in East Africa</h3>
+            <span class="font-mono text-xs font-bold bg-black text-white px-2 py-1 shrink-0">MEE-004</span>
+          </div>
+          <p class="font-display text-sm italic text-gray-500 mt-1">Directors: Dr. Joseph Habimana</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[MORALITIES]</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">START</p>
+              <p class="font-body text-sm font-bold">Jul 2023</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">END</p>
+              <p class="font-body text-sm font-bold">Jun 2026</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT DEADLINE</p>
+              <p class="font-body text-sm font-bold">Sep 2026</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT REQUESTED</p>
+              <span class="inline-block w-3 h-3 bg-ubt-green border border-black mt-1"></span>
+            </div>
+          </div>
+          <div class="border-l-4 border-ubt-green bg-gray-50 p-3 mt-3">
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">REQUESTED</p>
+                <p class="font-body text-sm font-bold">&euro;350,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">APPROVED</p>
+                <p class="font-body text-sm font-bold">&euro;320,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">INVOLVED</p>
+                <p class="font-body text-sm font-bold">7 persons</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 5 -->
+        <article class="mb-8 pb-8 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-display text-2xl md:text-3xl font-bold leading-tight">Gender &amp; Mobility in West Africa</h3>
+            <span class="font-mono text-xs font-bold bg-black text-white px-2 py-1 shrink-0">GMW-005</span>
+          </div>
+          <p class="font-display text-sm italic text-gray-500 mt-1">Directors: Dr. Fatima Diallo</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[MOBILITIES]</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">START</p>
+              <p class="font-body text-sm font-bold">Mar 2022</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">END</p>
+              <p class="font-body text-sm font-bold">Feb 2025</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT DEADLINE</p>
+              <p class="font-body text-sm font-bold">May 2025</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT SUBMITTED</p>
+              <span class="inline-block w-3 h-3 bg-ubt-green border border-black mt-1"></span>
+            </div>
+          </div>
+          <div class="border-l-4 border-ubt-green bg-gray-50 p-3 mt-3">
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">REQUESTED</p>
+                <p class="font-body text-sm font-bold">&euro;550,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">APPROVED</p>
+                <p class="font-body text-sm font-bold">&euro;520,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">INVOLVED</p>
+                <p class="font-body text-sm font-bold">11 persons</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 6 -->
+        <article class="mb-8 pb-8 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-display text-2xl md:text-3xl font-bold leading-tight">Urban Aesthetics of Lagos</h3>
+            <span class="font-mono text-xs font-bold bg-black text-white px-2 py-1 shrink-0">UAL-006</span>
+          </div>
+          <p class="font-display text-sm italic text-gray-500 mt-1">Directors: Prof. Chidinma Nwosu</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[AESTHETICS]</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">START</p>
+              <p class="font-body text-sm font-bold">Jan 2025</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">END</p>
+              <p class="font-body text-sm font-bold">Dec 2028</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT DEADLINE</p>
+              <p class="font-body text-sm font-bold">Mar 2029</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT REQUESTED</p>
+              <span class="inline-block w-3 h-3 bg-gray-200 border border-gray-300 mt-1"></span>
+            </div>
+          </div>
+          <div class="border-l-4 border-gray-300 bg-gray-50 p-3 mt-3">
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">REQUESTED</p>
+                <p class="font-body text-sm font-bold">&euro;420,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">APPROVED</p>
+                <p class="font-body text-sm text-gray-400">&mdash;</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">INVOLVED</p>
+                <p class="font-body text-sm font-bold">4 persons</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 7 -->
+        <article class="mb-8 pb-8 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-display text-2xl md:text-3xl font-bold leading-tight">Pedagogies of Liberation</h3>
+            <span class="font-mono text-xs font-bold bg-black text-white px-2 py-1 shrink-0">POL-007</span>
+          </div>
+          <p class="font-display text-sm italic text-gray-500 mt-1">Directors: Dr. Aisha Mohammed</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[LEARNING]</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">START</p>
+              <p class="font-body text-sm font-bold">Oct 2026</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">END</p>
+              <p class="font-body text-sm font-bold">Sep 2029</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT DEADLINE</p>
+              <p class="font-body text-sm text-gray-400">&mdash;</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT REQUESTED</p>
+              <span class="inline-block w-3 h-3 bg-gray-200 border border-gray-300 mt-1"></span>
+            </div>
+          </div>
+          <div class="border-l-4 border-gray-300 bg-gray-50 p-3 mt-3">
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">REQUESTED</p>
+                <p class="font-body text-sm font-bold">&euro;280,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">APPROVED</p>
+                <p class="font-body text-sm text-gray-400">&mdash;</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">INVOLVED</p>
+                <p class="font-body text-sm font-bold">3 persons</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 8 -->
+        <article class="mb-8 pb-8 border-b border-gray-200">
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-display text-2xl md:text-3xl font-bold leading-tight">Religious Pluralism and Public Morality</h3>
+            <span class="font-mono text-xs font-bold bg-black text-white px-2 py-1 shrink-0">RPM-008</span>
+          </div>
+          <p class="font-display text-sm italic text-gray-500 mt-1">Directors: Dr. Ousmane Sow</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="font-mono text-[10px] font-bold text-black bg-gray-100 border border-black px-2 py-0.5">[MORALITIES]</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">START</p>
+              <p class="font-body text-sm font-bold">Jan 2026</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">END</p>
+              <p class="font-body text-sm font-bold">Dec 2028</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT DEADLINE</p>
+              <p class="font-body text-sm text-gray-400">&mdash;</p>
+            </div>
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">REPORT REQUESTED</p>
+              <span class="inline-block w-3 h-3 bg-gray-200 border border-gray-300 mt-1"></span>
+            </div>
+          </div>
+          <div class="border-l-4 border-gray-300 bg-gray-50 p-3 mt-3">
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">REQUESTED</p>
+                <p class="font-body text-sm font-bold">&euro;260,000</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">APPROVED</p>
+                <p class="font-body text-sm text-gray-400">&mdash;</p>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500">INVOLVED</p>
+                <p class="font-body text-sm font-bold">4 persons</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="lg:w-72 shrink-0 space-y-6">
+
+        <!-- Funding Summary -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">FUNDING OVERVIEW</h3>
+          <div class="space-y-3">
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500">TOTAL REQUESTED</p>
+              <p class="font-display text-3xl font-black text-black">&euro;3.05M</p>
+            </div>
+            <div>
+              <p class="font-mono text-xs uppercase tracking-widest text-gray-500">TOTAL APPROVED</p>
+              <p class="font-display text-3xl font-black text-ubt-green">&euro;1.96M</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Breakdown -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">BY RESEARCH SECTION</h3>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm font-bold">Knowledges</span>
+              <span class="font-mono text-sm font-bold bg-ubt-green text-white px-2 py-0.5">7</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm font-bold">Mobilities</span>
+              <span class="font-mono text-sm font-bold bg-black text-white px-2 py-0.5">6</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm font-bold">Moralities</span>
+              <span class="font-mono text-sm font-bold bg-black text-white px-2 py-0.5">4</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm font-bold">Aesthetics</span>
+              <span class="font-mono text-sm font-bold bg-black text-white px-2 py-0.5">3</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm font-bold">Learning</span>
+              <span class="font-mono text-sm font-bold bg-black text-white px-2 py-0.5">3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Status -->
+        <div class="border-2 border-black p-5">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">REPORT STATUS</h3>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm font-bold">Report submitted</span>
+              <span class="font-mono text-sm font-bold bg-ubt-green text-white px-2 py-0.5">3</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm font-bold">Report requested</span>
+              <span class="font-mono text-sm font-bold bg-gray-500 text-white px-2 py-0.5">2</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-body text-sm font-bold">Pending</span>
+              <span class="font-mono text-sm font-bold bg-gray-300 text-gray-700 px-2 py-0.5">3</span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t-4 border-black bg-white py-6 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500">Africa Multiple Cluster of Excellence &mdash; University of Bayreuth</p>
+      <p class="font-mono text-xs text-gray-400">&copy; 2026</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Africa Multiple — Risograph</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --pink: #ff0066;
+      --teal: #008080;
+      --black: #1a1a1a;
+      --paper: #f5f0e8;
+      --overprint: #4a0040;
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: var(--paper);
+      color: var(--black);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: var(--black);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+    }
+    .site-title {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--pink);
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      border-right: 2px solid #333;
+      display: flex;
+      align-items: center;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      list-style: none;
+      flex: 1;
+    }
+    .nav-links li { position: relative; }
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      transition: color 0.15s, background 0.15s;
+      height: 100%;
+    }
+    .nav-links a:hover { color: #fff; background: #333; }
+    .nav-links a.active { color: var(--pink); background: #2a2a2a; }
+    .nav-links .has-sub:hover .sub-nav { display: flex; }
+    .sub-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--black);
+      border: 2px solid #333;
+      flex-direction: column;
+      min-width: 180px;
+      z-index: 200;
+    }
+    .sub-nav a { padding: 0.5rem 1rem; font-size: 0.65rem; border-bottom: 1px solid #333; }
+    .sub-nav a:last-child { border-bottom: none; }
+
+    .halftone { position: relative; }
+    .halftone::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--black) 1px, transparent 1px);
+      background-size: 4px 4px;
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    .misregister {
+      text-shadow: 2px 1px 0 rgba(255,0,102,0.3), -1px -1px 0 rgba(0,128,128,0.3);
+    }
+
+    .ink-stamp {
+      border: 2px solid currentColor;
+      transform: rotate(-2deg);
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.6rem;
+      font-weight: 700;
+    }
+
+    @keyframes stampIn {
+      from { opacity: 0; transform: scale(1.3) rotate(-5deg); }
+      to { opacity: 1; transform: scale(1) rotate(var(--rot, -1deg)); }
+    }
+    @keyframes typeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .page-header {
+      border-bottom: 3px solid var(--black);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .page-title {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1;
+      transform: rotate(-0.5deg);
+    }
+    .page-meta {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+      margin-top: 0.5rem;
+    }
+
+    /* PROJECT CARDS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .project-card {
+      border: 3px solid var(--black);
+      padding: 1.25rem 1.25rem 1rem;
+      position: relative;
+      transition: transform 0.2s;
+      animation: stampIn 0.5s ease-out both;
+    }
+    .project-card:nth-child(1) { --rot: -1.2deg; transform: rotate(-1.2deg); animation-delay: 0.05s; }
+    .project-card:nth-child(2) { --rot: 0.6deg; transform: rotate(0.6deg); animation-delay: 0.1s; }
+    .project-card:nth-child(3) { --rot: -0.4deg; transform: rotate(-0.4deg); animation-delay: 0.15s; }
+    .project-card:nth-child(4) { --rot: 0.9deg; transform: rotate(0.9deg); animation-delay: 0.2s; }
+    .project-card:nth-child(5) { --rot: -0.7deg; transform: rotate(-0.7deg); animation-delay: 0.25s; }
+    .project-card:nth-child(6) { --rot: 0.3deg; transform: rotate(0.3deg); animation-delay: 0.3s; }
+    .project-card:hover { transform: rotate(0deg) !important; }
+
+    .project-card.active-project {
+      border-color: var(--pink);
+      border-width: 3px;
+    }
+    .project-card.active-project::before {
+      content: 'ACTIVE';
+      position: absolute;
+      top: -0.6rem;
+      right: 1rem;
+      background: var(--pink);
+      color: #fff;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+
+    .project-id {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .project-title {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 1.4rem;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+    .project-title a {
+      color: var(--black);
+      text-decoration: none;
+    }
+    .project-title a:hover { color: var(--pink); }
+
+    .project-field {
+      font-size: 0.7rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+      display: flex;
+      gap: 0.5rem;
+    }
+    .project-field:last-child { border-bottom: none; }
+    .project-field-label {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.6rem;
+      min-width: 100px;
+      flex-shrink: 0;
+      color: #666;
+    }
+    .project-field-value { flex: 1; }
+    .project-field-value a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .project-field-value a:hover { color: var(--pink); }
+
+    .tag {
+      display: inline-block;
+      background: var(--teal);
+      color: #fff;
+      padding: 0.1rem 0.35rem;
+      font-size: 0.55rem;
+      margin: 0.1rem;
+      letter-spacing: 0.04em;
+    }
+
+    .funding-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .funding-item {
+      flex: 1;
+      border: 2px solid var(--black);
+      padding: 0.4rem;
+      text-align: center;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .funding-item strong {
+      display: block;
+      font-size: 0.85rem;
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+    }
+
+    /* BOTTOM STAMPS */
+    .summary-stamps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .summary-stamp {
+      border: 3px solid var(--black);
+      padding: 1rem 1.5rem;
+      text-align: center;
+      animation: stampIn 0.5s ease-out both;
+    }
+    .summary-stamp:nth-child(1) { transform: rotate(-2deg); animation-delay: 0.4s; }
+    .summary-stamp:nth-child(2) { transform: rotate(1.5deg); animation-delay: 0.45s; }
+    .summary-stamp:nth-child(3) { transform: rotate(-1deg); animation-delay: 0.5s; }
+    .summary-stamp-number {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+    .summary-stamp-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+      margin-top: 0.15rem;
+    }
+
+    .section-bar {
+      background: var(--black);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: inline-block;
+      transform: rotate(-0.5deg);
+    }
+
+    .site-footer {
+      border-top: 3px solid var(--black);
+      padding: 1.5rem 0;
+      margin-top: 2rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .site-footer a { color: var(--teal); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .header-inner { flex-direction: column; }
+      .site-title { border-right: none; border-bottom: 2px solid #333; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .page-title { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="dashboard.html" class="site-title">AFRICA MULTIPLE</a>
+      <ul class="nav-links">
+        <li class="has-sub">
+          <a href="listing.html">Persons</a>
+          <div class="sub-nav">
+            <a href="listing.html">Employees</a>
+            <a href="listing.html">Cluster members</a>
+            <a href="listing.html">BIGSAS members</a>
+            <a href="listing.html">Fellows</a>
+            <a href="listing.html">Guests</a>
+          </div>
+        </li>
+        <li class="has-sub">
+          <a href="projects.html" class="active">Projects</a>
+          <div class="sub-nav">
+            <a href="projects.html">Research sections</a>
+          </div>
+        </li>
+        <li><a href="#">Publications</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="#">Countries</a></li>
+        <li><a href="#">Locations</a></li>
+        <li class="has-sub">
+          <a href="institutions.html">Institutions</a>
+          <div class="sub-nav">
+            <a href="institutions.html">ACC</a>
+          </div>
+        </li>
+        <li><a href="#">Filtered Views</a></li>
+        <li><a href="#">Administration</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <div class="page-header halftone">
+      <h1 class="page-title misregister">Projects</h1>
+      <p class="page-meta">23 projects &mdash; research &amp; collaboration</p>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- PROJECT 1 -->
+      <div class="project-card active-project halftone">
+        <div class="project-id">A03</div>
+        <div class="project-title"><a href="#">Mobility &amp; Belonging in African Cities</a></div>
+        <div class="project-field">
+          <span class="project-field-label">Directors</span>
+          <span class="project-field-value"><a href="detail.html">Dr. Amina Osei</a>, <a href="#">Prof. Okoro</a></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Research sections</span>
+          <span class="project-field-value"><span class="tag">Affiliations</span> <span class="tag">Knowledge</span></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Start</span>
+          <span class="project-field-value">2021-01-01</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">End</span>
+          <span class="project-field-value">2025-12-31</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report deadline</span>
+          <span class="project-field-value">2025-03-31</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report requested</span>
+          <span class="project-field-value" style="color:var(--pink);font-weight:700;">Yes</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report submitted</span>
+          <span class="project-field-value" style="color:var(--teal);font-weight:700;">Yes</span>
+        </div>
+        <div class="funding-bar">
+          <div class="funding-item">
+            Requested
+            <strong>&euro; 245,000</strong>
+          </div>
+          <div class="funding-item" style="border-color:var(--pink);">
+            Approved
+            <strong>&euro; 210,000</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 2 -->
+      <div class="project-card active-project halftone">
+        <div class="project-id">B07</div>
+        <div class="project-title"><a href="#">Diaspora Networks &amp; Knowledge Transfer</a></div>
+        <div class="project-field">
+          <span class="project-field-label">Directors</span>
+          <span class="project-field-value"><a href="#">Prof. Ndlovu</a></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Research sections</span>
+          <span class="project-field-value"><span class="tag">Knowledge</span></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Start</span>
+          <span class="project-field-value">2022-04-01</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">End</span>
+          <span class="project-field-value">2026-03-31</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report deadline</span>
+          <span class="project-field-value">2026-06-30</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report requested</span>
+          <span class="project-field-value" style="color:#aaa;">No</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report submitted</span>
+          <span class="project-field-value" style="color:#aaa;">No</span>
+        </div>
+        <div class="funding-bar">
+          <div class="funding-item">Requested<strong>&euro; 180,000</strong></div>
+          <div class="funding-item" style="border-color:var(--pink);">Approved<strong>&euro; 165,000</strong></div>
+        </div>
+      </div>
+
+      <!-- PROJECT 3 -->
+      <div class="project-card halftone">
+        <div class="project-id">C02</div>
+        <div class="project-title"><a href="#">Digital Archives of Migration</a></div>
+        <div class="project-field">
+          <span class="project-field-label">Directors</span>
+          <span class="project-field-value"><a href="#">Dr. Diallo</a></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Research sections</span>
+          <span class="project-field-value"><span class="tag">Arts</span></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Start</span>
+          <span class="project-field-value">2023-01-01</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">End</span>
+          <span class="project-field-value">2025-12-31</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report deadline</span>
+          <span class="project-field-value">2025-06-30</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report requested</span>
+          <span class="project-field-value" style="color:var(--pink);font-weight:700;">Yes</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report submitted</span>
+          <span class="project-field-value" style="color:#aaa;">No</span>
+        </div>
+        <div class="funding-bar">
+          <div class="funding-item">Requested<strong>&euro; 95,000</strong></div>
+          <div class="funding-item" style="border-color:var(--pink);">Approved<strong>&euro; 88,000</strong></div>
+        </div>
+      </div>
+
+      <!-- PROJECT 4 -->
+      <div class="project-card active-project halftone">
+        <div class="project-id">A01</div>
+        <div class="project-title"><a href="#">Land, Memory &amp; Belonging</a></div>
+        <div class="project-field">
+          <span class="project-field-label">Directors</span>
+          <span class="project-field-value"><a href="#">Prof. Mbeki</a>, <a href="#">Dr. Mensah</a></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Research sections</span>
+          <span class="project-field-value"><span class="tag">Moralities</span> <span class="tag">Affiliations</span></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Start</span>
+          <span class="project-field-value">2019-07-01</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">End</span>
+          <span class="project-field-value">2025-06-30</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report deadline</span>
+          <span class="project-field-value">2025-09-30</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report requested</span>
+          <span class="project-field-value" style="color:#aaa;">No</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report submitted</span>
+          <span class="project-field-value" style="color:#aaa;">No</span>
+        </div>
+        <div class="funding-bar">
+          <div class="funding-item">Requested<strong>&euro; 320,000</strong></div>
+          <div class="funding-item" style="border-color:var(--pink);">Approved<strong>&euro; 290,000</strong></div>
+        </div>
+      </div>
+
+      <!-- PROJECT 5 -->
+      <div class="project-card halftone">
+        <div class="project-id">D04</div>
+        <div class="project-title"><a href="#">Gender &amp; Religious Authority</a></div>
+        <div class="project-field">
+          <span class="project-field-label">Directors</span>
+          <span class="project-field-value"><a href="#">Dr. Afolabi</a></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Research sections</span>
+          <span class="project-field-value"><span class="tag">Moralities</span></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Start</span>
+          <span class="project-field-value">2020-01-01</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">End</span>
+          <span class="project-field-value">2024-12-31</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report deadline</span>
+          <span class="project-field-value">2025-03-31</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report requested</span>
+          <span class="project-field-value" style="color:var(--pink);font-weight:700;">Yes</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report submitted</span>
+          <span class="project-field-value" style="color:var(--teal);font-weight:700;">Yes</span>
+        </div>
+        <div class="funding-bar">
+          <div class="funding-item">Requested<strong>&euro; 150,000</strong></div>
+          <div class="funding-item" style="border-color:var(--pink);">Approved<strong>&euro; 142,000</strong></div>
+        </div>
+      </div>
+
+      <!-- PROJECT 6 -->
+      <div class="project-card active-project halftone">
+        <div class="project-id">B12</div>
+        <div class="project-title"><a href="#">Urban Ecology &amp; African Futures</a></div>
+        <div class="project-field">
+          <span class="project-field-label">Directors</span>
+          <span class="project-field-value"><a href="#">Awa Traore</a></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Research sections</span>
+          <span class="project-field-value"><span class="tag">Learning</span></span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Start</span>
+          <span class="project-field-value">2024-01-01</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">End</span>
+          <span class="project-field-value">2027-12-31</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report deadline</span>
+          <span class="project-field-value">&mdash;</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report requested</span>
+          <span class="project-field-value" style="color:#aaa;">No</span>
+        </div>
+        <div class="project-field">
+          <span class="project-field-label">Report submitted</span>
+          <span class="project-field-value" style="color:#aaa;">No</span>
+        </div>
+        <div class="funding-bar">
+          <div class="funding-item">Requested<strong>&euro; 200,000</strong></div>
+          <div class="funding-item" style="border-color:var(--pink);">Approved<strong>&euro; 185,000</strong></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUMMARY STAMPS -->
+    <div class="section-bar">Summary</div>
+    <div class="summary-stamps">
+      <div class="summary-stamp">
+        <div class="summary-stamp-number">23</div>
+        <div class="summary-stamp-label">Total Projects</div>
+      </div>
+      <div class="summary-stamp">
+        <div class="summary-stamp-number" style="color:var(--pink);">14</div>
+        <div class="summary-stamp-label">Active</div>
+      </div>
+      <div class="summary-stamp">
+        <div class="summary-stamp-number" style="color:var(--teal);">&euro;2.1M</div>
+        <div class="summary-stamp-label">Total Approved Funding</div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <span>&copy; 2026 Africa Multiple Cluster of Excellence</span>
+      <a href="../index.html">&larr; Back to all prototypes</a>
+    </footer>
+
+  </main>
+
+</body>
+</html>

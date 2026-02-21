@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persons | Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sidebar: { DEFAULT: '#1e293b', hover: '#334155', active: '#312e81' },
+          },
+          fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .animate-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+    .animate-slide { animation: slideIn 0.5s ease-out forwards; opacity: 0; }
+    .animate-scale { animation: scaleIn 0.4s ease-out forwards; opacity: 0; }
+    .card-hover { transition: transform 150ms ease, box-shadow 150ms ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .nav-item { transition: background-color 100ms ease, border-color 100ms ease; }
+    .row-hover { transition: background-color 100ms ease; }
+    .row-hover:hover { background-color: #eef2ff; }
+    kbd { font-size: 10px; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen" x-data="{ sidebarOpen: false, search: '', section: 'all', sortBy: 'lastName' }">
+
+  <!-- Mobile Header -->
+  <div class="lg:hidden fixed top-0 left-0 right-0 h-14 bg-slate-800 flex items-center px-4 z-50">
+    <button @click="sidebarOpen = !sidebarOpen" class="text-white p-1">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <span class="ml-3 text-white font-semibold text-sm">Cluster Management</span>
+  </div>
+
+  <!-- Sidebar Backdrop -->
+  <div x-show="sidebarOpen" @click="sidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40" x-transition></div>
+
+  <!-- Sidebar -->
+  <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed top-0 left-0 bottom-0 w-56 bg-slate-800 z-50 lg:translate-x-0 transition-transform duration-200 flex flex-col">
+    <div class="px-5 py-5 border-b border-slate-700">
+      <div class="text-white font-bold text-lg tracking-tight">Cluster</div>
+      <div class="text-slate-400 text-xs mt-0.5">Management</div>
+    </div>
+    <div class="px-3 py-3">
+      <div class="flex items-center bg-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 cursor-pointer hover:bg-slate-600 transition-colors">
+        <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <span class="text-slate-400">Search...</span>
+        <kbd class="ml-auto">&#8984;K</kbd>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+      <div class="text-xs font-medium text-slate-500 uppercase tracking-wider px-3 py-2">Overview</div>
+      <a href="dashboard.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        Dashboard
+      </a>
+      <div class="text-xs font-medium text-slate-500 uppercase tracking-wider px-3 py-2 mt-4">Data</div>
+      <a href="listing.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-white bg-indigo-900/30 rounded-lg border-l-[3px] border-indigo-500">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/></svg>
+        Persons
+        <kbd class="ml-auto">P</kbd>
+      </a>
+      <a href="projects.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+        Projects
+        <kbd class="ml-auto">R</kbd>
+      </a>
+      <a href="events.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Events
+        <kbd class="ml-auto">E</kbd>
+      </a>
+      <a href="institutions.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        Institutions
+        <kbd class="ml-auto">I</kbd>
+      </a>
+      <div class="text-xs font-medium text-slate-500 uppercase tracking-wider px-3 py-2 mt-4">System</div>
+      <a href="../index.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        All Prototypes
+      </a>
+    </nav>
+    <div class="px-5 py-4 border-t border-slate-700">
+      <div class="flex items-center">
+        <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">AD</div>
+        <div class="ml-3">
+          <div class="text-sm text-white font-medium">Admin</div>
+          <div class="text-xs text-slate-400">Cluster Manager</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="lg:ml-56 pt-14 lg:pt-0 min-h-screen">
+    <div class="p-6 lg:p-8 max-w-7xl mx-auto">
+
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 animate-in">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-800">Persons</h1>
+          <p class="text-sm text-slate-500 mt-1">247 persons across 5 research sections</p>
+        </div>
+        <button class="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Add Person
+        </button>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="bg-white rounded-xl shadow-sm p-4 mb-6 animate-in" style="animation-delay: 100ms;">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1 relative">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input x-model="search" type="text" placeholder="Search persons..." class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+          </div>
+          <select x-model="section" class="px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="all">All Sections</option>
+            <option value="Mobilities">Mobilities</option>
+            <option value="Knowledges">Knowledges</option>
+            <option value="Moralities">Moralities</option>
+            <option value="Learning">Learning</option>
+            <option value="Aesthetics">Aesthetics</option>
+          </select>
+          <div class="flex items-center space-x-1 bg-slate-50 rounded-lg p-0.5">
+            <button @click="sortBy='lastName'" :class="sortBy==='lastName' ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500'" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all">Last Name</button>
+            <button @click="sortBy='location'" :class="sortBy==='location' ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500'" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all">Location</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden animate-scale" style="animation-delay: 200ms;">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-slate-100">
+                <th class="text-left px-6 py-4 text-xs font-medium text-slate-500 uppercase tracking-wide">Title</th>
+                <th class="text-left px-6 py-4 text-xs font-medium text-slate-500 uppercase tracking-wide">Last Name</th>
+                <th class="text-left px-6 py-4 text-xs font-medium text-slate-500 uppercase tracking-wide">First Name</th>
+                <th class="text-center px-6 py-4 text-xs font-medium text-slate-500 uppercase tracking-wide hidden md:table-cell">Gender</th>
+                <th class="text-center px-6 py-4 text-xs font-medium text-slate-500 uppercase tracking-wide hidden md:table-cell">BIGSAS</th>
+                <th class="text-left px-6 py-4 text-xs font-medium text-slate-500 uppercase tracking-wide hidden lg:table-cell">Location</th>
+                <th class="text-left px-6 py-4 text-xs font-medium text-slate-500 uppercase tracking-wide hidden xl:table-cell">Thematic Fields</th>
+                <th class="text-left px-6 py-4 text-xs font-medium text-slate-500 uppercase tracking-wide hidden xl:table-cell">Geographic Fields</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 250ms;" onclick="window.location='detail.html'">
+                <td class="px-6 py-4 text-sm text-slate-600">Dr.</td>
+                <td class="px-6 py-4">
+                  <a href="detail.html" class="text-sm font-medium text-slate-800 hover:text-indigo-600">Osei</a>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600">Amina</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">female</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Y</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Bayreuth</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Mobility, Migration, Diaspora</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">West Africa, Ghana</td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 300ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Prof.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Asante</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Kwame</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">male</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-400 text-xs font-bold">N</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Cape Town</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Indigenous Knowledge, Epistemology</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Southern Africa</td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 350ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Dr.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Diallo</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Fatima</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">female</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Y</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Dakar</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Ethics, AI, Morality</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">West Africa, Senegal</td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 400ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Dr.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Habimana</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Jean-Pierre</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">male</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-400 text-xs font-bold">N</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Kigali</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Digital Archives, Diaspora</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">East Africa, Rwanda</td>
+              </tr>
+
+              <!-- Row 5 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 450ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Dr.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Mensah</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Grace</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">female</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Y</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Winneba</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Pedagogy, Education</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">West Africa, Ghana</td>
+              </tr>
+
+              <!-- Row 6 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 500ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Dr.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Mwangi</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Samuel</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">male</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Y</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Nairobi</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Pedagogy, Innovation</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">East Africa, Kenya</td>
+              </tr>
+
+              <!-- Row 7 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 550ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Dr.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Ndlovu</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Thandiwe</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">female</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-400 text-xs font-bold">N</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Johannesburg</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Knowledge Systems, Identity</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Southern Africa</td>
+              </tr>
+
+              <!-- Row 8 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 600ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Prof.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Nwosu</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Chidinma</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">female</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-400 text-xs font-bold">N</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Lagos</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Visual Arts, Aesthetics</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">West Africa, Nigeria</td>
+              </tr>
+
+              <!-- Row 9 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 650ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Dr.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Tafara</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Blessing</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">female</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Y</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Harare</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Mobility, Border Studies</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Southern Africa, Zimbabwe</td>
+              </tr>
+
+              <!-- Row 10 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 700ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Prof.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Abdullahi</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Ibrahim</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">male</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-400 text-xs font-bold">N</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Zaria</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Ethics, Power Dynamics</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">West Africa, Nigeria</td>
+              </tr>
+
+              <!-- Row 11 -->
+              <tr class="border-b border-slate-50 row-hover cursor-pointer animate-slide" style="animation-delay: 750ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Dr.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Kouadio</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Emmanuel</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">male</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Y</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Abidjan</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Visual Arts, Identity</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">West Africa, Ivory Coast</td>
+              </tr>
+
+              <!-- Row 12 -->
+              <tr class="row-hover cursor-pointer animate-slide" style="animation-delay: 800ms;">
+                <td class="px-6 py-4 text-sm text-slate-600">Prof.</td>
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">Kamau</td>
+                <td class="px-6 py-4 text-sm text-slate-600">Miriam</td>
+                <td class="px-6 py-4 text-center text-sm text-slate-600 hidden md:table-cell">female</td>
+                <td class="px-6 py-4 text-center hidden md:table-cell">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Y</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600 hidden lg:table-cell">Nairobi</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">Knowledge Production, Research Methods</td>
+                <td class="px-6 py-4 text-xs text-slate-500 hidden xl:table-cell">East Africa, Kenya</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-sm text-slate-500">Showing 1-12 of 247 persons</span>
+          <div class="flex items-center space-x-1">
+            <button class="px-3 py-1.5 text-sm text-slate-400 bg-slate-50 rounded-md cursor-not-allowed">Previous</button>
+            <button class="px-3 py-1.5 text-sm text-white bg-indigo-600 rounded-md">1</button>
+            <button class="px-3 py-1.5 text-sm text-slate-600 bg-slate-50 rounded-md hover:bg-slate-100">2</button>
+            <button class="px-3 py-1.5 text-sm text-slate-600 bg-slate-50 rounded-md hover:bg-slate-100">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      const shortcuts = { 'p': 'listing.html', 'r': 'projects.html', 'e': 'events.html', 'i': 'institutions.html' };
+      if (shortcuts[e.key.toLowerCase()] && !e.metaKey && !e.ctrlKey) {
+        window.location.href = shortcuts[e.key.toLowerCase()];
+      }
+    });
+  </script>
+</body>
+</html>

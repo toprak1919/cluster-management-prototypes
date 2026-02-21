@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dr. Amina Osei - Africa Multiple Collaboration Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          violet: { 50:'#f5f3ff',100:'#ede9fe',200:'#ddd6fe',300:'#c4b5fd',400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9',800:'#5b21b6',900:'#4c1d95' },
+        },
+        fontFamily: { body: ['Inter','system-ui','sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes pulseOnline { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+    @keyframes feedItem { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+    .slide-up { animation: slideUp 0.4s ease-out forwards; }
+    .pulse-online { animation: pulseOnline 2s ease-in-out infinite; }
+    .feed-item { animation: feedItem 0.35s ease-out forwards; }
+    .stagger-1 { animation-delay:0.05s; opacity:0; }
+    .stagger-2 { animation-delay:0.1s; opacity:0; }
+    .stagger-3 { animation-delay:0.15s; opacity:0; }
+    .stagger-4 { animation-delay:0.2s; opacity:0; }
+    .stagger-5 { animation-delay:0.25s; opacity:0; }
+    .stagger-6 { animation-delay:0.3s; opacity:0; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+  <div class="flex min-h-screen" x-data="{ mobileNav: false, activeTab: 'activity' }">
+
+    <!-- Left Sidebar -->
+    <aside class="hidden lg:flex flex-col w-56 bg-white border-r border-slate-200 fixed inset-y-0 left-0 z-40">
+      <div class="px-4 py-4 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-violet-700 text-white flex items-center justify-center text-xs font-bold">AM</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold text-slate-900 truncate">Africa Multiple</p>
+            <p class="text-xs text-slate-400">Cluster of Excellence</p>
+          </div>
+          <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 9l4-4 4 4m0 6l-4 4-4-4"/></svg>
+        </div>
+      </div>
+      <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition text-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
+          Home
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition text-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search
+        </a>
+        <a href="listing.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-50 text-violet-700 font-medium text-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Persons
+        </a>
+        <a href="projects.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition text-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Projects
+        </a>
+        <a href="events.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition text-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Events
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition text-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Countries
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition text-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Locations
+        </a>
+        <a href="institutions.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition text-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Institutions
+        </a>
+      </nav>
+      <div class="px-3 pb-2">
+        <a href="../index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+          All Prototypes
+        </a>
+      </div>
+      <div class="px-4 py-3 border-t border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="relative">
+            <div class="w-8 h-8 rounded-full bg-violet-600 text-white flex items-center justify-center text-xs font-semibold">AD</div>
+            <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full pulse-online"></div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-slate-900 truncate">Admin User</p>
+            <p class="text-xs text-emerald-500">Online</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile header -->
+    <div class="lg:hidden fixed top-0 inset-x-0 z-50 bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-violet-700 text-white flex items-center justify-center text-xs font-bold">AM</div>
+        <span class="text-sm font-semibold">Africa Multiple</span>
+      </div>
+      <button @click="mobileNav = !mobileNav" class="p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer">
+        <svg class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div x-show="mobileNav" x-transition.opacity @click="mobileNav = false" class="lg:hidden fixed inset-0 z-40 bg-black/30"></div>
+    <div x-show="mobileNav" x-transition:enter="transition transform ease-out duration-200" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition transform ease-in duration-150" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" class="lg:hidden fixed inset-y-0 left-0 z-50 w-56 bg-white border-r border-slate-200 flex flex-col">
+      <div class="px-4 py-4 border-b border-slate-100"><div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-lg bg-violet-700 text-white flex items-center justify-center text-xs font-bold">AM</div><div><p class="text-sm font-semibold">Africa Multiple</p><p class="text-xs text-slate-400">Cluster of Excellence</p></div></div></div>
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 text-sm">Home</a>
+        <a href="listing.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-50 text-violet-700 font-medium text-sm">Persons</a>
+        <a href="projects.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 text-sm">Projects</a>
+        <a href="events.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 text-sm">Events</a>
+        <a href="institutions.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 text-sm">Institutions</a>
+      </nav>
+      <div class="px-3 pb-2"><a href="../index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-400 hover:text-violet-600 transition">All Prototypes</a></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-56 pt-16 lg:pt-0">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
+
+        <!-- Breadcrumb -->
+        <nav class="mb-6 slide-up">
+          <ol class="flex items-center gap-2 text-sm text-slate-500">
+            <li><a href="listing.html" class="hover:text-violet-600 transition">Persons</a></li>
+            <li><svg class="w-4 h-4 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></li>
+            <li class="text-slate-900 font-medium">Dr. Amina Osei</li>
+          </ol>
+        </nav>
+
+        <!-- Profile Hero -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 lg:p-8 mb-6 slide-up stagger-1">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+            <div class="relative shrink-0">
+              <div class="w-20 h-20 rounded-full bg-violet-600 text-white flex items-center justify-center text-2xl font-bold ring-4 ring-violet-100">AO</div>
+              <div class="absolute bottom-0 right-0 w-5 h-5 bg-emerald-500 border-3 border-white rounded-full pulse-online"></div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-1">
+                <h1 class="text-2xl font-bold text-slate-900">Dr. Amina Osei</h1>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 font-medium">Active</span>
+              </div>
+              <p class="text-sm text-slate-500 mb-3">Location: Accra &middot; Gender: female &middot; Highest academic degree: PhD</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 font-medium">Cluster</span>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 font-medium">BIGSAS</span>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">entitled to vote</span>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 font-medium">Signed Rights and Duties</span>
+              </div>
+            </div>
+            <div class="flex gap-2 shrink-0">
+              <a href="#" class="inline-flex items-center gap-1.5 px-4 py-2 bg-violet-700 text-white text-sm font-medium rounded-lg hover:bg-violet-800 transition cursor-pointer">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Edit
+              </a>
+              <a href="#" onclick="return confirm('Delete this person?')" class="inline-flex items-center gap-1.5 px-4 py-2 border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition cursor-pointer">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                Delete
+              </a>
+            </div>
+          </div>
+          <!-- Summary Stats -->
+          <div class="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-100">
+            <div class="text-center">
+              <p class="text-xl font-bold text-violet-700">3</p>
+              <p class="text-xs text-slate-500">Projects</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xl font-bold text-violet-700">2</p>
+              <p class="text-xs text-slate-500">Fellowships</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xl font-bold text-violet-700">5</p>
+              <p class="text-xs text-slate-500">Events (Host)</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xl font-bold text-violet-700">2</p>
+              <p class="text-xs text-slate-500">Institutions</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="bg-white rounded-xl border border-slate-200 mb-6 slide-up stagger-2">
+          <div class="flex border-b border-slate-100 overflow-x-auto">
+            <button @click="activeTab = 'activity'" :class="activeTab === 'activity' ? 'border-violet-700 text-violet-700' : 'border-transparent text-slate-500 hover:text-slate-700'" class="px-5 py-3 text-sm font-medium border-b-2 transition whitespace-nowrap cursor-pointer">Overview</button>
+            <button @click="activeTab = 'research'" :class="activeTab === 'research' ? 'border-violet-700 text-violet-700' : 'border-transparent text-slate-500 hover:text-slate-700'" class="px-5 py-3 text-sm font-medium border-b-2 transition whitespace-nowrap cursor-pointer">Projects</button>
+            <button @click="activeTab = 'network'" :class="activeTab === 'network' ? 'border-violet-700 text-violet-700' : 'border-transparent text-slate-500 hover:text-slate-700'" class="px-5 py-3 text-sm font-medium border-b-2 transition whitespace-nowrap cursor-pointer">Fellowships</button>
+            <button @click="activeTab = 'contact'" :class="activeTab === 'contact' ? 'border-violet-700 text-violet-700' : 'border-transparent text-slate-500 hover:text-slate-700'" class="px-5 py-3 text-sm font-medium border-b-2 transition whitespace-nowrap cursor-pointer">Contact</button>
+          </div>
+
+          <!-- Overview Tab -->
+          <div x-show="activeTab === 'activity'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+            <div class="p-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Contact & Identity -->
+                <div class="space-y-4">
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Email(s)</p>
+                    <a href="mailto:a.osei@ug.edu.gh" class="text-sm text-violet-600 hover:text-violet-800 transition">a.osei@ug.edu.gh</a>
+                    <span class="text-xs text-slate-400 ml-1">(work)</span>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Homepage(s)</p>
+                    <a href="#" class="text-sm text-violet-600 hover:text-violet-800 transition">https://ug.edu.gh/~aosei</a>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">ORCID(s)</p>
+                    <p class="text-sm text-slate-900">0000-0002-1234-5678</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Phone(s)</p>
+                    <p class="text-sm text-slate-900">+233 30 213 4567 <span class="text-xs text-slate-400">(work)</span></p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Languages spoken and written</p>
+                    <p class="text-sm text-slate-700">English, French, Twi</p>
+                  </div>
+                </div>
+                <!-- Academic & Membership -->
+                <div class="space-y-4">
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Geographic fields of expertise</p>
+                    <div class="flex flex-wrap gap-1.5">
+                      <span class="text-xs px-2 py-0.5 rounded-full bg-rose-50 text-rose-600">West Africa</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-600">Ghana</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">Senegal</span>
+                    </div>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Thematic fields of expertise</p>
+                    <div class="flex flex-wrap gap-1.5">
+                      <span class="text-xs px-2 py-0.5 rounded-full bg-violet-50 text-violet-600">Migration Studies</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">Postcolonial Theory</span>
+                    </div>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Field of study</p>
+                    <p class="text-sm text-slate-700">African Studies, Sociology</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Membership category</p>
+                    <p class="text-sm text-slate-700">Senior Researcher</p>
+                  </div>
+                  <div class="flex gap-6">
+                    <div>
+                      <p class="text-xs text-slate-400 mb-1">Membership Start</p>
+                      <p class="text-sm text-slate-700">2020-01-15</p>
+                    </div>
+                    <div>
+                      <p class="text-xs text-slate-400 mb-1">Membership End</p>
+                      <p class="text-sm text-slate-400">&mdash;</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Position</p>
+                    <p class="text-sm text-slate-700">Postdoctoral Researcher</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 mb-1">Location</p>
+                    <p class="text-sm text-slate-700">Accra (Ghana, West Africa)</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Institutions -->
+              <div class="mt-6 pt-6 border-t border-slate-100">
+                <h3 class="text-sm font-semibold text-slate-900 mb-3">Institutions</h3>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50">
+                    <div class="w-8 h-8 rounded-lg bg-violet-700 text-white flex items-center justify-center text-xs font-bold">UG</div>
+                    <div>
+                      <p class="text-sm font-medium text-slate-900">University of Ghana</p>
+                      <p class="text-xs text-slate-400">Researcher &middot; Dept. of Sociology</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50">
+                    <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold">UB</div>
+                    <div>
+                      <p class="text-sm font-medium text-slate-900">University of Bayreuth</p>
+                      <p class="text-xs text-slate-400">Visiting Fellow &middot; African Studies</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Research Sections -->
+              <div class="mt-6 pt-6 border-t border-slate-100">
+                <h3 class="text-sm font-semibold text-slate-900 mb-3">Research Sections</h3>
+                <div class="flex flex-wrap gap-2">
+                  <span class="text-xs px-2.5 py-1 rounded-full bg-violet-50 text-violet-600 font-medium">Mobilities</span>
+                  <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">Knowledges</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projects Tab -->
+          <div x-show="activeTab === 'research'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+            <div class="p-5">
+              <!-- Managed Projects -->
+              <h3 class="text-sm font-semibold text-slate-900 mb-3">Managed Projects</h3>
+              <div class="space-y-3 mb-6">
+                <a href="projects.html" class="block p-3 rounded-lg border border-slate-100 hover:border-violet-200 hover:bg-violet-50/30 transition group">
+                  <div class="flex items-center justify-between mb-1">
+                    <p class="text-sm font-medium text-slate-900 group-hover:text-violet-700 transition">Transnational Migration Patterns in West Africa</p>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 shrink-0">Active</span>
+                  </div>
+                  <p class="text-xs text-slate-400">Project Director &middot; 2023-01-01 to 2026-06-30</p>
+                </a>
+              </div>
+
+              <!-- Involved Projects -->
+              <h3 class="text-sm font-semibold text-slate-900 mb-3">Involved Projects</h3>
+              <div class="space-y-3 mb-6">
+                <a href="projects.html" class="block p-3 rounded-lg border border-slate-100 hover:border-violet-200 hover:bg-violet-50/30 transition group">
+                  <div class="flex items-center justify-between mb-1">
+                    <p class="text-sm font-medium text-slate-900 group-hover:text-violet-700 transition">Climate Adaptation &amp; Rural Livelihoods</p>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 shrink-0">Active</span>
+                  </div>
+                  <p class="text-xs text-slate-400">Project Member &middot; 2022-04-01 to 2025-12-31</p>
+                </a>
+                <a href="projects.html" class="block p-3 rounded-lg border border-slate-100 hover:border-violet-200 hover:bg-violet-50/30 transition group">
+                  <div class="flex items-center justify-between mb-1">
+                    <p class="text-sm font-medium text-slate-900 group-hover:text-violet-700 transition">Digital Archives of West African Oral Traditions</p>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 shrink-0">Completed</span>
+                  </div>
+                  <p class="text-xs text-slate-400">Former Project Member &middot; 2021-01-01 to 2024-12-31</p>
+                </a>
+              </div>
+
+              <!-- Publications (project-linked) -->
+              <h3 class="text-sm font-semibold text-slate-900 mb-3">Publications (Project-linked)</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-100 bg-slate-50/50">
+                      <th class="text-left px-3 py-2 font-semibold text-slate-600 text-xs">Year</th>
+                      <th class="text-left px-3 py-2 font-semibold text-slate-600 text-xs">Planned</th>
+                      <th class="text-left px-3 py-2 font-semibold text-slate-600 text-xs">Achieved</th>
+                      <th class="text-right px-3 py-2 font-semibold text-slate-600 text-xs">Costs</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-50">
+                    <tr>
+                      <td class="px-3 py-2 text-slate-900">2025</td>
+                      <td class="px-3 py-2 text-slate-600 text-xs">2 journal articles on migration patterns</td>
+                      <td class="px-3 py-2 text-slate-600 text-xs">1 article published, 1 under review</td>
+                      <td class="px-3 py-2 text-right text-slate-600">1,200.00</td>
+                    </tr>
+                    <tr>
+                      <td class="px-3 py-2 text-slate-900">2024</td>
+                      <td class="px-3 py-2 text-slate-600 text-xs">Edited volume on transnational identities</td>
+                      <td class="px-3 py-2 text-slate-600 text-xs">Volume published</td>
+                      <td class="px-3 py-2 text-right text-slate-600">3,500.00</td>
+                    </tr>
+                    <tr>
+                      <td class="px-3 py-2 text-slate-900">2023</td>
+                      <td class="px-3 py-2 text-slate-600 text-xs">Working paper series launch</td>
+                      <td class="px-3 py-2 text-slate-600 text-xs">3 working papers published</td>
+                      <td class="px-3 py-2 text-right text-slate-600">800.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fellowships Tab -->
+          <div x-show="activeTab === 'network'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+            <div class="p-5">
+              <!-- Fellowships as Fellow -->
+              <h3 class="text-sm font-semibold text-slate-900 mb-3">Fellowships (as Fellow)</h3>
+              <div class="space-y-3 mb-6">
+                <div class="p-3 rounded-lg border border-slate-100">
+                  <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs text-slate-400">Start:</span>
+                      <span class="text-sm text-slate-900">2024-03-01</span>
+                      <span class="text-xs text-slate-400 ml-2">End:</span>
+                      <span class="text-sm text-slate-900">2024-08-31</span>
+                    </div>
+                  </div>
+                  <p class="text-xs text-slate-500">Host: <span class="font-medium text-slate-700">Prof. Johannes Hartmann</span></p>
+                </div>
+                <div class="p-3 rounded-lg border border-slate-100">
+                  <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs text-slate-400">Start:</span>
+                      <span class="text-sm text-slate-900">2022-09-01</span>
+                      <span class="text-xs text-slate-400 ml-2">End:</span>
+                      <span class="text-sm text-slate-900">2023-02-28</span>
+                    </div>
+                  </div>
+                  <p class="text-xs text-slate-500">Host: <span class="font-medium text-slate-700">Prof. Lena Teshome</span></p>
+                </div>
+              </div>
+
+              <!-- Fellowships as Host -->
+              <h3 class="text-sm font-semibold text-slate-900 mb-3">Fellowships (as Host)</h3>
+              <div class="space-y-3">
+                <div class="p-3 rounded-lg border border-slate-100">
+                  <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs text-slate-400">Start:</span>
+                      <span class="text-sm text-slate-900">2025-10-01</span>
+                      <span class="text-xs text-slate-400 ml-2">End:</span>
+                      <span class="text-sm text-slate-900">2026-03-31</span>
+                    </div>
+                  </div>
+                  <p class="text-xs text-slate-500">Fellow: <span class="font-medium text-slate-700">Dr. Nadia Benali</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Tab -->
+          <div x-show="activeTab === 'contact'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+            <div class="p-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Addresses -->
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-900 mb-4">Addresses</h3>
+                  <div class="space-y-3">
+                    <div class="p-3 rounded-lg border border-slate-100">
+                      <p class="text-xs text-slate-400 mb-1">Work Address</p>
+                      <p class="text-sm text-slate-700">Department of Sociology</p>
+                      <p class="text-sm text-slate-700">University of Ghana</p>
+                      <p class="text-sm text-slate-700">P.O. Box LG 65, Legon</p>
+                      <p class="text-sm text-slate-700">Accra, Ghana</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Events & Remark -->
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-900 mb-4">Events (as Host)</h3>
+                  <div class="space-y-2">
+                    <a href="events.html" class="block p-2.5 rounded-lg border border-slate-100 hover:border-violet-200 hover:bg-violet-50/30 transition">
+                      <p class="text-sm font-medium text-slate-900">Pan-African Studies Conference 2026</p>
+                      <p class="text-xs text-slate-400">March 2-4, 2026 &middot; Accra</p>
+                    </a>
+                  </div>
+                  <h3 class="text-sm font-semibold text-slate-900 mt-6 mb-4">Events (as Guest)</h3>
+                  <div class="space-y-2">
+                    <a href="events.html" class="block p-2.5 rounded-lg border border-slate-100 hover:border-violet-200 hover:bg-violet-50/30 transition">
+                      <p class="text-sm font-medium text-slate-900">African Humanities Summit</p>
+                      <p class="text-xs text-slate-400">April 3-5, 2026 &middot; Nairobi</p>
+                    </a>
+                    <a href="events.html" class="block p-2.5 rounded-lg border border-slate-100 hover:border-violet-200 hover:bg-violet-50/30 transition">
+                      <p class="text-sm font-medium text-slate-900">Methods in Oral History Workshop</p>
+                      <p class="text-xs text-slate-400">March 18-19, 2026 &middot; Bayreuth</p>
+                    </a>
+                  </div>
+                  <h3 class="text-sm font-semibold text-slate-900 mt-6 mb-3">Remark</h3>
+                  <p class="text-sm text-slate-600">Active researcher with strong network in West African migration studies.</p>
+                </div>
+              </div>
+              <!-- Expert Search Settings -->
+              <div class="mt-6 pt-6 border-t border-slate-100">
+                <h3 class="text-sm font-semibold text-slate-900 mb-3">Expert Search</h3>
+                <div class="flex items-center gap-4">
+                  <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">Visible in Expert Search</span>
+                  <span class="text-xs text-slate-400">Consent given on 2023-06-15</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persons - Africa Multiple Research Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          charcoal: '#1a1a2e',
+          coral: { DEFAULT: '#e94560', 50: '#fef2f4', 100: '#fde6ea', 200: '#f9c0cb', 400: '#e94560', 500: '#d6334e', 600: '#b91d3a' },
+          'ubt-green': { DEFAULT: '#0d9462', 50: '#cceadc', 400: '#0d9462' },
+          azure: { DEFAULT: '#008f9c', 50: '#cee8e9', 400: '#008f9c' },
+          raspberry: { DEFAULT: '#bd62a0', 50: '#f0ddef', 400: '#bd62a0' },
+          purple: { DEFAULT: '#787acd', 50: '#ede0f1', 400: '#787acd' },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    @keyframes heroFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-fade { animation: heroFadeIn 0.8s ease-out forwards; }
+    .hero-fade-d1 { animation: heroFadeIn 0.8s ease-out 0.1s forwards; opacity: 0; }
+    .hero-fade-d2 { animation: heroFadeIn 0.8s ease-out 0.2s forwards; opacity: 0; }
+    .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="bg-white text-gray-900 min-h-screen" x-data="{
+  scrolled: false,
+  mobileOpen: false,
+  search: '',
+  activeFilter: 'all',
+  researchers: [
+    { name: 'Dr. Amina Osei', initials: 'AO', firstName: 'Amina', lastName: 'Osei', title: 'Dr.', gender: 'female', bigsas: true, location: 'Accra', section: 'culture', sectionColor: 'purple', thematic: ['Cultural Identity', 'Diaspora Studies'], geographic: ['West Africa'], languages: ['English', 'Twi'] },
+    { name: 'Prof. Kwame Asante', initials: 'KA', firstName: 'Kwame', lastName: 'Asante', title: 'Prof.', gender: 'male', bigsas: false, location: 'Bayreuth', section: 'knowledge', sectionColor: 'ubt-green', thematic: ['African Epistemology', 'Decolonial Theory'], geographic: ['Pan-African'], languages: ['English', 'German', 'Akan'] },
+    { name: 'Dr. Fatima Diallo', initials: 'FD', firstName: 'Fatima', lastName: 'Diallo', title: 'Dr.', gender: 'female', bigsas: true, location: 'Dakar', section: 'society', sectionColor: 'raspberry', thematic: ['Urban Studies', 'Migration'], geographic: ['West Africa', 'Sahel'], languages: ['French', 'Wolof'] },
+    { name: 'Dr. Emmanuel Mensah', initials: 'EM', firstName: 'Emmanuel', lastName: 'Mensah', title: 'Dr.', gender: 'male', bigsas: true, location: 'Cape Town', section: 'methodology', sectionColor: 'azure', thematic: ['Digital Humanities', 'Data Science'], geographic: ['Southern Africa'], languages: ['English', 'Afrikaans'] },
+    { name: 'Prof. Ngozi Adichie-Okafor', initials: 'NA', firstName: 'Ngozi', lastName: 'Adichie-Okafor', title: 'Prof.', gender: 'female', bigsas: false, location: 'Lagos', section: 'culture', sectionColor: 'purple', thematic: ['Postcolonial Literature', 'African Languages'], geographic: ['West Africa'], languages: ['English', 'Igbo'] },
+    { name: 'Dr. Ibrahim Keita', initials: 'IK', firstName: 'Ibrahim', lastName: 'Keita', title: 'Dr.', gender: 'male', bigsas: true, location: 'Bamako', section: 'knowledge', sectionColor: 'ubt-green', thematic: ['Precolonial History', 'Manuscript Studies'], geographic: ['West Africa', 'Sahel'], languages: ['French', 'Bambara'] },
+    { name: 'Dr. Wanjiku Kamau', initials: 'WK', firstName: 'Wanjiku', lastName: 'Kamau', title: 'Dr.', gender: 'female', bigsas: false, location: 'Nairobi', section: 'society', sectionColor: 'raspberry', thematic: ['Community Development', 'Public Health'], geographic: ['East Africa'], languages: ['English', 'Swahili'] },
+    { name: 'Prof. Olumide Balogun', initials: 'OB', firstName: 'Olumide', lastName: 'Balogun', title: 'Prof.', gender: 'male', bigsas: false, location: 'Ibadan', section: 'society', sectionColor: 'raspberry', thematic: ['Religious Pluralism', 'Youth Culture'], geographic: ['West Africa'], languages: ['English', 'Yoruba'] },
+    { name: 'Dr. Aisha Mohamed', initials: 'AM', firstName: 'Aisha', lastName: 'Mohamed', title: 'Dr.', gender: 'female', bigsas: true, location: 'Bayreuth', section: 'methodology', sectionColor: 'azure', thematic: ['Ethnography', 'Visual Methods'], geographic: ['East Africa', 'Horn of Africa'], languages: ['English', 'Arabic', 'German'] },
+    { name: 'Prof. Thabo Ndlovu', initials: 'TN', firstName: 'Thabo', lastName: 'Ndlovu', title: 'Prof.', gender: 'male', bigsas: false, location: 'Makhanda', section: 'knowledge', sectionColor: 'ubt-green', thematic: ['African Governance', 'Pan-Africanism'], geographic: ['Southern Africa'], languages: ['English', 'Zulu'] },
+    { name: 'Dr. Mariam Toure', initials: 'MT', firstName: 'Mariam', lastName: 'Toure', title: 'Dr.', gender: 'female', bigsas: true, location: 'Accra', section: 'culture', sectionColor: 'purple', thematic: ['Ethnomusicology', 'Performance Studies'], geographic: ['West Africa'], languages: ['English', 'French', 'Ewe'] },
+    { name: 'Dr. Samuel Okonkwo', initials: 'SO', firstName: 'Samuel', lastName: 'Okonkwo', title: 'Dr.', gender: 'male', bigsas: false, location: 'Eldoret', section: 'methodology', sectionColor: 'azure', thematic: ['GIS Mapping', 'Spatial Analysis'], geographic: ['East Africa'], languages: ['English', 'Swahili'] }
+  ],
+  get filtered() {
+    return this.researchers.filter(r => {
+      const matchFilter = this.activeFilter === 'all' || r.section === this.activeFilter;
+      const matchSearch = !this.search || r.name.toLowerCase().includes(this.search.toLowerCase()) || r.location.toLowerCase().includes(this.search.toLowerCase()) || r.thematic.some(k => k.toLowerCase().includes(this.search.toLowerCase())) || r.geographic.some(k => k.toLowerCase().includes(this.search.toLowerCase()));
+      return matchFilter && matchSearch;
+    });
+  }
+}" @scroll.window="scrolled = (window.scrollY > 50)">
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+       :class="scrolled ? 'bg-white shadow-md' : 'bg-transparent'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="dashboard.html" class="flex items-center gap-2">
+          <span class="text-lg font-bold tracking-tight transition-colors duration-300"
+                :class="scrolled ? 'text-charcoal' : 'text-white'">AFRICA MULTIPLE</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="dashboard.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Home</a>
+          <a href="listing.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-coral' : 'text-white bg-white/10'">Persons</a>
+          <a href="projects.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Projects</a>
+          <a href="events.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Events</a>
+          <a href="institutions.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Institutions</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../index.html" class="text-xs transition-colors duration-300 hidden lg:inline"
+             :class="scrolled ? 'text-gray-400 hover:text-gray-600' : 'text-gray-400 hover:text-white'">All Prototypes</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-2 rounded-lg transition-colors duration-300 cursor-pointer"
+                  :class="scrolled ? 'text-gray-600 hover:bg-gray-100' : 'text-white hover:bg-white/10'">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden pb-3 space-y-1" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Home</a>
+        <a href="listing.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-coral' : 'text-white bg-white/10'">Persons</a>
+        <a href="projects.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Projects</a>
+        <a href="events.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Events</a>
+        <a href="institutions.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="bg-charcoal pt-32 pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl sm:text-5xl font-light text-white tracking-tight hero-fade">Persons</h1>
+      <p class="mt-4 text-lg text-gray-400 hero-fade-d1">847 persons across 38 countries in the cluster database</p>
+      <!-- Search -->
+      <div class="mt-10 max-w-xl mx-auto hero-fade-d2">
+        <div class="relative">
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" x-model="search" placeholder="Search by name, location, or field of expertise..."
+                 class="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-full text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-coral/50 focus:border-coral/50 transition-all">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Tabs -->
+  <div class="sticky top-16 z-40 bg-white border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex gap-1 py-3 overflow-x-auto">
+        <button @click="activeFilter = 'all'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors cursor-pointer"
+                :class="activeFilter === 'all' ? 'bg-charcoal text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+          All <span class="ml-1 text-xs opacity-70" x-text="'(' + researchers.length + ')'"></span>
+        </button>
+        <button @click="activeFilter = 'knowledge'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors cursor-pointer"
+                :class="activeFilter === 'knowledge' ? 'bg-ubt-green text-white' : 'bg-ubt-green-50 text-ubt-green hover:bg-ubt-green/20'">
+          Knowledge
+        </button>
+        <button @click="activeFilter = 'society'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors cursor-pointer"
+                :class="activeFilter === 'society' ? 'bg-raspberry text-white' : 'bg-raspberry-50 text-raspberry hover:bg-raspberry/20'">
+          Society
+        </button>
+        <button @click="activeFilter = 'culture'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors cursor-pointer"
+                :class="activeFilter === 'culture' ? 'bg-purple text-white' : 'bg-purple-50 text-purple hover:bg-purple/20'">
+          Culture
+        </button>
+        <button @click="activeFilter = 'methodology'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors cursor-pointer"
+                :class="activeFilter === 'methodology' ? 'bg-azure text-white' : 'bg-azure-50 text-azure hover:bg-azure/20'">
+          Methodology
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Researcher Grid -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <template x-for="(r, idx) in filtered" :key="r.name">
+          <a :href="r.name === 'Dr. Amina Osei' ? 'detail.html' : '#'"
+             class="card-hover bg-white rounded-2xl border border-gray-100 p-6 block scroll-reveal visible"
+             :style="'transition-delay: ' + (idx * 0.05) + 's'">
+            <div class="flex items-start gap-4">
+              <!-- Initials Avatar -->
+              <div class="flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold text-white"
+                   :class="{
+                     'bg-purple': r.sectionColor === 'purple',
+                     'bg-ubt-green': r.sectionColor === 'ubt-green',
+                     'bg-raspberry': r.sectionColor === 'raspberry',
+                     'bg-azure': r.sectionColor === 'azure'
+                   }"
+                   x-text="r.initials">
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-lg font-semibold text-charcoal truncate" x-text="r.title + ' ' + r.firstName + ' ' + r.lastName"></h3>
+                </div>
+                <p class="text-sm text-gray-500 mt-0.5" x-text="r.gender.charAt(0).toUpperCase() + r.gender.slice(1)"></p>
+                <p class="text-xs text-gray-400 mt-0.5" x-text="r.location"></p>
+              </div>
+            </div>
+            <!-- Fields -->
+            <div class="mt-4 flex flex-wrap gap-1.5">
+              <template x-for="kw in r.thematic" :key="kw">
+                <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600" x-text="kw"></span>
+              </template>
+              <template x-for="kw in r.geographic" :key="kw">
+                <span class="px-2 py-0.5 text-xs rounded-full bg-coral-50 text-coral" x-text="kw"></span>
+              </template>
+            </div>
+            <!-- Footer -->
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span x-show="r.bigsas" class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-ubt-green-50 text-ubt-green">BIGSAS</span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full"
+                      :class="{
+                        'bg-purple-50 text-purple': r.sectionColor === 'purple',
+                        'bg-ubt-green-50 text-ubt-green': r.sectionColor === 'ubt-green',
+                        'bg-raspberry-50 text-raspberry': r.sectionColor === 'raspberry',
+                        'bg-azure-50 text-azure': r.sectionColor === 'azure'
+                      }" x-text="r.section.charAt(0).toUpperCase() + r.section.slice(1)">
+                </span>
+              </div>
+              <span class="text-xs text-gray-400" x-text="r.languages.join(', ')"></span>
+            </div>
+          </a>
+        </template>
+      </div>
+
+      <!-- Empty State -->
+      <div x-show="filtered.length === 0" class="text-center py-20">
+        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <p class="text-lg text-gray-500">No persons found matching your criteria</p>
+        <button @click="search = ''; activeFilter = 'all'" class="mt-4 text-sm text-coral hover:text-coral-500 font-medium cursor-pointer">Clear filters</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="text-lg font-bold text-white tracking-tight">AFRICA MULTIPLE</span>
+          <p class="mt-1 text-sm text-gray-500">Cluster of Excellence &mdash; University of Bayreuth</p>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          <a href="dashboard.html" class="hover:text-white transition-colors">Home</a>
+          <a href="listing.html" class="hover:text-white transition-colors">Persons</a>
+          <a href="projects.html" class="hover:text-white transition-colors">Projects</a>
+          <a href="events.html" class="hover:text-white transition-colors">Events</a>
+          <a href="institutions.html" class="hover:text-white transition-colors">Institutions</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-white/10 text-center text-xs text-gray-600">
+        Style N: Research Showcase Platform &mdash; Prototype
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

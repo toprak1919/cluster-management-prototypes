@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - AM Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 100: "#a5d2d5", 200: "#7bbcc1", 300: "#4ca6af", 400: "#008f9c", 500: "#007683", 600: "#005e6b", 700: "#004754", 800: "#00313d", 900: "#001d25" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 100: "#e3bfdd", 200: "#d6a1ca", 300: "#c982b5", 400: "#bd62a0", 500: "#a54988", 600: "#8c3271", 700: "#73195b", 800: "#590043", 900: "#390027" },
+          "purple": { 50: "#ede0f1", 100: "#d7c4e6", 400: "#787acd", 500: "#5d64b5", 700: "#293a85" },
+          "leaf-green": { 50: "#e5e6cb", 400: "#788a32" },
+          "yellow": { 50: "#ebe3ca", 400: "#af7532", 500: "#965e1a" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+    .gantt-bar { transition: all 0.15s ease; }
+    .gantt-bar:hover { filter: brightness(1.15); transform: scaleY(1.3); }
+    .gantt-row:hover { background: rgba(13,148,98,0.04); }
+    .gantt-today { animation: pulse-line 2s ease-in-out infinite; }
+    @keyframes pulse-line { 0%,100% { opacity: 0.7; } 50% { opacity: 1; } }
+  </style>
+</head>
+<body class="h-full bg-gray-100 text-gray-900 antialiased" x-data="projectApp()">
+  <div class="flex h-full">
+
+    <!-- Mobile sidebar overlay -->
+    <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 bg-black/50 z-40 md:hidden" x-transition:enter="transition-opacity duration-200" x-transition:leave="transition-opacity duration-200"></div>
+
+    <!-- Sidebar -->
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed md:static md:translate-x-0 z-50 w-48 bg-gray-900 flex flex-col flex-shrink-0 h-screen overflow-y-auto transition-transform duration-200">
+      <div class="px-3 py-3 border-b border-gray-800 flex items-center justify-between">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-gray-400 font-semibold">AM Cluster</span>
+        <button @click="sidebarOpen = false" class="md:hidden text-gray-400 hover:text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <nav class="flex-1 py-2">
+        <a href="dashboard.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Dashboard
+          </span>
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search
+        </a>
+
+        <div class="px-3 pt-3 pb-1">
+          <span class="text-[11px] uppercase tracking-[0.2em] text-gray-500 font-medium">Records</span>
+        </div>
+        <a href="listing.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Persons
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">847</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Employees</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Cluster members</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">BIGSAS members</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Fellows</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Guests</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Similar names</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Compare with website</a>
+        </div>
+        <a href="projects.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-white bg-gray-800 border-l-2 border-ubt-green-400 transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Projects
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">23</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">Research sections</a>
+        </div>
+        <a href="#" title="Coming soon" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            Publications
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">340</span>
+        </a>
+        <a href="events.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Events
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">12</span>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Countries
+          </span>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Locations
+          </span>
+        </a>
+        <a href="institutions.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            Institutions
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">156</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">ACC</a>
+        </div>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          Filtered Views
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+          Feedback
+        </a>
+
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[11px] uppercase tracking-[0.2em] text-gray-500 font-medium">Administration</span>
+        </div>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Emails
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-gray-800 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Expert Sync
+        </a>
+      </nav>
+
+      <div class="px-3 py-2 border-t border-gray-800">
+        <a href="../index.html" class="text-[11px] text-gray-600 hover:text-gray-400 transition-all duration-150">&larr; Back to prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+
+      <!-- Top Bar -->
+      <header class="bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-3 flex-shrink-0">
+        <button @click="sidebarOpen = true" class="md:hidden text-gray-500 hover:text-gray-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <!-- Search -->
+        <div class="flex-1 relative">
+          <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Filter projects..." class="w-full max-w-xs pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded bg-gray-50 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green" x-model="search">
+        </div>
+        <!-- Filters -->
+        <div class="hidden md:flex items-center gap-2">
+          <select x-model="filterSection" class="text-[11px] border border-gray-200 rounded px-2 py-1.5 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-ubt-green">
+            <option value="">All Sections</option>
+            <option value="Mobilities">Mobilities</option>
+            <option value="Knowledges">Knowledges</option>
+            <option value="Moralities">Moralities</option>
+            <option value="Aesthetics">Aesthetics</option>
+            <option value="Learning">Learning</option>
+          </select>
+          <select x-model="filterStatus" class="text-[11px] border border-gray-200 rounded px-2 py-1.5 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-ubt-green">
+            <option value="">All Projects</option>
+            <option value="Active">Active</option>
+            <option value="Planned">Planned</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+        <!-- View toggles -->
+        <div class="flex items-center border border-gray-200 rounded overflow-hidden">
+          <button @click="view = 'gantt'" :class="view === 'gantt' ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'" class="px-2 py-1.5 text-[11px] font-medium transition-all duration-150">Gantt</button>
+          <button @click="view = 'table'" :class="view === 'table' ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'" class="px-2 py-1.5 text-[11px] font-medium border-l border-gray-200 transition-all duration-150">Table</button>
+          <button @click="view = 'kanban'" :class="view === 'kanban' ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'" class="px-2 py-1.5 text-[11px] font-medium border-l border-gray-200 transition-all duration-150">Kanban</button>
+        </div>
+        <!-- Record count -->
+        <span class="text-[11px] font-mono text-gray-400" x-text="filteredProjects.length + ' projects'"></span>
+        <!-- User -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-500">Admin</span>
+          <div class="w-6 h-6 rounded-full bg-ubt-green text-white flex items-center justify-center text-[11px] font-medium">AD</div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="flex-1 overflow-hidden flex flex-col">
+
+        <!-- Summary Stats Strip -->
+        <div class="bg-white border-b border-gray-200 px-4 py-1.5 flex items-center text-[11px] divide-x divide-gray-200 flex-shrink-0">
+          <span class="pr-3">Active: <span class="font-mono font-bold text-ubt-green">6</span></span>
+          <span class="px-3">Planned: <span class="font-mono font-bold text-blue-600">3</span></span>
+          <span class="px-3">Completed: <span class="font-mono font-bold text-gray-500">3</span></span>
+          <span class="pl-3">Total Approved: <span class="font-mono font-bold">&euro;4.2M</span></span>
+        </div>
+
+        <!-- Gantt View -->
+        <div x-show="view === 'gantt'" class="flex-1 overflow-auto flex flex-col min-h-0">
+          <!-- Gantt Chart -->
+          <div class="flex-1 overflow-auto bg-white border-b border-gray-200">
+            <div class="min-w-[900px]">
+              <!-- Year headers -->
+              <div class="flex border-b border-gray-200 sticky top-0 bg-gray-50 z-10">
+                <div class="w-52 flex-shrink-0 px-3 py-1.5 text-[11px] uppercase tracking-wider text-gray-500 font-medium border-r border-gray-200">Project</div>
+                <div class="flex-1 flex">
+                  <template x-for="year in years" :key="year">
+                    <div class="flex-1 text-center text-[11px] font-mono text-gray-400 py-1.5 border-r border-gray-100" x-text="year"></div>
+                  </template>
+                </div>
+              </div>
+              <!-- Project rows -->
+              <template x-for="(project, idx) in filteredProjects" :key="project.id">
+                <div class="flex gantt-row cursor-pointer border-b border-gray-100" :class="selectedProject?.id === project.id ? 'bg-ubt-green-50' : ''" @click="selectedProject = selectedProject?.id === project.id ? null : project">
+                  <!-- Project name column -->
+                  <div class="w-52 flex-shrink-0 px-3 py-1.5 border-r border-gray-200 flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-medium flex-shrink-0" :class="project.statusColor" x-text="project.initials"></span>
+                    <div class="min-w-0">
+                      <div class="text-[11px] font-medium text-gray-900 truncate" x-text="project.name"></div>
+                      <div class="text-[10px] text-gray-400 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" :class="project.sectionDot"></span>
+                        <span x-text="project.section"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Timeline area -->
+                  <div class="flex-1 relative py-1.5">
+                    <!-- Grid lines for years -->
+                    <div class="absolute inset-0 flex">
+                      <template x-for="year in years" :key="'grid-'+year">
+                        <div class="flex-1 border-r border-gray-50"></div>
+                      </template>
+                    </div>
+                    <!-- Today marker -->
+                    <div class="absolute top-0 bottom-0 w-px bg-red-400 gantt-today z-10" :style="'left:' + todayPosition + '%'"></div>
+                    <!-- Bar -->
+                    <div class="absolute top-1/2 -translate-y-1/2 h-4 rounded-sm gantt-bar flex items-center justify-end pr-1"
+                         :class="project.barClass"
+                         :style="'left:' + getBarLeft(project) + '%; width:' + getBarWidth(project) + '%'">
+                      <span class="text-[9px] font-mono text-white/80" x-show="getBarWidth(project) > 8" x-text="project.funding"></span>
+                    </div>
+                    <!-- Current position on active bars -->
+                    <template x-if="project.status === 'Active'">
+                      <div class="absolute top-1/2 -translate-y-1/2 w-1.5 h-5 bg-white border border-gray-400 rounded-sm z-10" :style="'left:calc(' + todayPosition + '% - 3px)'"></div>
+                    </template>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Detail Panel (collapsible) -->
+          <div x-show="selectedProject" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="translate-y-4 opacity-0" x-transition:enter-end="translate-y-0 opacity-100" class="bg-white border-t border-gray-200 flex-shrink-0">
+            <div class="px-4 py-2 flex items-start gap-6">
+              <button @click="selectedProject = null" class="text-gray-400 hover:text-gray-600 mt-0.5 flex-shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-3 mb-1">
+                  <span class="text-xs font-semibold text-gray-900" x-text="selectedProject?.name"></span>
+                  <span class="text-[11px] px-1.5 py-0.5 rounded font-medium" :class="selectedProject?.statusBadge" x-text="selectedProject?.status"></span>
+                </div>
+                <p class="text-[11px] text-gray-600 leading-relaxed" x-text="selectedProject?.description"></p>
+              </div>
+              <div class="flex-shrink-0 grid grid-cols-2 gap-x-6 gap-y-1 text-[11px]">
+                <div><span class="text-gray-400">Directors:</span> <span class="text-gray-700 font-medium" x-text="selectedProject?.directors"></span></div>
+                <div><span class="text-gray-400">Approved:</span> <span class="font-mono text-gray-700" x-text="selectedProject?.funding"></span></div>
+                <div><span class="text-gray-400">Research section:</span> <span class="text-gray-700" x-text="selectedProject?.section"></span></div>
+                <div><span class="text-gray-400">Duration:</span> <span class="font-mono text-gray-700" x-text="selectedProject?.start + ' - ' + selectedProject?.end"></span></div>
+                <div><span class="text-gray-400">Involved:</span> <span class="font-mono text-gray-700" x-text="selectedProject?.team + ' persons'"></span></div>
+                <div><span class="text-gray-400">Report deadline:</span> <span class="font-mono text-gray-700" x-text="selectedProject?.reportDeadline || '—'"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div x-show="view === 'table'" x-cloak class="flex-1 overflow-auto bg-white">
+          <table class="w-full">
+            <thead class="sticky top-0 bg-gray-50 z-10">
+              <tr class="border-b border-gray-200">
+                <th class="text-left text-[11px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-3">Project</th>
+                <th class="text-left text-[11px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-3">Directors</th>
+                <th class="text-left text-[11px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-3">Research section</th>
+                <th class="text-right text-[11px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-3">Start</th>
+                <th class="text-right text-[11px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-3">End</th>
+                <th class="text-right text-[11px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-3">Involved</th>
+                <th class="text-right text-[11px] uppercase tracking-wider text-gray-500 font-medium py-1.5 px-3">Approved</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="project in filteredProjects" :key="'t-'+project.id">
+                <tr class="border-b border-gray-100 hover:bg-ubt-green-50 cursor-pointer transition-all duration-150" @click="selectedProject = selectedProject?.id === project.id ? null : project" :class="selectedProject?.id === project.id ? 'bg-ubt-green-50' : ''">
+                  <td class="text-xs font-medium text-gray-900 py-1.5 px-3" x-text="project.name"></td>
+                  <td class="text-[11px] text-gray-600 py-1.5 px-3" x-text="project.directors"></td>
+                  <td class="py-1.5 px-3">
+                    <span class="text-[11px] px-1.5 py-0.5 rounded" :class="project.sectionBadge" x-text="project.section"></span>
+                  </td>
+                  <td class="text-[11px] font-mono text-gray-500 py-1.5 px-3 text-right" x-text="project.start"></td>
+                  <td class="text-[11px] font-mono text-gray-500 py-1.5 px-3 text-right" x-text="project.end"></td>
+                  <td class="text-[11px] font-mono text-gray-600 py-1.5 px-3 text-right" x-text="project.team"></td>
+                  <td class="text-[11px] font-mono text-gray-600 py-1.5 px-3 text-right" x-text="project.funding"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Kanban View -->
+        <div x-show="view === 'kanban'" x-cloak class="flex-1 overflow-auto p-3">
+          <div class="flex gap-3 h-full">
+            <!-- Planned -->
+            <div class="flex-1 min-w-[200px]">
+              <div class="flex items-center gap-1.5 mb-2">
+                <span class="text-[11px] uppercase tracking-wider text-gray-500 font-medium">Planned</span>
+                <span class="text-[11px] font-mono text-gray-400 bg-gray-100 rounded px-1" x-text="projects.filter(p => p.status==='Planned').length"></span>
+              </div>
+              <div class="space-y-2">
+                <template x-for="project in filteredProjects.filter(p => p.status === 'Planned')" :key="'k-'+project.id">
+                  <div class="bg-gray-50 border border-dashed border-gray-300 rounded p-2 cursor-pointer hover:shadow-md hover:border-ubt-green-200 transition-all duration-150" @click="selectedProject = project">
+                    <div class="text-xs font-medium text-gray-900 leading-tight" x-text="project.name"></div>
+                    <div class="flex items-center gap-2 mt-1.5">
+                      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-medium" :class="project.statusColor" x-text="project.initials"></span>
+                      <span class="text-[11px] text-gray-400 font-mono" x-text="project.start + '-' + project.end"></span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="w-1.5 h-1.5 rounded-full" :class="project.sectionDot"></span>
+                      <span class="text-[11px] text-gray-400" x-text="project.section"></span>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+            <!-- Active -->
+            <div class="flex-1 min-w-[200px]">
+              <div class="flex items-center gap-1.5 mb-2">
+                <span class="text-[11px] uppercase tracking-wider text-gray-500 font-medium">Active</span>
+                <span class="text-[11px] font-mono text-gray-400 bg-gray-100 rounded px-1" x-text="projects.filter(p => p.status==='Active').length"></span>
+              </div>
+              <div class="space-y-2">
+                <template x-for="project in filteredProjects.filter(p => p.status === 'Active')" :key="'k-'+project.id">
+                  <div class="bg-white border border-gray-200 rounded p-2 cursor-pointer hover:shadow-md hover:border-ubt-green-200 transition-all duration-150" @click="selectedProject = project">
+                    <div class="text-xs font-medium text-gray-900 leading-tight" x-text="project.name"></div>
+                    <div class="flex items-center gap-2 mt-1.5">
+                      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-medium" :class="project.statusColor" x-text="project.initials"></span>
+                      <span class="text-[11px] text-gray-400 font-mono" x-text="project.start + '-' + project.end"></span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="w-1.5 h-1.5 rounded-full" :class="project.sectionDot"></span>
+                      <span class="text-[11px] text-gray-400" x-text="project.section"></span>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+            <!-- Completed -->
+            <div class="flex-1 min-w-[200px]">
+              <div class="flex items-center gap-1.5 mb-2">
+                <span class="text-[11px] uppercase tracking-wider text-gray-500 font-medium">Completed</span>
+                <span class="text-[11px] font-mono text-gray-400 bg-gray-100 rounded px-1" x-text="projects.filter(p => p.status==='Completed').length"></span>
+              </div>
+              <div class="space-y-2">
+                <template x-for="project in filteredProjects.filter(p => p.status === 'Completed')" :key="'k-'+project.id">
+                  <div class="bg-gray-50 border border-gray-200 rounded p-2 opacity-75 cursor-pointer hover:shadow-md hover:border-ubt-green-200 hover:opacity-100 transition-all duration-150" @click="selectedProject = project">
+                    <div class="text-xs font-medium text-gray-700 leading-tight" x-text="project.name"></div>
+                    <div class="flex items-center gap-2 mt-1.5">
+                      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-[9px] font-medium text-gray-600" x-text="project.initials"></span>
+                      <span class="text-[11px] text-gray-400 font-mono" x-text="project.start + '-' + project.end"></span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="w-1.5 h-1.5 rounded-full" :class="project.sectionDot"></span>
+                      <span class="text-[11px] text-gray-400" x-text="project.section"></span>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+  function projectApp() {
+    return {
+      sidebarOpen: false,
+      view: 'gantt',
+      search: '',
+      filterSection: '',
+      filterStatus: '',
+      selectedProject: null,
+      years: [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030],
+      get todayPosition() {
+        const startYear = 2019;
+        const totalYears = 12;
+        const now = new Date();
+        const yearFraction = (now.getFullYear() - startYear) + (now.getMonth() / 12) + (now.getDate() / 365);
+        return (yearFraction / totalYears) * 100;
+      },
+      projects: [
+        { id: 1, name: 'Transnational Migration Patterns', directors: 'Dr. Amina Osei', initials: 'AO', section: 'Mobilities', status: 'Active', start: 2023, end: 2026, team: 8, funding: '\u20AC520K', publications: 12, description: 'Examining contemporary transnational migration corridors between West Africa and Europe, with focus on diaspora networks, remittance economies, and identity formation across borders.', statusColor: 'bg-azure-50 text-azure-700', sectionDot: 'bg-azure-400', sectionBadge: 'bg-azure-50 text-azure-700', statusBadge: 'bg-green-100 text-green-700', barClass: 'bg-azure-400' },
+        { id: 2, name: 'Decolonizing Knowledge Systems', directors: 'Prof. Kwame Asante', initials: 'KA', section: 'Knowledges', status: 'Active', start: 2024, end: 2027, team: 6, funding: '\u20AC380K', publications: 5, description: 'Critical examination of epistemological frameworks in African universities, developing indigenous knowledge methodologies and challenging Western-centric academic paradigms.', statusColor: 'bg-purple-50 text-purple-700', sectionDot: 'bg-purple-400', sectionBadge: 'bg-purple-50 text-purple-700', statusBadge: 'bg-green-100 text-green-700', barClass: 'bg-purple-400' },
+        { id: 3, name: 'Climate Adaptation & Rural Livelihoods', directors: 'Dr. Samuel Mwangi', initials: 'SM', section: 'Learning', status: 'Active', start: 2022, end: 2025, team: 10, funding: '\u20AC450K', publications: 18, description: 'Investigating how rural communities in East Africa adapt agricultural and pastoral practices in response to climate change, integrating indigenous knowledge with scientific data.', statusColor: 'bg-leaf-green-50 text-green-700', sectionDot: 'bg-leaf-green-400', sectionBadge: 'bg-leaf-green-50 text-green-700', statusBadge: 'bg-green-100 text-green-700', barClass: 'bg-leaf-green-400' },
+        { id: 4, name: 'Visual Cultures of Resistance', directors: 'Prof. Chidinma Nwosu', initials: 'CN', section: 'Aesthetics', status: 'Active', start: 2023, end: 2026, team: 5, funding: '\u20AC290K', publications: 8, description: 'Analyzing visual art, photography, and digital media as tools of political resistance and social commentary across contemporary Africa.', statusColor: 'bg-yellow-50 text-yellow-500', sectionDot: 'bg-yellow-400', sectionBadge: 'bg-yellow-50 text-yellow-500', statusBadge: 'bg-green-100 text-green-700', barClass: 'bg-yellow-400' },
+        { id: 5, name: 'Urban Informality & Governance', directors: 'Dr. Grace Achieng', initials: 'GA', section: 'Mobilities', status: 'Active', start: 2024, end: 2027, team: 7, funding: '\u20AC410K', publications: 3, description: 'Studying informal economies and governance structures in rapidly urbanizing African cities, focusing on Nairobi, Lagos, and Kinshasa.', statusColor: 'bg-azure-50 text-azure-700', sectionDot: 'bg-azure-400', sectionBadge: 'bg-azure-50 text-azure-700', statusBadge: 'bg-green-100 text-green-700', barClass: 'bg-azure-400' },
+        { id: 6, name: 'Religious Pluralism in the Sahel', directors: 'Prof. Ibrahim Tour\u00e9', initials: 'IT', section: 'Moralities', status: 'Active', start: 2023, end: 2026, team: 6, funding: '\u20AC350K', publications: 9, description: 'Examining interfaith dynamics, religious coexistence, and moral frameworks in the Sahel region, particularly Mali, Niger, and Burkina Faso.', statusColor: 'bg-raspberry-50 text-raspberry-700', sectionDot: 'bg-raspberry-400', sectionBadge: 'bg-raspberry-50 text-raspberry-700', statusBadge: 'bg-green-100 text-green-700', barClass: 'bg-raspberry-400' },
+        { id: 7, name: 'Digital Heritage Archive', directors: 'Dr. Fatima Diallo', initials: 'FD', section: 'Moralities', status: 'Planned', start: 2026, end: 2029, team: 4, funding: '\u20AC280K', publications: 0, description: 'Building a comprehensive digital archive of oral histories, cultural artifacts, and heritage sites across West Africa using advanced digitization technologies.', statusColor: 'bg-raspberry-50 text-raspberry-700', sectionDot: 'bg-raspberry-400', sectionBadge: 'bg-raspberry-50 text-raspberry-700', statusBadge: 'bg-blue-100 text-blue-700', barClass: 'bg-gray-300 border border-dashed border-gray-400' },
+        { id: 8, name: 'Ocean Economies of East Africa', directors: 'Dr. Samuel Mwangi', initials: 'SM', section: 'Mobilities', status: 'Planned', start: 2026, end: 2028, team: 5, funding: '\u20AC320K', publications: 0, description: 'Investigating maritime trade routes, fishing economies, and coastal livelihoods along the East African seaboard from Somalia to Mozambique.', statusColor: 'bg-azure-50 text-azure-700', sectionDot: 'bg-azure-400', sectionBadge: 'bg-azure-50 text-azure-700', statusBadge: 'bg-blue-100 text-blue-700', barClass: 'bg-gray-300 border border-dashed border-gray-400' },
+        { id: 9, name: 'Pan-African Curriculum Reform', directors: 'Prof. Chidinma Nwosu', initials: 'CN', section: 'Learning', status: 'Planned', start: 2027, end: 2030, team: 8, funding: '\u20AC500K', publications: 0, description: 'Developing and piloting Afrocentric curriculum frameworks for secondary and tertiary education institutions across the continent.', statusColor: 'bg-leaf-green-50 text-green-700', sectionDot: 'bg-leaf-green-400', sectionBadge: 'bg-leaf-green-50 text-green-700', statusBadge: 'bg-blue-100 text-blue-700', barClass: 'bg-gray-300 border border-dashed border-gray-400' },
+        { id: 10, name: 'Mapping Linguistic Diversity', directors: 'Dr. Grace Achieng', initials: 'GA', section: 'Knowledges', status: 'Completed', start: 2020, end: 2024, team: 9, funding: '\u20AC420K', publications: 24, description: 'Comprehensive mapping and documentation of endangered and minority languages across Sub-Saharan Africa, creating digital language resources.', statusColor: 'bg-gray-200 text-gray-600', sectionDot: 'bg-purple-400', sectionBadge: 'bg-purple-50 text-purple-700', statusBadge: 'bg-gray-100 text-gray-600', barClass: 'bg-gray-300 opacity-60' },
+        { id: 11, name: 'Conflict Memory in Great Lakes', directors: 'Dr. Jean-Pierre Habimana', initials: 'JPH', section: 'Moralities', status: 'Completed', start: 2021, end: 2024, team: 7, funding: '\u20AC380K', publications: 16, description: 'Documenting collective memory, trauma narratives, and reconciliation processes in the Great Lakes region following decades of conflict.', statusColor: 'bg-gray-200 text-gray-600', sectionDot: 'bg-raspberry-400', sectionBadge: 'bg-raspberry-50 text-raspberry-700', statusBadge: 'bg-gray-100 text-gray-600', barClass: 'bg-gray-300 opacity-60' },
+        { id: 12, name: 'Gender & Market Systems', directors: 'Dr. Aisha Mohammed', initials: 'AM', section: 'Aesthetics', status: 'Completed', start: 2019, end: 2023, team: 6, funding: '\u20AC310K', publications: 20, description: 'Analyzing gendered dimensions of market participation, trade networks, and economic agency in West African market systems.', statusColor: 'bg-gray-200 text-gray-600', sectionDot: 'bg-yellow-400', sectionBadge: 'bg-yellow-50 text-yellow-500', statusBadge: 'bg-gray-100 text-gray-600', barClass: 'bg-gray-300 opacity-60' },
+      ],
+      get filteredProjects() {
+        return this.projects.filter(p => {
+          if (this.search && !p.name.toLowerCase().includes(this.search.toLowerCase()) && !p.directors.toLowerCase().includes(this.search.toLowerCase())) return false;
+          if (this.filterSection && p.section !== this.filterSection) return false;
+          if (this.filterStatus && p.status !== this.filterStatus) return false;
+          return true;
+        });
+      },
+      getBarLeft(project) {
+        const startYear = 2019;
+        const totalYears = 12;
+        return ((project.start - startYear) / totalYears) * 100;
+      },
+      getBarWidth(project) {
+        const totalYears = 12;
+        return ((project.end - project.start) / totalYears) * 100;
+      },
+    }
+  }
+  </script>
+</body>
+</html>

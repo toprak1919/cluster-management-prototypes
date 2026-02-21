@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persons — Africa Multiple Cluster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 400: "#0d9462", 500: "#007b4b" },
+            "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+            "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+            "cream": { DEFAULT: "#faf5eb", 50: "#fdfbf7", 100: "#faf5eb", 200: "#f0e6d0", 300: "#e6d7b5" },
+            "coffee": { DEFAULT: "#6b4c3b", 100: "#d4c0a8", 200: "#b89e82", 300: "#9c7d5c", 400: "#6b4c3b", 500: "#4a3428" },
+            "rust": { DEFAULT: "#c45a3c", 100: "#f0c4b8", 200: "#e89880", 300: "#d4704e", 400: "#c45a3c", 500: "#a04030" },
+          },
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Georgia', 'Palatino', 'serif'],
+            mono: ['Courier New', 'monospace'],
+          },
+        }
+      }
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+      body { background-color: #faf5eb; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); }
+      .warm-shadow { box-shadow: 0 4px 12px rgba(107,76,59,0.15); }
+      .index-card { position: relative; transition: transform 0.2s, box-shadow 0.2s; }
+      .index-card:hover { transform: rotate(0deg) !important; box-shadow: 0 8px 24px rgba(107,76,59,0.2); z-index: 10; }
+      .paperclip { position: absolute; top: -4px; right: 16px; width: 20px; height: 40px; }
+      .stamp { text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; border: 3px double currentColor; border-radius: 4px; padding: 2px 8px; display: inline-block; transform: rotate(-3deg); }
+    </style>
+</head>
+<body class="min-h-screen font-body text-coffee-400" x-data="{ mobileMenu: false, activeTab: 'all', search: '' }">
+
+    <!-- Vintage Control Panel Top Bar -->
+    <nav class="bg-coffee-500 border-b-4 border-coffee-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-6">
+                    <a href="../index.html" class="text-cream-200 hover:text-cream text-xs font-mono tracking-wider flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        PROTOTYPES
+                    </a>
+                    <div class="hidden md:flex items-center gap-1">
+                        <svg class="w-5 h-5 text-rust-300" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        <span class="font-display text-cream text-lg tracking-wide">AFRICA MULTIPLE</span>
+                        <span class="text-coffee-200 text-xs font-mono ml-2">CLUSTER MANAGEMENT</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="dashboard.html" class="px-3 py-1.5 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">DASHBOARD</a>
+                    <a href="listing.html" class="px-3 py-1.5 bg-rust-400 text-cream rounded text-sm font-mono tracking-wide">PERSONS</a>
+                    <a href="projects.html" class="px-3 py-1.5 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">PROJECTS</a>
+                    <a href="events.html" class="px-3 py-1.5 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">EVENTS</a>
+                    <a href="institutions.html" class="px-3 py-1.5 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">INSTITUTIONS</a>
+                </div>
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden text-cream-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+        <div x-show="mobileMenu" x-transition class="md:hidden bg-coffee-500 border-t border-coffee-400 px-4 pb-4">
+            <a href="dashboard.html" class="block px-3 py-2 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide mb-1">DASHBOARD</a>
+            <a href="listing.html" class="block px-3 py-2 bg-rust-400 text-cream rounded text-sm font-mono tracking-wide mb-1">PERSONS</a>
+            <a href="projects.html" class="block px-3 py-2 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide mb-1">PROJECTS</a>
+            <a href="events.html" class="block px-3 py-2 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide mb-1">EVENTS</a>
+            <a href="institutions.html" class="block px-3 py-2 text-cream-200 hover:bg-coffee-400 rounded text-sm font-mono tracking-wide">INSTITUTIONS</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+        <!-- Header -->
+        <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+            <div>
+                <h1 class="font-display text-3xl text-coffee-500">Card Catalog</h1>
+                <p class="text-coffee-300 font-mono text-sm mt-1">PERSONNEL INDEX &mdash; 847 RECORDS ON FILE</p>
+            </div>
+            <div class="stamp text-coffee-300 text-xs">CLASSIFIED</div>
+        </div>
+
+        <!-- Search Bar (typewriter style) -->
+        <div class="mb-6">
+            <div class="relative max-w-lg">
+                <div class="bg-coffee-500 text-cream font-mono text-xs px-3 py-1 rounded-t-md inline-block">SEARCH RECORDS</div>
+                <div class="bg-cream-50 border-2 border-coffee-200 rounded-b-md rounded-tr-md p-1 flex">
+                    <input x-model="search" type="text" placeholder="Type name, institution, or research area..." class="w-full bg-transparent px-3 py-2 font-mono text-sm text-coffee-500 placeholder-coffee-200 focus:outline-none">
+                    <button class="px-4 py-2 bg-coffee-400 text-cream font-mono text-xs tracking-wider rounded hover:bg-coffee-500 transition-colors">FIND</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Dividers -->
+        <div class="flex flex-wrap gap-0 mb-8">
+            <template x-for="tab in [{id:'all',label:'ALL'},{id:'af',label:'A\u2013F'},{id:'gl',label:'G\u2013L'},{id:'mr',label:'M\u2013R'},{id:'sz',label:'S\u2013Z'}]">
+                <button @click="activeTab = tab.id"
+                    :class="activeTab === tab.id ? 'bg-cream-50 text-coffee-500 border-cream-300 border-b-cream-50 -mb-px z-10' : 'bg-cream-200 text-coffee-300 border-cream-300 hover:bg-cream-100'"
+                    class="px-5 py-2 font-mono text-sm tracking-wider border border-b-0 rounded-t-lg transition-colors">
+                    <span x-text="tab.label"></span>
+                </button>
+            </template>
+        </div>
+
+        <!-- Person Index Cards Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Card 1 -->
+            <a href="detail.html" class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(-0.8deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Dr. Osei, Amina</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Female</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-ubt-green">Yes</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Bayreuth</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-ubt-green text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Postcolonial Lit.</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, French, Twi</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: West Africa, Ghana</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card 2 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(0.6deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Prof. Mensah, Kofi</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Male</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-coffee-300">No</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Accra</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-azure text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Political Science</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Akan</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: West Africa</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(-0.5deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Dr. Nkrumah, Fatima</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Female</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-ubt-green">Yes</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Cape Town</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-raspberry text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Anthropology</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Zulu, French</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: Southern Africa</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(0.9deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Prof. Adeyemi, Olumide</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Male</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-coffee-300">No</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Ibadan</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-rust-400 text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">History</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Yoruba</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: West Africa, Nigeria</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(-0.7deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Dr. Chimwe, Blessing</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Female</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-ubt-green">Yes</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Harare</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-ubt-green text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Sociology</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Shona</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: Southern Africa</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(0.4deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Prof. Asante, Kwame</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Male</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-coffee-300">No</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Bayreuth</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-azure text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">African History</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Twi, German</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: West Africa, Ghana</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(-1deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Dr. Eze, Ngozi</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Female</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-coffee-300">No</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Lagos</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-raspberry text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Gender Studies</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Igbo</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: West Africa, Nigeria</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(0.8deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Prof. Kariuki, Samuel</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Male</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-ubt-green">Yes</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Nairobi</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-rust-400 text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Philosophy</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Swahili</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: East Africa, Kenya</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 9 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(-0.3deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Dr. Diallo, Mariam</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Female</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-ubt-green">Yes</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Dakar</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-ubt-green text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Linguistics</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: French, Wolof, English</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: West Africa, Senegal</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 10 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(0.5deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Prof. Moyo, Tendai</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Male</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-coffee-300">No</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Stellenbosch</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-azure text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Economics</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Ndebele</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: Southern Africa</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 11 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(-0.9deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Dr. Bakare, Ayo</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Male</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-coffee-300">No</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Ile-Ife</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-raspberry text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Art History</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Yoruba</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: West Africa, Nigeria</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 12 -->
+            <div class="index-card bg-cream-50 border border-cream-300 rounded-lg overflow-hidden warm-shadow" style="transform: rotate(0.7deg);">
+                <div class="h-1.5 bg-rust-400"></div>
+                <div class="p-5">
+                    <svg class="paperclip" viewBox="0 0 20 44" fill="none" stroke="#9c7d5c" stroke-width="1.5">
+                        <path d="M5 2 L5 34 Q5 40 10 40 Q15 40 15 34 L15 10 Q15 6 12 6 Q9 6 9 10 L9 30"/>
+                    </svg>
+                    <p class="font-display text-lg font-bold text-coffee-500">Prof. Mwangi, Zainab</p>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200 space-y-1">
+                        <div class="flex justify-between"><span>GENDER:</span><span class="text-coffee-400">Female</span></div>
+                        <div class="flex justify-between"><span>BIGSAS:</span><span class="text-ubt-green">Yes</span></div>
+                        <div class="flex justify-between"><span>LOCATION:</span><span class="text-coffee-400">Kampala</span></div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <span class="stamp text-rust-400 text-[9px]" style="transform: rotate(-2deg); padding: 1px 6px; border-width: 2px;">Media Studies</span>
+                    </div>
+                    <div class="mt-2 font-mono text-[10px] text-coffee-200">
+                        <span>LANGUAGES: English, Swahili, Luganda</span>
+                    </div>
+                    <div class="mt-1 font-mono text-[10px] text-coffee-200">
+                        <span>GEO. FIELDS: East Africa, Uganda</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-10 flex items-center justify-center gap-2 font-mono text-sm">
+            <span class="text-coffee-200">&laquo; PREV</span>
+            <span class="px-3 py-1 bg-rust-400 text-cream rounded">1</span>
+            <a href="#" class="px-3 py-1 text-coffee-400 hover:bg-cream-200 rounded">2</a>
+            <a href="#" class="px-3 py-1 text-coffee-400 hover:bg-cream-200 rounded">3</a>
+            <span class="text-coffee-300">...</span>
+            <a href="#" class="px-3 py-1 text-coffee-400 hover:bg-cream-200 rounded">71</a>
+            <a href="#" class="text-coffee-400 hover:text-coffee-500">NEXT &raquo;</a>
+        </div>
+
+    </main>
+
+    <footer class="border-t-2 border-cream-300 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="font-mono text-xs text-coffee-200">AFRICA MULTIPLE CLUSTER OF EXCELLENCE &mdash; UNIVERSITY OF BAYREUTH</p>
+            <p class="font-mono text-xs text-coffee-200">STYLE F: RETRO ANALOG DASHBOARD &mdash; PROTOTYPE</p>
+        </div>
+    </footer>
+
+</body>
+</html>

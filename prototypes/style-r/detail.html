@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Specimen Record — Dr. Amina Osei | Africa Multiple</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --parchment: #faf6ee;
+      --ink: #2c2416;
+      --green: #3d6b4f;
+      --gold: #b8860b;
+      --red: #8b3a3a;
+      --blue: #4a6b8a;
+      --gold-light: rgba(184,134,11,0.15);
+      --gold-faint: rgba(184,134,11,0.3);
+    }
+
+    body {
+      font-family: 'Crimson Pro', serif;
+      background-color: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .running-header {
+      border-bottom: 1px solid var(--gold);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--parchment);
+    }
+    .running-header::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0; right: 0;
+      height: 0.5px;
+      background: var(--gold-faint);
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+    .header-title a { color: inherit; text-decoration: none; }
+    .header-nav { display: flex; align-items: baseline; gap: 24px; }
+    .header-nav a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: -12px;
+      background: var(--parchment); border: 1px solid var(--gold);
+      padding: 8px 0; min-width: 180px; z-index: 200; margin-top: 8px;
+    }
+    .nav-dropdown-menu::before {
+      content: ''; position: absolute; inset: 3px;
+      border: 0.5px solid var(--gold-faint); pointer-events: none;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 4px 16px; font-size: 10px; letter-spacing: 0.12em;
+    }
+    .nav-dropdown-menu a:hover { background: var(--gold-light); }
+
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .plate-heading { text-align: center; margin-bottom: 12px; }
+    .plate-no {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--red);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .ornamental-rule {
+      border: none; height: 1px; background: var(--gold);
+      position: relative; margin: 32px 0;
+    }
+    .ornamental-rule::after {
+      content: '\2726'; position: absolute; left: 50%; top: -8px;
+      transform: translateX(-50%); background: var(--parchment);
+      padding: 0 8px; color: var(--gold); font-size: 12px;
+    }
+
+    /* Specimen Frame */
+    .specimen-frame {
+      border: 1px solid var(--gold);
+      outline: 1px solid var(--gold);
+      outline-offset: 4px;
+      padding: 40px 36px;
+      position: relative;
+      background: var(--parchment);
+      animation: fadeInSpecimen 0.6s ease-out both;
+    }
+    .specimen-frame::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 0.5px solid var(--gold-faint);
+      pointer-events: none;
+    }
+    .ornament-corner { position: relative; }
+    .ornament-corner::before,
+    .ornament-corner::after {
+      content: '\2767';
+      position: absolute;
+      color: var(--gold);
+      font-size: 18px;
+      opacity: 0.6;
+    }
+    .ornament-corner::before { top: 12px; left: 16px; }
+    .ornament-corner::after { bottom: 12px; right: 16px; transform: rotate(180deg); }
+
+    /* Person header */
+    .person-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 2.4rem;
+      color: var(--ink);
+      margin-bottom: 4px;
+      line-height: 1.1;
+    }
+    .person-taxonomy {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: var(--green);
+      margin-bottom: 24px;
+    }
+
+    /* Action buttons */
+    .specimen-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .action-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 6px 14px;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover { background: var(--gold-light); }
+    .action-btn.primary { background: var(--green); color: var(--parchment); border-color: var(--green); }
+    .action-btn.primary:hover { background: #2d5540; }
+
+    /* Classification sections */
+    .classification {
+      margin-bottom: 28px;
+    }
+    .classification-heading {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 0.5px solid var(--gold-faint);
+    }
+    .field-grid {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 6px 16px;
+    }
+    .field-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--ink);
+      opacity: 0.6;
+    }
+    .field-value {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+    .field-value a {
+      color: var(--blue);
+      text-decoration: none;
+      border-bottom: 0.5px solid transparent;
+    }
+    .field-value a:hover { border-bottom-color: var(--blue); }
+    .taxonomy-value {
+      font-style: italic;
+      color: var(--green);
+    }
+    .bool-yes { color: var(--green); }
+    .bool-no { color: var(--ink); opacity: 0.35; }
+
+    /* Tags */
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      padding: 2px 8px;
+      border: 0.5px solid var(--gold-faint);
+      color: var(--green);
+      font-style: italic;
+    }
+
+    /* Fellowship table */
+    .fellowship-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+    .fellowship-table th {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      text-align: left;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--gold);
+    }
+    .fellowship-table td {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      padding: 8px 8px;
+      border-bottom: 0.5px solid var(--gold-faint);
+      color: var(--ink);
+    }
+    .fellowship-table td a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .fellowship-table td a:hover { border-bottom: 0.5px solid var(--blue); }
+
+    /* Publication table */
+    .pub-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+    .pub-table th {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      text-align: left;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--gold);
+    }
+    .pub-table td {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      padding: 8px 8px;
+      border-bottom: 0.5px solid var(--gold-faint);
+    }
+
+    /* Sidebar nav within specimen */
+    .specimen-nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .specimen-nav a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--blue);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .specimen-nav a:hover { color: var(--green); }
+
+    @keyframes fadeInSpecimen {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-footer {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px;
+      text-align: center;
+    }
+    .page-footer a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .page-footer a:hover { color: var(--green); }
+
+    @media (max-width: 768px) {
+      .person-name { font-size: 1.8rem; }
+      .field-grid { grid-template-columns: 1fr; gap: 2px; }
+      .field-label { margin-top: 8px; }
+      .specimen-frame { padding: 24px 20px; }
+    }
+    @media (max-width: 480px) {
+      .header-inner { flex-direction: column; gap: 8px; text-align: center; }
+      .header-nav { justify-content: center; flex-wrap: wrap; }
+      .specimen-actions { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body x-data="{ activeSection: 'all' }">
+
+  <header class="running-header">
+    <div class="header-inner">
+      <div class="header-title"><a href="dashboard.html">The Africa Multiple Compendium</a></div>
+      <nav class="header-nav">
+        <a href="dashboard.html">Index</a>
+        <div class="nav-dropdown">
+          <a href="listing.html" class="active">Persons</a>
+          <div class="nav-dropdown-menu">
+            <a href="listing.html">Register of Persons</a>
+            <a href="#">Employees</a>
+            <a href="#">Cluster Members</a>
+            <a href="#">BIGSAS Members</a>
+            <a href="#">Fellows</a>
+            <a href="#">Guests</a>
+          </div>
+        </div>
+        <a href="projects.html">Projects</a>
+        <a href="events.html">Events</a>
+        <a href="institutions.html">Institutions</a>
+        <a href="detail.html">Specimen</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-body">
+
+    <div class="plate-heading">
+      <span class="plate-no">Plate II &mdash; Specimen No. 001</span>
+    </div>
+
+    <!-- Main Specimen Frame -->
+    <div class="specimen-frame ornament-corner">
+
+      <h1 class="person-name">Dr. Amina Osei</h1>
+      <p class="person-taxonomy">Researcher, Mobilities &mdash; University of Bayreuth</p>
+
+      <div class="specimen-actions">
+        <button class="action-btn primary">Edit Record</button>
+        <button class="action-btn">Export</button>
+        <button class="action-btn">History</button>
+      </div>
+
+      <!-- In-specimen navigation -->
+      <nav class="specimen-nav">
+        <a href="#contact">Contact</a>
+        <a href="#identity">Identity</a>
+        <a href="#expertise">Expertise</a>
+        <a href="#membership">Membership</a>
+        <a href="#projects">Projects</a>
+        <a href="#institutions">Institutions</a>
+        <a href="#fellowships">Fellowships</a>
+        <a href="#publications">Publications</a>
+        <a href="#events">Events</a>
+        <a href="#expert-search">Expert Search</a>
+        <a href="#addresses">Addresses</a>
+      </nav>
+
+      <hr class="ornamental-rule">
+
+      <!-- I. Contact Information -->
+      <div class="classification" id="contact">
+        <h2 class="classification-heading">I. Contact Information</h2>
+        <div class="field-grid">
+          <span class="field-label">Email(s)</span>
+          <span class="field-value">
+            <a href="#">amina.osei@uni-bayreuth.de</a> <span style="opacity:0.5; font-size: 0.85rem;">(primary)</span><br>
+            <a href="#">a.osei@ghana-research.org</a> <span style="opacity:0.5; font-size: 0.85rem;">(research network)</span>
+          </span>
+
+          <span class="field-label">Homepage(s)</span>
+          <span class="field-value"><a href="#">Personal Research Page</a></span>
+
+          <span class="field-label">ORCID</span>
+          <span class="field-value"><a href="#">0000-0002-1234-5678</a></span>
+
+          <span class="field-label">Phone(s)</span>
+          <span class="field-value">+49 921 55-xxxx <span style="opacity:0.5; font-size: 0.85rem;">(work)</span></span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- II. Identity -->
+      <div class="classification" id="identity">
+        <h2 class="classification-heading">II. Identity &amp; Classification</h2>
+        <div class="field-grid">
+          <span class="field-label">Gender</span>
+          <span class="field-value">Female</span>
+
+          <span class="field-label">Highest degree</span>
+          <span class="field-value">Dr. phil.</span>
+
+          <span class="field-label">Languages</span>
+          <span class="field-value">
+            <span class="tag-list">
+              <span class="tag">English</span>
+              <span class="tag">Twi</span>
+              <span class="tag">French</span>
+              <span class="tag">German</span>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- III. Fields of Expertise -->
+      <div class="classification" id="expertise">
+        <h2 class="classification-heading">III. Fields of Expertise</h2>
+        <div class="field-grid">
+          <span class="field-label">Geographic fields</span>
+          <span class="field-value">
+            <span class="tag-list">
+              <span class="tag">West Africa</span>
+              <span class="tag">Ghana</span>
+              <span class="tag">Nigeria</span>
+            </span>
+          </span>
+
+          <span class="field-label">Thematic fields</span>
+          <span class="field-value">
+            <span class="tag-list">
+              <span class="tag">Migration</span>
+              <span class="tag">Diaspora</span>
+              <span class="tag">Transnationalism</span>
+            </span>
+          </span>
+
+          <span class="field-label">Field of study</span>
+          <span class="field-value">
+            <span class="tag-list">
+              <span class="tag">African Studies</span>
+              <span class="tag">Sociology</span>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- IV. Membership -->
+      <div class="classification" id="membership">
+        <h2 class="classification-heading">IV. Membership &amp; Affiliation</h2>
+        <div class="field-grid">
+          <span class="field-label">BIGSAS</span>
+          <span class="field-value bool-yes">Yes</span>
+
+          <span class="field-label">Cluster</span>
+          <span class="field-value bool-yes">Yes</span>
+
+          <span class="field-label">Entitled to vote</span>
+          <span class="field-value bool-yes">Yes</span>
+
+          <span class="field-label">Signed Rights and Duties</span>
+          <span class="field-value bool-yes">Yes</span>
+
+          <span class="field-label">Membership category</span>
+          <span class="field-value">Principal Investigator</span>
+
+          <span class="field-label">Membership Start</span>
+          <span class="field-value">01 Jan 2019</span>
+
+          <span class="field-label">Membership End</span>
+          <span class="field-value bool-no">&mdash;</span>
+
+          <span class="field-label">Position</span>
+          <span class="field-value">Postdoctoral Researcher</span>
+
+          <span class="field-label">Location</span>
+          <span class="field-value"><a href="#">Bayreuth</a></span>
+
+          <span class="field-label">Research Sections</span>
+          <span class="field-value">
+            <span class="tag-list">
+              <span class="tag">Mobilities</span>
+              <span class="tag">Affiliations</span>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- V. Projects -->
+      <div class="classification" id="projects">
+        <h2 class="classification-heading">V. Projects</h2>
+        <div class="field-grid">
+          <span class="field-label">Managed projects</span>
+          <span class="field-value"><a href="projects.html">Decolonial Mobilities in West Africa</a></span>
+
+          <span class="field-label">Involved projects</span>
+          <span class="field-value">
+            <a href="projects.html">Transnational Networks &amp; Diaspora</a> <span style="opacity:0.5; font-size:0.85rem;">(Researcher)</span><br>
+            <a href="projects.html">Urban Migration Patterns</a> <span style="opacity:0.5; font-size:0.85rem;">(Consultant)</span>
+          </span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- VI. Institutions -->
+      <div class="classification" id="institutions">
+        <h2 class="classification-heading">VI. Institutions</h2>
+        <div class="field-grid">
+          <span class="field-label">Institution</span>
+          <span class="field-value">
+            <a href="institutions.html">University of Bayreuth</a> <span style="opacity:0.5; font-size:0.85rem;">(Researcher / Dept. of African Studies)</span>
+          </span>
+
+          <span class="field-label">Institution</span>
+          <span class="field-value">
+            <a href="institutions.html">University of Ghana, Legon</a> <span style="opacity:0.5; font-size:0.85rem;">(Visiting Fellow / Institute of African Studies)</span>
+          </span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- VII. Fellowships -->
+      <div class="classification" id="fellowships">
+        <h2 class="classification-heading">VII. Fellowships (as Fellow)</h2>
+        <table class="fellowship-table">
+          <thead>
+            <tr>
+              <th>Start</th>
+              <th>End</th>
+              <th>Host</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>01 Mar 2023</td>
+              <td>31 Aug 2023</td>
+              <td><a href="#">Prof. Kwame Mensah</a></td>
+            </tr>
+            <tr>
+              <td>15 Sep 2021</td>
+              <td>14 Mar 2022</td>
+              <td><a href="#">Dr. Elena Sandoval</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 class="classification-heading" style="margin-top: 24px;">Fellowships (as Host)</h2>
+        <table class="fellowship-table">
+          <thead>
+            <tr>
+              <th>Start</th>
+              <th>End</th>
+              <th>Fellow</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>01 Oct 2024</td>
+              <td>31 Mar 2025</td>
+              <td><a href="#">Joseph Kamau</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- VIII. Publications -->
+      <div class="classification" id="publications">
+        <h2 class="classification-heading">VIII. Publications (Project-linked)</h2>
+        <table class="pub-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Planned</th>
+              <th>Achieved</th>
+              <th>Costs (&euro;)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2025</td>
+              <td>2 journal articles, 1 edited volume</td>
+              <td>2 journal articles</td>
+              <td>3,200.00</td>
+            </tr>
+            <tr>
+              <td>2024</td>
+              <td>1 monograph chapter, 1 conference paper</td>
+              <td>1 monograph chapter, 1 conference paper</td>
+              <td>1,850.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- IX. Events -->
+      <div class="classification" id="events">
+        <h2 class="classification-heading">IX. Events (as Host)</h2>
+        <div class="field-grid">
+          <span class="field-label">Event</span>
+          <span class="field-value"><a href="events.html">Workshop on Digital Humanities</a> <span style="opacity:0.5; font-size:0.85rem;">(16&ndash;18 Feb 2026)</span></span>
+        </div>
+
+        <h2 class="classification-heading" style="margin-top: 24px;">Events (as Guest)</h2>
+        <div class="field-grid">
+          <span class="field-label">Event</span>
+          <span class="field-value"><a href="events.html">Pan-African Mobilities Conference</a> <span style="opacity:0.5; font-size:0.85rem;">(05&ndash;07 Nov 2025)</span></span>
+
+          <span class="field-label">Event</span>
+          <span class="field-value"><a href="events.html">BIGSAS Annual Symposium</a> <span style="opacity:0.5; font-size:0.85rem;">(20&ndash;22 Jun 2025)</span></span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- X. Expert Search -->
+      <div class="classification" id="expert-search">
+        <h2 class="classification-heading">X. Expert Search</h2>
+        <div class="field-grid">
+          <span class="field-label">Consent given</span>
+          <span class="field-value bool-yes">Yes</span>
+
+          <span class="field-label">Visible on website</span>
+          <span class="field-value bool-yes">Yes</span>
+
+          <span class="field-label">Last synced</span>
+          <span class="field-value">12 Feb 2026</span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- XI. Addresses -->
+      <div class="classification" id="addresses">
+        <h2 class="classification-heading">XI. Addresses</h2>
+        <div class="field-grid">
+          <span class="field-label">Office</span>
+          <span class="field-value">
+            GW II, Room 1.34<br>
+            University of Bayreuth<br>
+            95447 Bayreuth, Germany
+          </span>
+        </div>
+      </div>
+
+      <hr class="ornamental-rule">
+
+      <!-- XII. Remark -->
+      <div class="classification">
+        <h2 class="classification-heading">XII. Remark</h2>
+        <p class="field-value" style="font-style: italic; opacity: 0.7;">
+          Active member since 2019. Key contributor to the Mobilities research section.
+          Currently supervising two doctoral candidates through BIGSAS.
+        </p>
+      </div>
+
+    </div><!-- /specimen-frame -->
+
+  </main>
+
+  <footer class="page-footer">
+    <hr class="ornamental-rule">
+    <a href="listing.html">&larr; Return to Register</a>
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+    <a href="../index.html">&larr; Back to all prototypes</a>
+  </footer>
+
+</body>
+</html>

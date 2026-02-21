@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events | Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sidebar: { DEFAULT: '#1e293b', hover: '#334155', active: '#312e81' },
+          },
+          fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+    .animate-slide { animation: slideIn 0.5s ease-out forwards; opacity: 0; }
+    .animate-scale { animation: scaleIn 0.4s ease-out forwards; opacity: 0; }
+    .animate-up { animation: slideUp 0.5s ease-out forwards; opacity: 0; }
+    .card-hover { transition: transform 150ms ease, box-shadow 150ms ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .nav-item { transition: background-color 100ms ease; }
+    .heatmap-cell { transition: opacity 150ms ease; }
+    .heatmap-cell:hover { opacity: 0.8; }
+    kbd { font-size: 10px; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen" x-data="{ sidebarOpen: false, view: 'upcoming' }">
+
+  <!-- Mobile Header -->
+  <div class="lg:hidden fixed top-0 left-0 right-0 h-14 bg-slate-800 flex items-center px-4 z-50">
+    <button @click="sidebarOpen = !sidebarOpen" class="text-white p-1">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <span class="ml-3 text-white font-semibold text-sm">Cluster Management</span>
+  </div>
+
+  <!-- Sidebar Backdrop -->
+  <div x-show="sidebarOpen" @click="sidebarOpen = false" class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40" x-transition></div>
+
+  <!-- Sidebar -->
+  <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed top-0 left-0 bottom-0 w-56 bg-slate-800 z-50 lg:translate-x-0 transition-transform duration-200 flex flex-col">
+    <div class="px-5 py-5 border-b border-slate-700">
+      <div class="text-white font-bold text-lg tracking-tight">Cluster</div>
+      <div class="text-slate-400 text-xs mt-0.5">Management</div>
+    </div>
+    <div class="px-3 py-3">
+      <div class="flex items-center bg-slate-700 rounded-lg px-3 py-2 text-sm cursor-pointer hover:bg-slate-600 transition-colors">
+        <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <span class="text-slate-400">Search...</span>
+        <kbd class="ml-auto">&#8984;K</kbd>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+      <div class="text-xs font-medium text-slate-500 uppercase tracking-wider px-3 py-2">Overview</div>
+      <a href="dashboard.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        Dashboard
+      </a>
+      <div class="text-xs font-medium text-slate-500 uppercase tracking-wider px-3 py-2 mt-4">Data</div>
+      <a href="listing.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/></svg>
+        Persons
+        <kbd class="ml-auto">P</kbd>
+      </a>
+      <a href="projects.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+        Projects
+        <kbd class="ml-auto">R</kbd>
+      </a>
+      <a href="events.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-white bg-indigo-900/30 rounded-lg border-l-[3px] border-indigo-500">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Events
+        <kbd class="ml-auto">E</kbd>
+      </a>
+      <a href="institutions.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        Institutions
+        <kbd class="ml-auto">I</kbd>
+      </a>
+      <div class="text-xs font-medium text-slate-500 uppercase tracking-wider px-3 py-2 mt-4">System</div>
+      <a href="../index.html" class="nav-item flex items-center px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-lg border-l-[3px] border-transparent">
+        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        All Prototypes
+      </a>
+    </nav>
+    <div class="px-5 py-4 border-t border-slate-700">
+      <div class="flex items-center">
+        <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">AD</div>
+        <div class="ml-3">
+          <div class="text-sm text-white font-medium">Admin</div>
+          <div class="text-xs text-slate-400">Cluster Manager</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="lg:ml-56 pt-14 lg:pt-0 min-h-screen">
+    <div class="p-6 lg:p-8 max-w-7xl mx-auto">
+
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 animate-in">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-800">Events</h1>
+          <p class="text-sm text-slate-500 mt-1">12 events &middot; 4 upcoming</p>
+        </div>
+        <button class="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Add Event
+        </button>
+      </div>
+
+      <!-- View Toggle -->
+      <div class="flex items-center space-x-2 mb-6 animate-in" style="animation-delay: 50ms;">
+        <button @click="view='upcoming'" :class="view==='upcoming' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'" class="px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-colors">Upcoming</button>
+        <button @click="view='past'" :class="view==='past' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'" class="px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-colors">Past</button>
+        <button @click="view='all'" :class="view==='all' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'" class="px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-colors">All</button>
+      </div>
+
+      <!-- Upcoming Event Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8" x-show="view==='upcoming' || view==='all'" x-transition>
+        <div class="bg-white rounded-xl shadow-sm p-5 card-hover animate-scale" style="animation-delay: 100ms;">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">Conference</span>
+            <span class="text-xs text-slate-400">Mar 15-18, 2025</span>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-800 mb-1">ASA Annual Conference 2025</h3>
+          <p class="text-xs text-slate-500 mb-2">Accra, Ghana</p>
+          <dl class="space-y-1 text-xs">
+            <div class="flex justify-between"><dt class="text-slate-500">Applying body</dt><dd class="text-slate-700">African Studies Association</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Online</dt><dd class="text-slate-700">No</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Hybrid</dt><dd class="text-slate-700">Yes</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Hosts</dt><dd class="text-slate-700">Dr. Osei, Prof. Asante</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Guests</dt><dd class="text-slate-700">8 invited</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Report available</dt><dd class="text-slate-400">No</dd></div>
+          </dl>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-5 card-hover animate-scale" style="animation-delay: 180ms;">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">Workshop</span>
+            <span class="text-xs text-slate-400">Apr 8-9, 2025</span>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-800 mb-1">Methods in Migration Studies</h3>
+          <p class="text-xs text-slate-500 mb-2">Bayreuth, Germany</p>
+          <dl class="space-y-1 text-xs">
+            <div class="flex justify-between"><dt class="text-slate-500">Applying body</dt><dd class="text-slate-700">Africa Multiple Cluster</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Online</dt><dd class="text-slate-700">No</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Hybrid</dt><dd class="text-slate-700">No</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Hosts</dt><dd class="text-slate-700">Dr. Osei</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Guests</dt><dd class="text-slate-700">5 invited</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Report available</dt><dd class="text-slate-400">No</dd></div>
+          </dl>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-5 card-hover animate-scale" style="animation-delay: 260ms;">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-medium text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full">Lecture</span>
+            <span class="text-xs text-slate-400">May 22, 2025</span>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-800 mb-1">Public Lecture: Digital Futures</h3>
+          <p class="text-xs text-slate-500 mb-2">Lagos, Nigeria</p>
+          <dl class="space-y-1 text-xs">
+            <div class="flex justify-between"><dt class="text-slate-500">Applying body</dt><dd class="text-slate-700">University of Lagos</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Online</dt><dd class="text-slate-700">Yes</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Hybrid</dt><dd class="text-slate-700">Yes</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Hosts</dt><dd class="text-slate-700">Prof. Nwosu</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Guests</dt><dd class="text-slate-700">3 invited</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Report available</dt><dd class="text-slate-400">No</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Calendar Heatmap -->
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-8 animate-in" style="animation-delay: 300ms;">
+        <h2 class="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">Event Activity 2024-2025</h2>
+        <div class="overflow-x-auto">
+          <div class="min-w-[600px]">
+            <div class="flex mb-2 ml-8">
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Jan</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Feb</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Mar</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Apr</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">May</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Jun</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Jul</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Aug</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Sep</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Oct</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Nov</div>
+              <div class="flex-1 text-[10px] text-slate-400 text-center">Dec</div>
+            </div>
+            <div class="flex gap-px">
+              <div class="w-8 shrink-0 flex flex-col gap-px text-[9px] text-slate-400">
+                <div class="h-3 flex items-center">Mon</div>
+                <div class="h-3"></div>
+                <div class="h-3 flex items-center">Wed</div>
+                <div class="h-3"></div>
+                <div class="h-3 flex items-center">Fri</div>
+                <div class="h-3"></div>
+                <div class="h-3 flex items-center">Sun</div>
+              </div>
+              <div class="flex-1 grid grid-cols-52 gap-px" id="heatmap"></div>
+            </div>
+            <div class="flex items-center justify-end gap-1 mt-3 text-[10px] text-slate-400">
+              <span>Less</span>
+              <div class="w-3 h-3 rounded-sm bg-slate-100"></div>
+              <div class="w-3 h-3 rounded-sm bg-indigo-100"></div>
+              <div class="w-3 h-3 rounded-sm bg-indigo-300"></div>
+              <div class="w-3 h-3 rounded-sm bg-indigo-500"></div>
+              <div class="w-3 h-3 rounded-sm bg-indigo-700"></div>
+              <span>More</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Past Events Table -->
+      <div class="bg-white rounded-xl shadow-sm p-6 animate-in" style="animation-delay: 400ms;" x-show="view==='past' || view==='all'" x-transition>
+        <h2 class="text-sm font-medium text-slate-500 uppercase tracking-wide mb-6">Past Events</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-slate-100">
+                <th class="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase">Title</th>
+                <th class="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase hidden sm:table-cell">Type</th>
+                <th class="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase hidden md:table-cell">Applying body</th>
+                <th class="text-center px-4 py-3 text-xs font-medium text-slate-500 uppercase hidden md:table-cell">Online</th>
+                <th class="text-center px-4 py-3 text-xs font-medium text-slate-500 uppercase hidden lg:table-cell">Hybrid</th>
+                <th class="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase hidden lg:table-cell">Hosts</th>
+                <th class="text-center px-4 py-3 text-xs font-medium text-slate-500 uppercase hidden xl:table-cell">Guests</th>
+                <th class="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-slate-50 animate-slide" style="animation-delay: 450ms;">
+                <td class="px-4 py-3 font-medium text-slate-800">ASA Annual Conference 2024</td>
+                <td class="px-4 py-3 text-slate-600 hidden sm:table-cell">Conference</td>
+                <td class="px-4 py-3 text-slate-600 hidden md:table-cell">ASA</td>
+                <td class="px-4 py-3 text-center hidden md:table-cell"><span class="text-slate-400">No</span></td>
+                <td class="px-4 py-3 text-center hidden lg:table-cell"><span class="text-slate-400">No</span></td>
+                <td class="px-4 py-3 text-slate-600 hidden lg:table-cell">Dr. Osei</td>
+                <td class="px-4 py-3 text-center text-slate-600 hidden xl:table-cell">12</td>
+                <td class="px-4 py-3 text-slate-500 font-mono">Nov 2024</td>
+              </tr>
+              <tr class="border-b border-slate-50 animate-slide" style="animation-delay: 500ms;">
+                <td class="px-4 py-3 font-medium text-slate-800">Digital Humanities Workshop</td>
+                <td class="px-4 py-3 text-slate-600 hidden sm:table-cell">Workshop</td>
+                <td class="px-4 py-3 text-slate-600 hidden md:table-cell">Africa Multiple</td>
+                <td class="px-4 py-3 text-center hidden md:table-cell"><span class="text-slate-400">No</span></td>
+                <td class="px-4 py-3 text-center hidden lg:table-cell"><span class="text-emerald-600">Yes</span></td>
+                <td class="px-4 py-3 text-slate-600 hidden lg:table-cell">Dr. Osei, Prof. Asante</td>
+                <td class="px-4 py-3 text-center text-slate-600 hidden xl:table-cell">6</td>
+                <td class="px-4 py-3 text-slate-500 font-mono">Sep 2024</td>
+              </tr>
+              <tr class="border-b border-slate-50 animate-slide" style="animation-delay: 550ms;">
+                <td class="px-4 py-3 font-medium text-slate-800">Guest Lecture at UCT</td>
+                <td class="px-4 py-3 text-slate-600 hidden sm:table-cell">Lecture</td>
+                <td class="px-4 py-3 text-slate-600 hidden md:table-cell">University of Cape Town</td>
+                <td class="px-4 py-3 text-center hidden md:table-cell"><span class="text-emerald-600">Yes</span></td>
+                <td class="px-4 py-3 text-center hidden lg:table-cell"><span class="text-emerald-600">Yes</span></td>
+                <td class="px-4 py-3 text-slate-600 hidden lg:table-cell">Prof. Asante</td>
+                <td class="px-4 py-3 text-center text-slate-600 hidden xl:table-cell">2</td>
+                <td class="px-4 py-3 text-slate-500 font-mono">Jun 2024</td>
+              </tr>
+              <tr class="border-b border-slate-50 animate-slide" style="animation-delay: 600ms;">
+                <td class="px-4 py-3 font-medium text-slate-800">CODESRIA Seminar Series</td>
+                <td class="px-4 py-3 text-slate-600 hidden sm:table-cell">Seminar</td>
+                <td class="px-4 py-3 text-slate-600 hidden md:table-cell">CODESRIA</td>
+                <td class="px-4 py-3 text-center hidden md:table-cell"><span class="text-slate-400">No</span></td>
+                <td class="px-4 py-3 text-center hidden lg:table-cell"><span class="text-slate-400">No</span></td>
+                <td class="px-4 py-3 text-slate-600 hidden lg:table-cell">Dr. Diallo</td>
+                <td class="px-4 py-3 text-center text-slate-600 hidden xl:table-cell">4</td>
+                <td class="px-4 py-3 text-slate-500 font-mono">Mar 2024</td>
+              </tr>
+              <tr class="border-b border-slate-50 animate-slide" style="animation-delay: 650ms;">
+                <td class="px-4 py-3 font-medium text-slate-800">Cluster Kick-off 2024</td>
+                <td class="px-4 py-3 text-slate-600 hidden sm:table-cell">Workshop</td>
+                <td class="px-4 py-3 text-slate-600 hidden md:table-cell">Africa Multiple</td>
+                <td class="px-4 py-3 text-center hidden md:table-cell"><span class="text-slate-400">No</span></td>
+                <td class="px-4 py-3 text-center hidden lg:table-cell"><span class="text-slate-400">No</span></td>
+                <td class="px-4 py-3 text-slate-600 hidden lg:table-cell">Admin</td>
+                <td class="px-4 py-3 text-center text-slate-600 hidden xl:table-cell">15</td>
+                <td class="px-4 py-3 text-slate-500 font-mono">Jan 2024</td>
+              </tr>
+              <tr class="border-b border-slate-50 animate-slide" style="animation-delay: 700ms;">
+                <td class="px-4 py-3 font-medium text-slate-800">African Mobilities Conference</td>
+                <td class="px-4 py-3 text-slate-600 hidden sm:table-cell">Conference</td>
+                <td class="px-4 py-3 text-slate-600 hidden md:table-cell">Kenyatta University</td>
+                <td class="px-4 py-3 text-center hidden md:table-cell"><span class="text-slate-400">No</span></td>
+                <td class="px-4 py-3 text-center hidden lg:table-cell"><span class="text-emerald-600">Yes</span></td>
+                <td class="px-4 py-3 text-slate-600 hidden lg:table-cell">Dr. Mwangi</td>
+                <td class="px-4 py-3 text-center text-slate-600 hidden xl:table-cell">9</td>
+                <td class="px-4 py-3 text-slate-500 font-mono">Oct 2023</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Generate heatmap
+    const heatmap = document.getElementById('heatmap');
+    const eventWeeks = [3,10,15,24,28,36,38,42,44,48,50,52];
+    for (let week = 0; week < 52; week++) {
+      const col = document.createElement('div');
+      col.className = 'flex flex-col gap-px';
+      for (let day = 0; day < 7; day++) {
+        const cell = document.createElement('div');
+        const isEvent = eventWeeks.includes(week + 1);
+        const intensity = isEvent ? (Math.random() > 0.5 ? 'bg-indigo-500' : 'bg-indigo-300') : (Math.random() > 0.85 ? 'bg-indigo-100' : 'bg-slate-100');
+        cell.className = `w-full h-3 rounded-sm heatmap-cell ${intensity}`;
+        col.appendChild(cell);
+      }
+      heatmap.appendChild(col);
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      const shortcuts = { 'p': 'listing.html', 'r': 'projects.html', 'e': 'events.html', 'i': 'institutions.html' };
+      if (shortcuts[e.key.toLowerCase()] && !e.metaKey && !e.ctrlKey) {
+        window.location.href = shortcuts[e.key.toLowerCase()];
+      }
+    });
+  </script>
+</body>
+</html>

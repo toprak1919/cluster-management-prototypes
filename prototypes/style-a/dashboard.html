@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" class="font-body">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 100: "#a5d2d5", 200: "#7bbcc1", 300: "#4ca6af", 400: "#008f9c", 500: "#007683", 600: "#005e6b", 700: "#004754", 800: "#00313d", 900: "#001d25" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 100: "#e3bfdd", 200: "#d6a1ca", 300: "#c982b5", 400: "#bd62a0", 500: "#a54988", 600: "#8c3271", 700: "#73195b", 800: "#590043", 900: "#390027" },
+          "purple": { 50: "#ede0f1", 400: "#787acd", 500: "#5d64b5", 700: "#293a85" },
+          "leaf-green": { 50: "#e5e6cb", 400: "#788a32" },
+          "yellow": { 50: "#ebe3ca", 400: "#af7532" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 50% 100%; }
+      50% { background-position: 100% 50%; }
+      75% { background-position: 50% 0%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-bg {
+      background: linear-gradient(-45deg, #e0f5ea, #dff0f7, #f0e6f6, #e8f5ed, #dce8f5);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+    }
+
+    .glass {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .glass-nav {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.75);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .glass-strong {
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes counterUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .counter-animate {
+      animation: counterUp 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeSlideUp 0.5s ease-out forwards;
+    }
+
+    .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .fade-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .bar-animate {
+      animation: barGrow 1s ease-out forwards;
+      transform-origin: left;
+    }
+
+    @keyframes barGrow {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+  </style>
+</head>
+<body class="animated-bg font-body text-gray-900 min-h-screen">
+
+  <!-- Top Nav - Glass -->
+  <nav class="glass-nav sticky top-0 z-50 shadow-sm" x-data="{ mobileOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center gap-2 shrink-0">
+          <svg class="w-8 h-8 text-ubt-green-400" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M10 20 Q16 8 22 20" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="16" cy="14" r="3" fill="currentColor"/>
+          </svg>
+          <span class="text-lg font-semibold text-gray-900 hidden sm:inline">Africa Multiple</span>
+        </div>
+        <!-- Center Nav -->
+        <div class="hidden md:flex items-center gap-1">
+          <a href="dashboard.html" class="px-3 py-2 rounded-xl text-sm font-medium bg-ubt-green-400/10 text-ubt-green-400 backdrop-blur-sm">Dashboard</a>
+          <a href="listing.html" class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-white/40 transition-all duration-300">Persons</a>
+          <a href="projects.html" class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-white/40 transition-all duration-300">Projects</a>
+          <a href="events.html" class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-white/40 transition-all duration-300">Events</a>
+          <a href="institutions.html" class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-white/40 transition-all duration-300">Institutions</a>
+        </div>
+        <!-- Right: user avatar + hamburger -->
+        <div class="flex items-center gap-3">
+          <a href="../index.html" class="text-xs text-gray-400 hover:text-gray-600 hidden lg:inline transition-all duration-300">All Prototypes</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-1.5 rounded-lg hover:bg-white/40 transition-all duration-300 cursor-pointer" aria-label="Toggle menu">
+            <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white flex items-center justify-center text-sm font-semibold shadow-lg shadow-ubt-green-200/50">AD</div>
+        </div>
+      </div>
+      <!-- Mobile nav -->
+      <div class="md:hidden flex gap-1 pb-3 overflow-x-auto" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-ubt-green-400/10 text-ubt-green-400 whitespace-nowrap">Dashboard</a>
+        <a href="listing.html" class="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-600 whitespace-nowrap">Persons</a>
+        <a href="projects.html" class="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-600 whitespace-nowrap">Projects</a>
+        <a href="events.html" class="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-600 whitespace-nowrap">Events</a>
+        <a href="institutions.html" class="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-600 whitespace-nowrap">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-min">
+
+      <!-- Welcome + Stats Tile (spans 2 cols, 2 rows on large) -->
+      <div class="md:col-span-2 lg:col-span-3 lg:row-span-2 glass-strong rounded-2xl shadow-lg p-6 lg:p-8 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 fade-in">
+        <div class="flex flex-col h-full justify-between">
+          <div>
+            <p class="font-bold text-xs uppercase tracking-wider text-gray-400 mb-1">Welcome back</p>
+            <h1 class="font-light text-3xl lg:text-4xl text-gray-900 mb-1">Good morning, Admin</h1>
+            <p class="text-sm text-gray-500">Wednesday, February 18, 2026</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mt-6">
+            <a href="listing.html" class="group block">
+              <div class="glass rounded-xl p-4 hover:bg-white/80 transition-all duration-300 group-hover:shadow-lg">
+                <p class="font-bold text-xs uppercase tracking-wider text-gray-400">Persons</p>
+                <div class="flex items-end gap-2 mt-2">
+                  <span class="font-light text-5xl text-gray-900 counter-animate">847</span>
+                  <span class="inline-flex items-center gap-0.5 text-xs font-medium text-green-600 bg-green-50/80 px-2 py-1 rounded-full mb-2">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
+                    +12
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a href="projects.html" class="group block">
+              <div class="glass rounded-xl p-4 hover:bg-white/80 transition-all duration-300 group-hover:shadow-lg">
+                <p class="font-bold text-xs uppercase tracking-wider text-gray-400">Projects</p>
+                <div class="flex items-end gap-2 mt-2">
+                  <span class="font-light text-5xl text-gray-900 counter-animate" style="animation-delay:0.15s">23</span>
+                  <span class="inline-flex items-center gap-0.5 text-xs font-medium text-green-600 bg-green-50/80 px-2 py-1 rounded-full mb-2">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
+                    +3
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="flex gap-3 mt-6">
+            <a href="#" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-ubt-green-400 to-ubt-green-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-ubt-green-200/50 transition-all duration-300 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              New Person
+            </a>
+            <a href="#" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-azure-400 to-azure-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-azure-200/50 transition-all duration-300 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              New Event
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Feed (spans 2 cols on large, 1 row) -->
+      <div class="md:col-span-2 lg:col-span-3 lg:row-span-2 glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 fade-in fade-in-delay-1">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+          <a href="#" class="text-sm text-ubt-green-400 hover:text-ubt-green-500 font-medium transition-all duration-300">View all</a>
+        </div>
+        <div class="space-y-3 max-h-[420px] overflow-y-auto scrollbar-hide">
+          <!-- Entry 1 -->
+          <div class="flex gap-3 group rounded-xl hover:bg-white/60 transition-all duration-300 p-2.5 -mx-1">
+            <div class="relative flex flex-col items-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-ubt-green-400 mt-1.5 shrink-0 shadow-sm shadow-ubt-green-200"></div>
+              <div class="w-px h-full bg-gray-200/60"></div>
+            </div>
+            <div class="pb-2">
+              <p class="text-sm text-gray-900">Person updated: <a href="detail.html" class="font-medium hover:text-ubt-green-500 hover:underline transition">Dr. Amina Osei</a> &mdash; membership category changed</p>
+              <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+            </div>
+          </div>
+          <!-- Entry 2 -->
+          <div class="flex gap-3 group rounded-xl hover:bg-white/60 transition-all duration-300 p-2.5 -mx-1">
+            <div class="relative flex flex-col items-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-azure-400 mt-1.5 shrink-0 shadow-sm shadow-azure-200"></div>
+              <div class="w-px h-full bg-gray-200/60"></div>
+            </div>
+            <div class="pb-2">
+              <p class="text-sm text-gray-900">Project created: <a href="#" class="font-medium hover:text-ubt-green-500 hover:underline transition">Digital Heritage Archives</a> (P-012)</p>
+              <p class="text-xs text-gray-400 mt-1">3 hours ago</p>
+            </div>
+          </div>
+          <!-- Entry 3 -->
+          <div class="flex gap-3 group rounded-xl hover:bg-white/60 transition-all duration-300 p-2.5 -mx-1">
+            <div class="relative flex flex-col items-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-raspberry-400 mt-1.5 shrink-0 shadow-sm shadow-raspberry-200"></div>
+              <div class="w-px h-full bg-gray-200/60"></div>
+            </div>
+            <div class="pb-2">
+              <p class="text-sm text-gray-900">Report deadline approaching: <a href="#" class="font-medium hover:text-ubt-green-500 hover:underline transition">Transnational Migration Patterns</a> &mdash; due Mar 1</p>
+              <p class="text-xs text-gray-400 mt-1">5 hours ago</p>
+            </div>
+          </div>
+          <!-- Entry 4 -->
+          <div class="flex gap-3 group rounded-xl hover:bg-white/60 transition-all duration-300 p-2.5 -mx-1">
+            <div class="relative flex flex-col items-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-purple-400 mt-1.5 shrink-0 shadow-sm shadow-purple-200"></div>
+              <div class="w-px h-full bg-gray-200/60"></div>
+            </div>
+            <div class="pb-2">
+              <p class="text-sm text-gray-900">Event updated: <a href="#" class="font-medium hover:text-ubt-green-500 hover:underline transition">Annual Conference 2026</a> &mdash; guest list modified</p>
+              <p class="text-xs text-gray-400 mt-1">Yesterday at 4:30 PM</p>
+            </div>
+          </div>
+          <!-- Entry 5 -->
+          <div class="flex gap-3 group rounded-xl hover:bg-white/60 transition-all duration-300 p-2.5 -mx-1">
+            <div class="relative flex flex-col items-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-ubt-green-400 mt-1.5 shrink-0 shadow-sm shadow-ubt-green-200"></div>
+              <div class="w-px h-full bg-gray-200/60"></div>
+            </div>
+            <div class="pb-2">
+              <p class="text-sm text-gray-900">Institution created: <a href="#" class="font-medium hover:text-ubt-green-500 hover:underline transition">University of Rwanda</a></p>
+              <p class="text-xs text-gray-400 mt-1">Yesterday at 2:15 PM</p>
+            </div>
+          </div>
+          <!-- Entry 6 -->
+          <div class="flex gap-3 group rounded-xl hover:bg-white/60 transition-all duration-300 p-2.5 -mx-1">
+            <div class="relative flex flex-col items-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-azure-400 mt-1.5 shrink-0 shadow-sm shadow-azure-200"></div>
+              <div class="w-px h-full bg-gray-200/60"></div>
+            </div>
+            <div class="pb-2">
+              <p class="text-sm text-gray-900">Person updated: <a href="detail.html" class="font-medium hover:text-ubt-green-500 hover:underline transition">Prof. Chidinma Nwosu</a> &mdash; fellowship added</p>
+              <p class="text-xs text-gray-400 mt-1">Yesterday at 11:00 AM</p>
+            </div>
+          </div>
+          <!-- Entry 7 -->
+          <div class="flex gap-3 group rounded-xl hover:bg-white/60 transition-all duration-300 p-2.5 -mx-1">
+            <div class="relative flex flex-col items-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-raspberry-400 mt-1.5 shrink-0 shadow-sm shadow-raspberry-200"></div>
+              <div class="w-px h-full bg-gray-200/60"></div>
+            </div>
+            <div class="pb-2">
+              <p class="text-sm text-gray-900">Report submitted: <a href="#" class="font-medium hover:text-ubt-green-500 hover:underline transition">Climate Adaptation &amp; Rural Livelihoods</a></p>
+              <p class="text-xs text-gray-400 mt-1">2 days ago</p>
+            </div>
+          </div>
+          <!-- Entry 8 -->
+          <div class="flex gap-3 group rounded-xl hover:bg-white/60 transition-all duration-300 p-2.5 -mx-1">
+            <div class="relative flex flex-col items-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-purple-400 mt-1.5 shrink-0 shadow-sm shadow-purple-200"></div>
+            </div>
+            <div class="pb-2">
+              <p class="text-sm text-gray-900">Person updated: <a href="detail.html" class="font-medium hover:text-ubt-green-500 hover:underline transition">Dr. Samuel Mwangi</a> &mdash; Expert Search consent updated</p>
+              <p class="text-xs text-gray-400 mt-1">2 days ago</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events Count Tile (1 col, 1 row) -->
+      <a href="events.html" class="md:col-span-1 lg:col-span-1 glass rounded-2xl shadow-lg p-5 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer fade-in fade-in-delay-2 group">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-raspberry-400/20 to-raspberry-400/5 flex items-center justify-center">
+            <svg class="w-5 h-5 text-raspberry-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <span class="inline-flex items-center gap-0.5 text-xs font-medium text-green-600 bg-green-50/80 px-2 py-1 rounded-full">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7"/></svg>
+            +2
+          </span>
+        </div>
+        <p class="font-bold text-xs uppercase tracking-wider text-gray-400">Events</p>
+        <p class="font-light text-4xl text-gray-900 mt-1 counter-animate" style="animation-delay:0.3s">12</p>
+        <div class="mt-3 pt-3 border-t border-white/30">
+          <p class="text-xs text-gray-500">Next: <span class="font-medium text-raspberry-400">Fellows Workshop</span></p>
+          <p class="text-xs text-gray-400">Feb 28, Bayreuth</p>
+        </div>
+      </a>
+
+      <!-- Institutions Tile (1 col, 1 row) -->
+      <a href="institutions.html" class="md:col-span-1 lg:col-span-1 glass rounded-2xl shadow-lg p-5 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer fade-in fade-in-delay-3 group">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-400/20 to-purple-400/5 flex items-center justify-center">
+            <svg class="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <span class="inline-flex items-center gap-0.5 text-xs font-medium text-gray-500 bg-gray-100/80 px-2 py-1 rounded-full">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
+            0
+          </span>
+        </div>
+        <p class="font-bold text-xs uppercase tracking-wider text-gray-400">Institutions</p>
+        <p class="font-light text-4xl text-gray-900 mt-1 counter-animate" style="animation-delay:0.4s">156</p>
+        <div class="mt-3 pt-3 border-t border-white/30">
+          <p class="text-xs text-gray-500">Across <span class="font-medium text-purple-500">24 countries</span></p>
+        </div>
+      </a>
+
+      <!-- Research Sections Bar Chart (spans 4 cols on large) -->
+      <div class="md:col-span-4 lg:col-span-4 glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 fade-in fade-in-delay-3">
+        <h2 class="text-lg font-semibold text-gray-900 mb-5">Members by Research Section</h2>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-gray-700 font-medium">Knowledges</span>
+              <span class="font-light text-2xl text-gray-900 leading-none">52</span>
+            </div>
+            <div class="w-full bg-white/40 rounded-full h-3 overflow-hidden">
+              <div class="bg-gradient-to-r from-ubt-green-400 to-ubt-green-300 h-3 rounded-full bar-animate shadow-sm" style="width: 100%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-gray-700 font-medium">Moralities</span>
+              <span class="font-light text-2xl text-gray-900 leading-none">45</span>
+            </div>
+            <div class="w-full bg-white/40 rounded-full h-3 overflow-hidden">
+              <div class="bg-gradient-to-r from-azure-400 to-azure-300 h-3 rounded-full bar-animate shadow-sm" style="width: 86.5%; animation-delay: 0.1s"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-gray-700 font-medium">Mobilities</span>
+              <span class="font-light text-2xl text-gray-900 leading-none">38</span>
+            </div>
+            <div class="w-full bg-white/40 rounded-full h-3 overflow-hidden">
+              <div class="bg-gradient-to-r from-raspberry-400 to-raspberry-300 h-3 rounded-full bar-animate shadow-sm" style="width: 73%; animation-delay: 0.2s"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-gray-700 font-medium">Aesthetics</span>
+              <span class="font-light text-2xl text-gray-900 leading-none">31</span>
+            </div>
+            <div class="w-full bg-white/40 rounded-full h-3 overflow-hidden">
+              <div class="bg-gradient-to-r from-purple-400 to-purple-500/60 h-3 rounded-full bar-animate shadow-sm" style="width: 59.6%; animation-delay: 0.3s"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-gray-700 font-medium">Learning</span>
+              <span class="font-light text-2xl text-gray-900 leading-none">27</span>
+            </div>
+            <div class="w-full bg-white/40 rounded-full h-3 overflow-hidden">
+              <div class="bg-gradient-to-r from-yellow-400 to-yellow-400/60 h-3 rounded-full bar-animate shadow-sm" style="width: 51.9%; animation-delay: 0.4s"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Research Sections placeholder to fill the row (2 cols) is the Events+Institutions above -->
+
+      <!-- Upcoming Events - Full Width Horizontal Scroll -->
+      <div class="md:col-span-4 lg:col-span-6 fade-in fade-in-delay-4">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Upcoming Events</h2>
+          <a href="#" class="text-sm text-ubt-green-400 hover:text-ubt-green-500 font-medium transition-all duration-300">View all</a>
+        </div>
+        <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+          <!-- Event Card 1 -->
+          <a href="#" class="glass rounded-2xl shadow-lg p-5 min-w-[260px] max-w-[280px] shrink-0 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold bg-gradient-to-br from-raspberry-400/20 to-raspberry-400/5 text-raspberry-500 rounded-xl">Feb 28</span>
+              <span class="text-xs text-gray-400 font-medium">10 days away</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-900 group-hover:text-ubt-green-500 transition-all duration-300">Fellows Workshop</p>
+            <p class="text-xs text-gray-400 mt-1">Bayreuth, Germany</p>
+            <div class="mt-3 flex items-center gap-1.5">
+              <div class="w-5 h-5 rounded-full bg-ubt-green-400 text-white flex items-center justify-center text-[8px] font-bold">AO</div>
+              <div class="w-5 h-5 rounded-full bg-azure-400 text-white flex items-center justify-center text-[8px] font-bold">CN</div>
+              <span class="text-xs text-gray-400">+8 registered</span>
+            </div>
+          </a>
+          <!-- Event Card 2 -->
+          <a href="#" class="glass rounded-2xl shadow-lg p-5 min-w-[260px] max-w-[280px] shrink-0 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold bg-gradient-to-br from-azure-400/20 to-azure-400/5 text-azure-500 rounded-xl">Mar 15</span>
+              <span class="text-xs text-gray-400 font-medium">25 days away</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-900 group-hover:text-ubt-green-500 transition-all duration-300">Public Lecture Series</p>
+            <p class="text-xs text-gray-400 mt-1">Online</p>
+            <div class="mt-3 flex items-center gap-1.5">
+              <div class="w-5 h-5 rounded-full bg-raspberry-400 text-white flex items-center justify-center text-[8px] font-bold">FD</div>
+              <span class="text-xs text-gray-400">+15 registered</span>
+            </div>
+          </a>
+          <!-- Event Card 3 -->
+          <a href="#" class="glass rounded-2xl shadow-lg p-5 min-w-[260px] max-w-[280px] shrink-0 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold bg-gradient-to-br from-ubt-green-400/20 to-ubt-green-400/5 text-ubt-green-500 rounded-xl">Apr 02</span>
+              <span class="text-xs text-gray-400 font-medium">43 days away</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-900 group-hover:text-ubt-green-500 transition-all duration-300">Research Section Meeting</p>
+            <p class="text-xs text-gray-400 mt-1">University of Ghana, Accra</p>
+            <div class="mt-3 flex items-center gap-1.5">
+              <div class="w-5 h-5 rounded-full bg-purple-400 text-white flex items-center justify-center text-[8px] font-bold">SM</div>
+              <div class="w-5 h-5 rounded-full bg-ubt-green-300 text-white flex items-center justify-center text-[8px] font-bold">JH</div>
+              <span class="text-xs text-gray-400">+22 registered</span>
+            </div>
+          </a>
+          <!-- Event Card 4 -->
+          <a href="#" class="glass rounded-2xl shadow-lg p-5 min-w-[260px] max-w-[280px] shrink-0 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold bg-gradient-to-br from-purple-400/20 to-purple-400/5 text-purple-500 rounded-xl">Jun 20</span>
+              <span class="text-xs text-gray-400 font-medium">122 days away</span>
+            </div>
+            <p class="text-sm font-semibold text-gray-900 group-hover:text-ubt-green-500 transition-all duration-300">Annual Conference 2026</p>
+            <p class="text-xs text-gray-400 mt-1">Moi University, Eldoret</p>
+            <div class="mt-3 flex items-center gap-1.5">
+              <div class="w-5 h-5 rounded-full bg-azure-300 text-white flex items-center justify-center text-[8px] font-bold">KA</div>
+              <div class="w-5 h-5 rounded-full bg-raspberry-300 text-white flex items-center justify-center text-[8px] font-bold">AM</div>
+              <div class="w-5 h-5 rounded-full bg-ubt-green-200 text-white flex items-center justify-center text-[8px] font-bold">IT</div>
+              <span class="text-xs text-gray-400">+45 registered</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

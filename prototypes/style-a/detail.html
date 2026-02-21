@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" class="font-body">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dr. Amina Osei - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 100: "#a5d2d5", 200: "#7bbcc1", 300: "#4ca6af", 400: "#008f9c", 500: "#007683", 600: "#005e6b", 700: "#004754", 800: "#00313d", 900: "#001d25" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 100: "#e3bfdd", 200: "#d6a1ca", 300: "#c982b5", 400: "#bd62a0", 500: "#a54988", 600: "#8c3271", 700: "#73195b", 800: "#590043", 900: "#390027" },
+          "purple": { 50: "#ede0f1", 400: "#787acd", 500: "#5d64b5", 700: "#293a85" },
+          "leaf-green": { 50: "#e5e6cb", 400: "#788a32" },
+          "yellow": { 50: "#ebe3ca", 400: "#af7532" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+
+    .subtle-bg {
+      background: linear-gradient(160deg, #f0fdf4 0%, #ecfdf5 20%, #f0f9ff 40%, #faf5ff 60%, #f9fafb 100%);
+    }
+
+    .glass {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .glass-nav {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .glass-strong {
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes borderRotate {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .avatar-ring {
+      background: linear-gradient(135deg, #0d9462, #008f9c, #bd62a0, #787acd, #0d9462);
+      background-size: 300% 300%;
+      animation: borderRotate 4s ease infinite;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in { animation: fadeSlideUp 0.5s ease-out forwards; }
+    .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+    .tag-glass {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body class="subtle-bg font-body text-gray-900 min-h-screen">
+
+  <!-- Top Nav -->
+  <nav class="glass-nav sticky top-0 z-50 shadow-sm" x-data="{ mobileOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 shrink-0">
+          <svg class="w-8 h-8 text-ubt-green-400" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M10 20 Q16 8 22 20" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="16" cy="14" r="3" fill="currentColor"/>
+          </svg>
+          <span class="text-lg font-semibold text-gray-900 hidden sm:inline">Africa Multiple</span>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="dashboard.html" class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-white/40 transition-all duration-300">Dashboard</a>
+          <a href="listing.html" class="px-3 py-2 rounded-xl text-sm font-medium bg-ubt-green-400/10 text-ubt-green-400 backdrop-blur-sm">Persons</a>
+          <a href="projects.html" title="Coming soon" class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-white/40 transition-all duration-300">Projects</a>
+          <a href="events.html" title="Coming soon" class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-white/40 transition-all duration-300">Events</a>
+          <a href="institutions.html" title="Coming soon" class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-white/40 transition-all duration-300">Institutions</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../index.html" class="text-xs text-gray-400 hover:text-gray-600 hidden lg:inline transition-all duration-300">All Prototypes</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-1.5 rounded-lg hover:bg-white/40 transition-all duration-300 cursor-pointer" aria-label="Toggle menu">
+            <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white flex items-center justify-center text-sm font-semibold shadow-lg shadow-ubt-green-200/50">AD</div>
+        </div>
+      </div>
+      <div class="md:hidden flex gap-1 pb-3 overflow-x-auto" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-600 whitespace-nowrap">Dashboard</a>
+        <a href="listing.html" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-ubt-green-400/10 text-ubt-green-400 whitespace-nowrap">Persons</a>
+        <a href="projects.html" title="Coming soon" class="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-600 whitespace-nowrap">Projects</a>
+        <a href="events.html" title="Coming soon" class="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-600 whitespace-nowrap">Events</a>
+        <a href="institutions.html" title="Coming soon" class="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-600 whitespace-nowrap">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Breadcrumb -->
+    <nav class="mb-6 fade-in">
+      <ol class="flex items-center gap-2 text-sm text-gray-500">
+        <li><a href="listing.html" class="hover:text-gray-700 transition-all duration-300">Persons</a></li>
+        <li>
+          <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+        </li>
+        <li class="text-gray-900 font-medium">Dr. Amina Osei</li>
+      </ol>
+    </nav>
+
+    <!-- Profile Hero - Full Width Glass Card -->
+    <div class="glass-strong rounded-2xl shadow-lg p-6 lg:p-8 mb-6 fade-in">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+        <div class="flex items-center gap-5">
+          <!-- Animated gradient border avatar -->
+          <div class="avatar-ring rounded-full p-[3px] shrink-0">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white flex items-center justify-center text-2xl font-bold shadow-xl">AO</div>
+          </div>
+          <div>
+            <h1 class="font-light text-3xl text-gray-900">Dr. Amina Osei</h1>
+            <p class="text-sm text-gray-500 mt-1">University of Ghana, Accra</p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-azure-400/10 text-azure-500 tag-glass border border-azure-400/20">Cluster</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-400/10 text-purple-500 tag-glass border border-purple-400/20">BIGSAS</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-ubt-green-400/10 text-ubt-green-500 tag-glass border border-ubt-green-400/20">Senior Researcher</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <a href="#" title="Edit Person" aria-label="Edit Person" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-azure-400 to-azure-500 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-azure-200/50 transition-all duration-300 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Edit
+          </a>
+          <a href="#" title="Delete Person" aria-label="Delete Person" onclick="return confirm('Are you sure you want to delete this person? This action cannot be undone.')" class="inline-flex items-center gap-1.5 px-4 py-2.5 glass text-red-600 text-sm font-medium rounded-xl border border-red-200/50 hover:bg-red-50/50 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Delete
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bento Grid for Info Sections -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <!-- Contact Information (2 cols) -->
+      <div class="md:col-span-1 lg:col-span-2 glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 fade-in fade-in-delay-1">
+        <h2 class="text-lg font-semibold text-gray-900 mb-5 flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-azure-400/20 to-azure-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-azure-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          Contact Information
+        </h2>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-0.5">Email</p>
+              <a href="mailto:a.osei@ug.edu.gh" class="text-sm text-azure-400 hover:text-ubt-green-500 hover:underline transition-all duration-300">a.osei@ug.edu.gh</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-0.5">Phone</p>
+              <p class="text-sm text-gray-900">+233 30 213 4567 <span class="text-xs text-gray-400">(work)</span></p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-0.5">Homepage</p>
+              <a href="https://ug.edu.gh/~aosei" target="_blank" rel="noopener noreferrer" class="text-sm text-azure-400 hover:text-ubt-green-500 hover:underline transition-all duration-300">Personal Page</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <svg class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-0.5">ORCID</p>
+              <p class="text-sm text-gray-900">0000-0002-1234-5678</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Academic Profile (2 cols) -->
+      <div class="md:col-span-1 lg:col-span-2 glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 fade-in fade-in-delay-1">
+        <h2 class="text-lg font-semibold text-gray-900 mb-5 flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-ubt-green-400/20 to-ubt-green-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-ubt-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          </div>
+          Academic Profile
+        </h2>
+        <div class="space-y-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Fields of Study</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-ubt-green-400/10 text-ubt-green-600 tag-glass border border-ubt-green-400/15">Migration Studies</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-azure-400/10 text-azure-600 tag-glass border border-azure-400/15">Postcolonial Theory</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Geographic Focus</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-raspberry-400/10 text-raspberry-600 tag-glass border border-raspberry-400/15">West Africa</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-400/10 text-purple-600 tag-glass border border-purple-400/15">Ghana</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-400/10 text-yellow-600 tag-glass border border-yellow-400/15">Senegal</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Thematic Fields</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-ubt-green-400/10 text-ubt-green-600 tag-glass border border-ubt-green-400/15">Transnational Mobility</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-azure-400/10 text-azure-600 tag-glass border border-azure-400/15">Diaspora Studies</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Languages</p>
+            <p class="text-sm text-gray-900">English, French, Twi</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Membership (1 col) -->
+      <div class="md:col-span-1 lg:col-span-1 glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 fade-in fade-in-delay-2">
+        <h2 class="text-lg font-semibold text-gray-900 mb-5 flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-raspberry-400/20 to-raspberry-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-raspberry-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          Membership
+        </h2>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Gender</p>
+            <p class="text-sm text-gray-900">Female</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">BIGSAS</p>
+            <div class="w-2.5 h-2.5 rounded-full bg-green-400 shadow-sm shadow-green-200" title="Yes"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Cluster</p>
+            <div class="w-2.5 h-2.5 rounded-full bg-green-400 shadow-sm shadow-green-200" title="Yes"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">entitled to vote</p>
+            <div class="w-2.5 h-2.5 rounded-full bg-green-400 shadow-sm shadow-green-200" title="Yes"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Signed Rights and Duties</p>
+            <div class="w-2.5 h-2.5 rounded-full bg-green-400 shadow-sm shadow-green-200" title="Yes"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Membership category</p>
+            <p class="text-sm font-medium text-gray-900">Senior Researcher</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Membership Start</p>
+            <p class="text-sm text-gray-900">2020-01-15</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Position</p>
+            <p class="text-sm text-gray-900">Visiting Scholar</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Location</p>
+            <p class="text-sm text-gray-900">Accra</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Highest academic degree</p>
+            <p class="text-sm text-gray-900">PhD</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects (1 col, tall) -->
+      <div class="md:col-span-1 lg:col-span-1 glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 fade-in fade-in-delay-2">
+        <h2 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400/20 to-purple-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          </div>
+          Projects
+          <span class="text-xs font-normal text-gray-400">(2)</span>
+        </h2>
+        <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Managed projects</p>
+        <div class="space-y-3 mb-4">
+          <a href="#" class="block p-3 glass rounded-xl hover:bg-white/80 hover:shadow-md transition-all duration-300 group">
+            <p class="text-sm font-medium text-gray-900 group-hover:text-ubt-green-500 transition-all duration-300">Transnational Migration Patterns in West Africa</p>
+            <div class="flex items-center gap-2 mt-1.5">
+              <span class="text-xs text-ubt-green-400 font-semibold bg-ubt-green-400/10 px-2 py-0.5 rounded-full">Project Director</span>
+            </div>
+          </a>
+        </div>
+        <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Involved projects</p>
+        <div class="space-y-3">
+          <a href="#" class="block p-3 glass rounded-xl hover:bg-white/80 hover:shadow-md transition-all duration-300 group">
+            <p class="text-sm font-medium text-gray-900 group-hover:text-ubt-green-500 transition-all duration-300">Decolonizing Knowledge Systems</p>
+            <div class="flex items-center gap-2 mt-1.5">
+              <span class="text-xs text-azure-400 font-semibold bg-azure-400/10 px-2 py-0.5 rounded-full">Researcher</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Research Sections + Institutions (1 col) -->
+      <div class="md:col-span-1 lg:col-span-1 space-y-4 fade-in fade-in-delay-2">
+        <!-- Research Sections -->
+        <div class="glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+          <h2 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-ubt-green-400/20 to-ubt-green-400/5 flex items-center justify-center">
+              <svg class="w-3.5 h-3.5 text-ubt-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            </div>
+            Research Sections
+            <span class="text-xs font-normal text-gray-400">(1)</span>
+          </h2>
+          <div class="space-y-2">
+            <a href="#" class="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-white/60 transition-all duration-300 group">
+              <div class="w-2.5 h-2.5 rounded-full bg-raspberry-400 shadow-sm shadow-raspberry-200"></div>
+              <span class="text-sm text-gray-700 group-hover:text-ubt-green-500 transition-all duration-300">Mobilities</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Institutions -->
+        <div class="glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+          <h2 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-azure-400/20 to-azure-400/5 flex items-center justify-center">
+              <svg class="w-3.5 h-3.5 text-azure-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+            Institutions
+            <span class="text-xs font-normal text-gray-400">(1)</span>
+          </h2>
+          <div class="space-y-2">
+            <a href="#" class="block p-2.5 rounded-xl hover:bg-white/60 transition-all duration-300 group">
+              <p class="text-sm text-gray-700 group-hover:text-ubt-green-500 transition-all duration-300">University of Ghana</p>
+              <p class="text-xs text-gray-400">Role: Senior Lecturer &middot; Department: African Studies</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Events (1 col) -->
+      <div class="md:col-span-1 lg:col-span-1 glass rounded-2xl shadow-lg p-6 hover:bg-white/80 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 fade-in fade-in-delay-2">
+        <h2 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-raspberry-400/20 to-raspberry-400/5 flex items-center justify-center">
+            <svg class="w-3.5 h-3.5 text-raspberry-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          Upcoming
+          <span class="text-xs font-normal text-gray-400">(3)</span>
+        </h2>
+        <div class="space-y-2">
+          <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/60 transition-all duration-300 group">
+            <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold bg-gray-100/80 text-gray-600 rounded-lg whitespace-nowrap">Oct 25</span>
+            <span class="text-sm text-gray-700 group-hover:text-ubt-green-500 transition-all duration-300">Annual Conference 2025</span>
+          </a>
+          <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/60 transition-all duration-300 group">
+            <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold bg-raspberry-50/80 text-raspberry-500 rounded-lg whitespace-nowrap">Mar 26</span>
+            <span class="text-sm text-gray-700 group-hover:text-ubt-green-500 transition-all duration-300">Fellows Workshop</span>
+          </a>
+          <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/60 transition-all duration-300 group">
+            <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold bg-azure-50/80 text-azure-500 rounded-lg whitespace-nowrap">Mar 26</span>
+            <span class="text-sm text-gray-700 group-hover:text-ubt-green-500 transition-all duration-300">Public Lecture Series</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Events Full Table (2 cols) -->
+      <div class="md:col-span-2 lg:col-span-2 glass rounded-2xl shadow-lg overflow-hidden hover:bg-white/80 hover:shadow-2xl transition-all duration-300 fade-in fade-in-delay-3" x-data="{ open: true }">
+        <button @click="open = !open" class="w-full px-6 py-5 cursor-pointer text-lg font-semibold text-gray-900 hover:bg-white/40 transition-all duration-300 flex items-center gap-2" aria-label="Toggle Events section">
+          <svg class="w-5 h-5 text-gray-400 transition-transform duration-300" :class="{ 'rotate-90': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-raspberry-400/20 to-raspberry-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-raspberry-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          Events
+          <span class="text-xs font-normal text-gray-400">(5)</span>
+        </button>
+        <div x-show="open" x-transition class="px-6 pb-6">
+          <div class="space-y-2">
+            <div class="flex items-center gap-4 p-3 glass rounded-xl">
+              <span class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold bg-gray-100/80 text-gray-600 rounded-lg whitespace-nowrap min-w-[60px] text-center">Oct 25</span>
+              <div class="flex-1 min-w-0">
+                <a href="#" class="text-sm font-medium text-gray-900 hover:text-ubt-green-500 transition-all duration-300">Annual Conference 2025</a>
+                <p class="text-xs text-gray-400">Bayreuth</p>
+              </div>
+              <span class="text-xs text-gray-500 bg-gray-100/60 px-2 py-0.5 rounded-full shrink-0">Speaker</span>
+            </div>
+            <div class="flex items-center gap-4 p-3 glass rounded-xl">
+              <span class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold bg-raspberry-50/80 text-raspberry-500 rounded-lg whitespace-nowrap min-w-[60px] text-center">Mar 26</span>
+              <div class="flex-1 min-w-0">
+                <a href="#" class="text-sm font-medium text-gray-900 hover:text-ubt-green-500 transition-all duration-300">Fellows Workshop March 2026</a>
+                <p class="text-xs text-gray-400">Bayreuth</p>
+              </div>
+              <span class="text-xs text-gray-500 bg-gray-100/60 px-2 py-0.5 rounded-full shrink-0">Participant</span>
+            </div>
+            <div class="flex items-center gap-4 p-3 glass rounded-xl">
+              <span class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold bg-azure-50/80 text-azure-500 rounded-lg whitespace-nowrap min-w-[60px] text-center">Mar 26</span>
+              <div class="flex-1 min-w-0">
+                <a href="#" class="text-sm font-medium text-gray-900 hover:text-ubt-green-500 transition-all duration-300">Public Lecture Series</a>
+                <p class="text-xs text-gray-400">Online</p>
+              </div>
+              <span class="text-xs text-azure-500 bg-azure-50/60 px-2 py-0.5 rounded-full shrink-0">Keynote</span>
+            </div>
+            <div class="flex items-center gap-4 p-3 glass rounded-xl">
+              <span class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold bg-ubt-green-50/80 text-ubt-green-500 rounded-lg whitespace-nowrap min-w-[60px] text-center">Apr 26</span>
+              <div class="flex-1 min-w-0">
+                <a href="#" class="text-sm font-medium text-gray-900 hover:text-ubt-green-500 transition-all duration-300">Research Section Meeting - Mobilities</a>
+                <p class="text-xs text-gray-400">Accra</p>
+              </div>
+              <span class="text-xs text-ubt-green-500 bg-ubt-green-50/60 px-2 py-0.5 rounded-full shrink-0">Organizer</span>
+            </div>
+            <div class="flex items-center gap-4 p-3 glass rounded-xl">
+              <span class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold bg-purple-50/80 text-purple-500 rounded-lg whitespace-nowrap min-w-[60px] text-center">Jun 26</span>
+              <div class="flex-1 min-w-0">
+                <a href="#" class="text-sm font-medium text-gray-900 hover:text-ubt-green-500 transition-all duration-300">Annual Conference 2026</a>
+                <p class="text-xs text-gray-400">Eldoret</p>
+              </div>
+              <span class="text-xs text-gray-500 bg-gray-100/60 px-2 py-0.5 rounded-full shrink-0">Panelist</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Publications (2 cols) — linked through projects -->
+      <div class="md:col-span-2 lg:col-span-2 glass rounded-2xl shadow-lg overflow-hidden hover:bg-white/80 hover:shadow-2xl transition-all duration-300 fade-in fade-in-delay-3" x-data="{ open: true }">
+        <button @click="open = !open" class="w-full px-6 py-5 cursor-pointer text-lg font-semibold text-gray-900 hover:bg-white/40 transition-all duration-300 flex items-center gap-2" aria-label="Toggle Publications section">
+          <svg class="w-5 h-5 text-gray-400 transition-transform duration-300" :class="{ 'rotate-90': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400/20 to-purple-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          </div>
+          Publications
+          <span class="text-xs font-normal text-gray-400">(2)</span>
+        </button>
+        <div x-show="open" x-transition class="px-6 pb-6">
+          <p class="text-xs text-gray-400 mb-3">Linked through projects (Year / Planned / Achieved / Costs)</p>
+          <div class="space-y-2">
+            <div class="p-3 glass rounded-xl">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Planned</p>
+                  <p class="text-sm text-gray-900">2 journal articles on transnational migration patterns</p>
+                  <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mt-2 mb-1">Achieved</p>
+                  <p class="text-sm text-gray-900">1 article published in African Affairs</p>
+                  <div class="flex items-center gap-2 mt-2">
+                    <span class="text-xs text-gray-500 bg-gray-100/60 px-2 py-0.5 rounded-full">Costs: &euro;2,500</span>
+                  </div>
+                </div>
+                <span class="text-2xl font-light text-gray-300 shrink-0">2025</span>
+              </div>
+            </div>
+            <div class="p-3 glass rounded-xl">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Planned</p>
+                  <p class="text-sm text-gray-900">1 edited volume on diaspora networks</p>
+                  <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mt-2 mb-1">Achieved</p>
+                  <p class="text-sm text-gray-900">Book proposal submitted to publisher</p>
+                  <div class="flex items-center gap-2 mt-2">
+                    <span class="text-xs text-gray-500 bg-gray-100/60 px-2 py-0.5 rounded-full">Costs: &euro;4,000</span>
+                  </div>
+                </div>
+                <span class="text-2xl font-light text-gray-300 shrink-0">2024</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fellowships (full width) -->
+      <div class="md:col-span-2 lg:col-span-4 glass rounded-2xl shadow-lg overflow-hidden hover:bg-white/80 hover:shadow-2xl transition-all duration-300 fade-in fade-in-delay-3" x-data="{ open: false }">
+        <button @click="open = !open" class="w-full px-6 py-5 cursor-pointer text-lg font-semibold text-gray-900 hover:bg-white/40 transition-all duration-300 flex items-center gap-2" aria-label="Toggle Fellowships section">
+          <svg class="w-5 h-5 text-gray-400 transition-transform duration-300" :class="{ 'rotate-90': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-ubt-green-400/20 to-ubt-green-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-ubt-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          </div>
+          Fellowships
+          <span class="text-xs font-normal text-gray-400">(1)</span>
+        </button>
+        <div x-show="open" x-transition class="px-6 pb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="p-4 glass rounded-xl">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Start</p>
+                  <p class="text-sm text-gray-900">2021-03-01</p>
+                </div>
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold uppercase tracking-wider text-gray-400">End</p>
+                  <p class="text-sm text-gray-900">2023-02-28</p>
+                </div>
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Host</p>
+                  <a href="#" class="text-sm text-azure-400 hover:text-ubt-green-500 transition-all duration-300">Prof. Kwame Asante</a>
+                </div>
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Fellow</p>
+                  <p class="text-sm text-gray-900">Dr. Amina Osei</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expert Search (2 cols) -->
+      <div class="md:col-span-2 lg:col-span-2 glass rounded-2xl shadow-lg overflow-hidden hover:bg-white/80 hover:shadow-2xl transition-all duration-300 fade-in fade-in-delay-3" x-data="{ open: false }">
+        <button @click="open = !open" class="w-full px-6 py-5 cursor-pointer text-lg font-semibold text-gray-900 hover:bg-white/40 transition-all duration-300 flex items-center gap-2" aria-label="Toggle Expert Search section">
+          <svg class="w-5 h-5 text-gray-400 transition-transform duration-300" :class="{ 'rotate-90': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-azure-400/20 to-azure-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-azure-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+          </div>
+          Expert Search
+        </button>
+        <div x-show="open" x-transition class="px-6 pb-6">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Visible in Expert Search</p>
+              <div class="w-2.5 h-2.5 rounded-full bg-green-400 shadow-sm shadow-green-200" title="Yes"></div>
+            </div>
+            <div class="flex items-center justify-between">
+              <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Date inquired</p>
+              <p class="text-sm text-gray-900">2024-06-15</p>
+            </div>
+            <div class="flex items-center justify-between">
+              <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Consent denied</p>
+              <div class="w-2.5 h-2.5 rounded-full bg-gray-300 shadow-sm" title="No"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Addresses (2 cols) -->
+      <div class="md:col-span-2 lg:col-span-2 glass rounded-2xl shadow-lg overflow-hidden hover:bg-white/80 hover:shadow-2xl transition-all duration-300 fade-in fade-in-delay-3" x-data="{ open: false }">
+        <button @click="open = !open" class="w-full px-6 py-5 cursor-pointer text-lg font-semibold text-gray-900 hover:bg-white/40 transition-all duration-300 flex items-center gap-2" aria-label="Toggle Addresses section">
+          <svg class="w-5 h-5 text-gray-400 transition-transform duration-300" :class="{ 'rotate-90': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-raspberry-400/20 to-raspberry-400/5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-raspberry-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          Addresses
+          <span class="text-xs font-normal text-gray-400">(1)</span>
+        </button>
+        <div x-show="open" x-transition class="px-6 pb-6">
+          <div class="p-4 glass rounded-xl">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Street</p>
+                <p class="text-sm text-gray-900">P.O. Box LG 12</p>
+              </div>
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400">City</p>
+                <p class="text-sm text-gray-900">Accra</p>
+              </div>
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Country</p>
+                <p class="text-sm text-gray-900">Ghana</p>
+              </div>
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Visible in Expert Search</p>
+                <div class="w-2.5 h-2.5 rounded-full bg-green-400 shadow-sm shadow-green-200" title="Yes"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

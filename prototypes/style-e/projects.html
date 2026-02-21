@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" class="font-body">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+          "purple": { 50: "#ede0f1", 400: "#787acd", 500: "#5d64b5" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .aurora-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;
+      background: #f0f4f8;
+    }
+    .aurora-blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3;
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+    .aurora-blob:nth-child(2) { animation-delay: -5s; animation-duration: 25s; }
+    .aurora-blob:nth-child(3) { animation-delay: -10s; animation-duration: 22s; }
+    .aurora-blob:nth-child(4) { animation-delay: -15s; animation-duration: 28s; }
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(10px, -10px) scale(1.05); }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeSlideUp 0.6s ease-out forwards; }
+    .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .fade-in-delay-2 { animation-delay: 0.15s; opacity: 0; }
+    .fade-in-delay-3 { animation-delay: 0.2s; opacity: 0; }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.80);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .glass-sidebar {
+      background: rgba(255, 255, 255, 0.60);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .project-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+    }
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+  </style>
+</head>
+<body class="font-body text-gray-900 min-h-screen">
+
+  <!-- Aurora Background -->
+  <div class="aurora-bg">
+    <div class="aurora-blob" style="width: 600px; height: 600px; top: -10%; left: -5%; background: linear-gradient(135deg, #0d9462, #008f9c);"></div>
+    <div class="aurora-blob" style="width: 500px; height: 500px; top: 40%; right: -10%; background: linear-gradient(135deg, #bd62a0, #787acd);"></div>
+    <div class="aurora-blob" style="width: 450px; height: 450px; bottom: -5%; left: 30%; background: linear-gradient(135deg, #008f9c, #0d9462);"></div>
+    <div class="aurora-blob" style="width: 350px; height: 350px; top: 20%; left: 50%; background: linear-gradient(135deg, #787acd, #bd62a0); opacity: 0.2;"></div>
+  </div>
+
+  <div class="flex min-h-screen" x-data="{ mobileSidebar: false, section: '' }">
+
+    <!-- Sidebar -->
+    <aside class="glass-sidebar hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-40">
+      <div class="flex items-center gap-3 px-6 py-5 border-b border-white/20">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-ubt-green-400 to-azure-400 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.5"/><path d="M10 20 Q16 8 22 20" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="16" cy="14" r="3" fill="currentColor"/></svg>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-gray-900">Africa Multiple</h1>
+          <p class="text-xs text-gray-500">Cluster Management</p>
+        </div>
+      </div>
+      <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Dashboard</a>
+        <div class="px-3 pt-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Persons</div>
+        <a href="listing.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>All Persons</a>
+        <a href="projects.html" class="flex items-center gap-3 px-3 py-2 rounded-xl bg-gradient-to-r from-ubt-green-400/10 to-azure-400/10 text-ubt-green-400 font-medium text-sm"><div class="w-2 h-2 rounded-full bg-gradient-to-r from-ubt-green-400 to-azure-400"></div>Projects</a>
+        <a href="events.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Events</a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Countries</a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Locations</a>
+        <a href="institutions.html" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Institutions</a>
+        <div class="px-3 pt-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Admin</div>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-600 hover:bg-white/40 transition text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Administration</a>
+      </nav>
+      <div class="px-4 py-4 border-t border-white/20">
+        <a href="../index.html" class="flex items-center gap-2 px-3 py-2 text-xs text-gray-500 hover:text-gray-700 transition rounded-lg hover:bg-white/30">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Back to all prototypes
+        </a>
+        <div class="flex items-center gap-3 px-3 py-3 mt-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white flex items-center justify-center text-xs font-bold">AD</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-900 truncate">Admin User</p>
+            <p class="text-xs text-gray-500 truncate">admin@africa-multiple.org</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Sidebar -->
+    <div x-show="mobileSidebar" @click="mobileSidebar = false" class="fixed inset-0 bg-black/30 z-40 lg:hidden" x-transition.opacity></div>
+    <aside x-show="mobileSidebar" x-transition:enter="transition transform ease-out duration-200" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition transform ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" class="glass-sidebar fixed inset-y-0 left-0 z-50 w-64 lg:hidden">
+      <div class="flex items-center justify-between px-6 py-5 border-b border-white/20">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-ubt-green-400 to-azure-400 flex items-center justify-center"><svg class="w-5 h-5 text-white" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.5"/><path d="M10 20 Q16 8 22 20" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="16" cy="14" r="3" fill="currentColor"/></svg></div>
+          <span class="text-sm font-bold text-gray-900">Africa Multiple</span>
+        </div>
+        <button @click="mobileSidebar = false" class="p-1 rounded-lg hover:bg-white/30 cursor-pointer"><svg class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+      <nav class="px-4 py-4 space-y-1">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Dashboard</a>
+        <a href="listing.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Persons</a>
+        <a href="projects.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gradient-to-r from-ubt-green-400/10 to-azure-400/10 text-ubt-green-400 font-medium text-sm"><div class="w-2 h-2 rounded-full bg-gradient-to-r from-ubt-green-400 to-azure-400"></div>Projects</a>
+        <a href="events.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Events</a>
+        <a href="institutions.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 text-sm"><div class="w-2 h-2 rounded-full bg-gray-300"></div>Institutions</a>
+      </nav>
+      <div class="px-4 py-4 border-t border-white/20 mt-auto">
+        <a href="../index.html" class="flex items-center gap-2 px-3 py-2 text-xs text-gray-500 hover:text-gray-700 transition"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>Back to all prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-64 min-h-screen">
+      <!-- Top Bar -->
+      <header class="glass-card sticky top-0 z-30 px-6 py-4 flex items-center justify-between border-b border-white/30">
+        <div class="flex items-center gap-4">
+          <button @click="mobileSidebar = true" class="lg:hidden p-2 rounded-xl hover:bg-white/50 transition cursor-pointer">
+            <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <h2 class="text-lg font-semibold text-gray-900">Projects</h2>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-ubt-green-400 to-azure-400 text-white">23</span>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white flex items-center justify-center text-xs font-bold lg:hidden">AD</div>
+      </header>
+
+      <div class="p-6 space-y-6">
+        <!-- Summary Card -->
+        <div class="glass-card rounded-2xl shadow-lg p-6 fade-in">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="text-center">
+              <p class="text-2xl font-extrabold bg-gradient-to-r from-ubt-green-400 to-azure-400 bg-clip-text text-transparent">23</p>
+              <p class="text-xs text-gray-500 mt-1">Total Projects</p>
+            </div>
+            <div class="text-center">
+              <p class="text-2xl font-extrabold bg-gradient-to-r from-azure-400 to-purple-400 bg-clip-text text-transparent">14</p>
+              <p class="text-xs text-gray-500 mt-1">Active</p>
+            </div>
+            <div class="text-center">
+              <p class="text-2xl font-extrabold bg-gradient-to-r from-raspberry-400 to-purple-400 bg-clip-text text-transparent">2.4M</p>
+              <p class="text-xs text-gray-500 mt-1">Requested</p>
+            </div>
+            <div class="text-center">
+              <p class="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-ubt-green-400 bg-clip-text text-transparent">1.9M</p>
+              <p class="text-xs text-gray-500 mt-1">Approved</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter pills -->
+        <div class="flex flex-wrap gap-2 fade-in fade-in-delay-1">
+          <button @click="section = ''" :class="!section ? 'bg-gradient-to-r from-ubt-green-400 to-azure-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">All Sections</button>
+          <button @click="section = 'Mobilities'" :class="section === 'Mobilities' ? 'bg-gradient-to-r from-ubt-green-400 to-azure-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Mobilities</button>
+          <button @click="section = 'Knowledges'" :class="section === 'Knowledges' ? 'bg-gradient-to-r from-azure-400 to-purple-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Knowledges</button>
+          <button @click="section = 'Moralities'" :class="section === 'Moralities' ? 'bg-gradient-to-r from-raspberry-400 to-purple-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Moralities</button>
+          <button @click="section = 'Aesthetics'" :class="section === 'Aesthetics' ? 'bg-gradient-to-r from-purple-400 to-ubt-green-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Aesthetics</button>
+          <button @click="section = 'Learning'" :class="section === 'Learning' ? 'bg-gradient-to-r from-ubt-green-300 to-raspberry-400 text-white shadow-md' : 'bg-white/60 text-gray-600 hover:bg-white/80'" class="px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">Learning</button>
+        </div>
+
+        <!-- Active Projects -->
+        <div class="fade-in fade-in-delay-2">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 rounded-full bg-gradient-to-r from-ubt-green-400 to-azure-400"></div>
+            <h3 class="text-base font-semibold text-gray-900">Active Projects</h3>
+            <span class="text-xs text-gray-500">6 projects</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <!-- Project 1 -->
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="h-2 bg-gradient-to-r from-ubt-green-400 to-azure-400"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-ubt-green-400/15 to-azure-400/15 text-ubt-green-400">Mobilities</span>
+                  <svg class="progress-ring w-10 h-10" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="2.5"/>
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="url(#grad1)" stroke-width="2.5" stroke-dasharray="61.3 94.2" stroke-linecap="round"/>
+                    <defs><linearGradient id="grad1"><stop offset="0%" stop-color="#0d9462"/><stop offset="100%" stop-color="#008f9c"/></linearGradient></defs>
+                    <text x="18" y="20" text-anchor="middle" fill="#374151" font-size="8" font-weight="700">65%</text>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-gray-900 text-sm mb-1">Transnational Migration Patterns in West Africa</h4>
+                <p class="text-xs text-gray-500 mb-1">ID: TMP-2024-01 &middot; Director: Dr. Amina Osei</p>
+                <p class="text-xs text-gray-400 mb-3">Requested: 385,000 &euro; &middot; Approved: 320,000 &euro; &middot; Report deadline: 2026-12-31</p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                  <span>2024-2027</span>
+                  <div class="flex -space-x-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">AO</div>
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-azure-400 to-purple-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">MB</div>
+                    <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 text-[9px] font-bold flex items-center justify-center border-2 border-white">+3</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="h-2 bg-gradient-to-r from-azure-400 to-purple-400"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-azure-400/15 to-purple-400/15 text-azure-400">Knowledges</span>
+                  <svg class="progress-ring w-10 h-10" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="2.5"/>
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="url(#grad2)" stroke-width="2.5" stroke-dasharray="37.7 94.2" stroke-linecap="round"/>
+                    <defs><linearGradient id="grad2"><stop offset="0%" stop-color="#008f9c"/><stop offset="100%" stop-color="#787acd"/></linearGradient></defs>
+                    <text x="18" y="20" text-anchor="middle" fill="#374151" font-size="8" font-weight="700">40%</text>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-gray-900 text-sm mb-1">Indigenous Knowledge Systems and Digital Archives</h4>
+                <p class="text-xs text-gray-500 mb-1">ID: IKS-2024-05 &middot; Director: Prof. Kwame Nkrumah-Acheampong</p>
+                <p class="text-xs text-gray-400 mb-3">Requested: 520,000 &euro; &middot; Approved: 480,000 &euro; &middot; Report submitted</p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                  <span>2024-2028</span>
+                  <div class="flex -space-x-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-azure-400 to-purple-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">KN</div>
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-ubt-green-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">EO</div>
+                    <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 text-[9px] font-bold flex items-center justify-center border-2 border-white">+4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="h-2 bg-gradient-to-r from-raspberry-400 to-purple-400"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-raspberry-400/15 to-purple-400/15 text-raspberry-400">Moralities</span>
+                  <svg class="progress-ring w-10 h-10" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="2.5"/>
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="url(#grad3)" stroke-width="2.5" stroke-dasharray="75.4 94.2" stroke-linecap="round"/>
+                    <defs><linearGradient id="grad3"><stop offset="0%" stop-color="#bd62a0"/><stop offset="100%" stop-color="#787acd"/></linearGradient></defs>
+                    <text x="18" y="20" text-anchor="middle" fill="#374151" font-size="8" font-weight="700">80%</text>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-gray-900 text-sm mb-1">Ethics of AI in African Healthcare</h4>
+                <p class="text-xs text-gray-500 mb-1">ID: EAH-2023-02 &middot; Director: Dr. Fatima Mbeki</p>
+                <p class="text-xs text-gray-400 mb-3">Requested: 290,000 &euro; &middot; Approved: 250,000 &euro; &middot; Report requested</p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                  <span>2023-2026</span>
+                  <div class="flex -space-x-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-raspberry-400 to-purple-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">FM</div>
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">GD</div>
+                    <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 text-[9px] font-bold flex items-center justify-center border-2 border-white">+2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 4 -->
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="h-2 bg-gradient-to-r from-purple-400 to-ubt-green-400"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-purple-400/15 to-ubt-green-400/15 text-purple-500">Aesthetics</span>
+                  <svg class="progress-ring w-10 h-10" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="2.5"/>
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="url(#grad4)" stroke-width="2.5" stroke-dasharray="23.6 94.2" stroke-linecap="round"/>
+                    <defs><linearGradient id="grad4"><stop offset="0%" stop-color="#787acd"/><stop offset="100%" stop-color="#0d9462"/></linearGradient></defs>
+                    <text x="18" y="20" text-anchor="middle" fill="#374151" font-size="8" font-weight="700">25%</text>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-gray-900 text-sm mb-1">Contemporary African Art and Digital Media</h4>
+                <p class="text-xs text-gray-500 mb-1">ID: CAD-2025-01 &middot; Director: Dr. James Adeyemi</p>
+                <p class="text-xs text-gray-400 mb-3">Requested: 410,000 &euro; &middot; Approved: 350,000 &euro;</p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                  <span>2025-2028</span>
+                  <div class="flex -space-x-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-ubt-green-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">JA</div>
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-ubt-green-400 to-purple-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">LK</div>
+                    <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 text-[9px] font-bold flex items-center justify-center border-2 border-white">+5</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 5 -->
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="h-2 bg-gradient-to-r from-ubt-green-300 to-raspberry-400"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-ubt-green-300/15 to-raspberry-400/15 text-ubt-green-400">Learning</span>
+                  <svg class="progress-ring w-10 h-10" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="2.5"/>
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="url(#grad5)" stroke-width="2.5" stroke-dasharray="51.8 94.2" stroke-linecap="round"/>
+                    <defs><linearGradient id="grad5"><stop offset="0%" stop-color="#4ea980"/><stop offset="100%" stop-color="#bd62a0"/></linearGradient></defs>
+                    <text x="18" y="20" text-anchor="middle" fill="#374151" font-size="8" font-weight="700">55%</text>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-gray-900 text-sm mb-1">Multilingual Education in East Africa</h4>
+                <p class="text-xs text-gray-500 mb-1">ID: MEE-2024-03 &middot; Director: Prof. Sarah Wanjiku</p>
+                <p class="text-xs text-gray-400 mb-3">Requested: 475,000 &euro; &middot; Approved: 400,000 &euro; &middot; Report deadline: 2027-03-31</p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                  <span>2024-2027</span>
+                  <div class="flex -space-x-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-ubt-green-300 to-raspberry-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">SW</div>
+                    <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 text-[9px] font-bold flex items-center justify-center border-2 border-white">+6</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 6 -->
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden">
+              <div class="h-2 bg-gradient-to-r from-ubt-green-400 to-azure-400"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-ubt-green-400/15 to-azure-400/15 text-ubt-green-400">Mobilities</span>
+                  <svg class="progress-ring w-10 h-10" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="2.5"/>
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="url(#grad6)" stroke-width="2.5" stroke-dasharray="28.3 94.2" stroke-linecap="round"/>
+                    <defs><linearGradient id="grad6"><stop offset="0%" stop-color="#0d9462"/><stop offset="100%" stop-color="#008f9c"/></linearGradient></defs>
+                    <text x="18" y="20" text-anchor="middle" fill="#374151" font-size="8" font-weight="700">30%</text>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-gray-900 text-sm mb-1">Digital Narratives of African Diaspora</h4>
+                <p class="text-xs text-gray-500 mb-1">ID: DNA-2025-03 &middot; Director: Dr. Mohamed Ben Ali</p>
+                <p class="text-xs text-gray-400 mb-3">Requested: 320,000 &euro; &middot; Approved: 280,000 &euro;</p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                  <span>2025-2028</span>
+                  <div class="flex -space-x-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-azure-400 to-ubt-green-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">MB</div>
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-ubt-green-400 to-azure-400 text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">AO</div>
+                    <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 text-[9px] font-bold flex items-center justify-center border-2 border-white">+2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed Projects -->
+        <div class="fade-in fade-in-delay-3">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+            <h3 class="text-base font-semibold text-gray-900">Completed</h3>
+            <span class="text-xs text-gray-500">6 projects</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden opacity-75">
+              <div class="h-2 bg-gray-300"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500">Mobilities</span>
+                  <span class="text-xs font-semibold text-gray-400">Completed</span>
+                </div>
+                <h4 class="font-semibold text-gray-700 text-sm mb-1">Urban Mobility and Social Networks</h4>
+                <p class="text-xs text-gray-400 mb-3">Director: Dr. Amina Osei</p>
+                <div class="text-xs text-gray-400">DAAD | 2021-2024</div>
+              </div>
+            </div>
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden opacity-75">
+              <div class="h-2 bg-gray-300"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500">Knowledges</span>
+                  <span class="text-xs font-semibold text-gray-400">Completed</span>
+                </div>
+                <h4 class="font-semibold text-gray-700 text-sm mb-1">Oral Traditions in the Digital Age</h4>
+                <p class="text-xs text-gray-400 mb-3">Director: Prof. Emmanuel Okonkwo</p>
+                <div class="text-xs text-gray-400">UNESCO | 2020-2023</div>
+              </div>
+            </div>
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden opacity-75">
+              <div class="h-2 bg-gray-300"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500">Moralities</span>
+                  <span class="text-xs font-semibold text-gray-400">Completed</span>
+                </div>
+                <h4 class="font-semibold text-gray-700 text-sm mb-1">Religious Plurality in Southern Africa</h4>
+                <p class="text-xs text-gray-400 mb-3">Director: Dr. Grace Dlamini</p>
+                <div class="text-xs text-gray-400">VW Foundation | 2021-2024</div>
+              </div>
+            </div>
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden opacity-75">
+              <div class="h-2 bg-gray-300"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500">Aesthetics</span>
+                  <span class="text-xs font-semibold text-gray-400">Completed</span>
+                </div>
+                <h4 class="font-semibold text-gray-700 text-sm mb-1">Nollywood and Global Media Flows</h4>
+                <p class="text-xs text-gray-400 mb-3">Director: Dr. James Adeyemi</p>
+                <div class="text-xs text-gray-400">DFG | 2020-2023</div>
+              </div>
+            </div>
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden opacity-75">
+              <div class="h-2 bg-gray-300"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500">Learning</span>
+                  <span class="text-xs font-semibold text-gray-400">Completed</span>
+                </div>
+                <h4 class="font-semibold text-gray-700 text-sm mb-1">Teacher Training for Inclusive Education</h4>
+                <p class="text-xs text-gray-400 mb-3">Director: Prof. Sarah Wanjiku</p>
+                <div class="text-xs text-gray-400">DAAD | 2019-2022</div>
+              </div>
+            </div>
+            <div class="project-card rounded-2xl shadow-lg overflow-hidden opacity-75">
+              <div class="h-2 bg-gray-300"></div>
+              <div class="p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500">Knowledges</span>
+                  <span class="text-xs font-semibold text-gray-400">Completed</span>
+                </div>
+                <h4 class="font-semibold text-gray-700 text-sm mb-1">Decolonizing African Philosophy Curricula</h4>
+                <p class="text-xs text-gray-400 mb-3">Director: Prof. Kwame Nkrumah-Acheampong</p>
+                <div class="text-xs text-gray-400">ERC | 2018-2022</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Portfolio - Institutional Portal | Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy: { DEFAULT: '#1e3a5f', dark: '#152c49', light: '#2a4d7a', 100: '#e8edf3', 200: '#c5d0de' },
+          gold: { DEFAULT: '#c5973e', light: '#d4a94f', pale: '#fdf6e9', 100: '#f9f0dc' },
+        },
+        fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .skip-link { position: absolute; top: -40px; left: 0; background: #c5973e; color: #fff; padding: 8px 16px; z-index: 100; font-weight: 600; }
+    .skip-link:focus { top: 0; }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes progressFill { from { width: 0; } }
+    @keyframes milestoneReveal { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+    .animate-fade-slide { opacity: 0; animation: fadeSlideUp 0.5s ease-out forwards; }
+    .animate-delay-1 { animation-delay: 0.1s; }
+    .animate-delay-2 { animation-delay: 0.2s; }
+    .animate-delay-3 { animation-delay: 0.3s; }
+    .animate-progress { animation: progressFill 1s ease-out forwards; }
+    .animate-milestone { opacity: 0; animation: milestoneReveal 0.4s ease-out forwards; }
+    *:focus-visible { outline: 3px solid #c5973e; outline-offset: 2px; border-radius: 2px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-600 min-h-screen">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Navigation -->
+  <nav class="fixed top-0 left-0 right-0 bg-navy z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center space-x-2 text-white font-bold text-lg hover:text-gold transition-colors">
+          <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          <span class="hidden sm:inline">Cluster Portal</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-1">
+          <a href="dashboard.html" class="px-3 py-2 text-sm font-medium text-navy-200 hover:text-white rounded-md transition-colors">Dashboard</a>
+          <a href="listing.html" class="px-3 py-2 text-sm font-medium text-navy-200 hover:text-white rounded-md transition-colors">Persons</a>
+          <a href="projects.html" class="px-3 py-2 text-sm font-medium text-white bg-navy-dark rounded-md" aria-current="page">Projects</a>
+          <a href="events.html" class="px-3 py-2 text-sm font-medium text-navy-200 hover:text-white rounded-md transition-colors">Events</a>
+          <a href="institutions.html" class="px-3 py-2 text-sm font-medium text-navy-200 hover:text-white rounded-md transition-colors">Institutions</a>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button class="relative p-2 text-navy-200 hover:text-white transition-colors rounded-lg hover:bg-navy-dark" aria-label="Notifications">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="absolute -top-0.5 -right-0.5 w-5 h-5 bg-gold text-white text-xs font-bold rounded-full flex items-center justify-center">3</span>
+          </button>
+          <div class="flex items-center space-x-2 text-white">
+            <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center text-sm font-bold">AD</div>
+            <span class="hidden lg:inline text-sm font-medium">Dr. Admin</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="main-content" class="pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6" x-data="projectPortfolio()">
+
+      <!-- Breadcrumb -->
+      <nav aria-label="Breadcrumb" class="mb-4 animate-fade-slide">
+        <ol class="flex items-center space-x-2 text-sm">
+          <li><a href="dashboard.html" class="text-gold hover:underline">Home</a></li>
+          <li class="text-gray-400">/</li>
+          <li class="text-gray-500 font-medium" aria-current="page">Projects</li>
+        </ol>
+        <p class="text-xs text-gray-400 mt-1">You are viewing the project portfolio</p>
+      </nav>
+
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 animate-fade-slide animate-delay-1">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">Project Portfolio</h1>
+          <p class="text-sm text-gray-500 mt-1"><span x-text="filteredProjects.length"></span> projects</p>
+        </div>
+        <div class="mt-3 sm:mt-0 flex items-center space-x-2">
+          <button @click="statusFilter = ''" :class="statusFilter === '' ? 'bg-navy text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'" class="px-3 py-2 text-xs font-medium rounded-lg transition-colors">All</button>
+          <button @click="statusFilter = 'Active'" :class="statusFilter === 'Active' ? 'bg-navy text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'" class="px-3 py-2 text-xs font-medium rounded-lg transition-colors">Active</button>
+          <button @click="statusFilter = 'Completed'" :class="statusFilter === 'Completed' ? 'bg-navy text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'" class="px-3 py-2 text-xs font-medium rounded-lg transition-colors">Completed</button>
+          <button @click="statusFilter = 'Planning'" :class="statusFilter === 'Planning' ? 'bg-navy text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'" class="px-3 py-2 text-xs font-medium rounded-lg transition-colors">Planning</button>
+          <button @click="statusFilter = 'On Hold'" :class="statusFilter === 'On Hold' ? 'bg-navy text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'" class="px-3 py-2 text-xs font-medium rounded-lg transition-colors">On Hold</button>
+        </div>
+      </div>
+
+      <!-- Project Cards Grid -->
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <template x-for="(project, idx) in filteredProjects" :key="project.id">
+          <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg hover:border-gold transition-all duration-200 animate-fade-slide" :style="'animation-delay:' + (0.1 + idx * 0.05) + 's'">
+            <!-- Header -->
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex-1 min-w-0">
+                <h3 class="text-sm font-semibold text-gray-800 truncate" x-text="project.title"></h3>
+                <p class="text-xs text-gray-400 mt-0.5">Project ID: <span class="font-medium text-gray-500" x-text="project.projectId"></span></p>
+                <p class="text-xs text-gray-500 mt-0.5" x-text="project.duration"></p>
+              </div>
+              <span class="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ml-2" :class="statusClass(project.status)" x-text="project.status"></span>
+            </div>
+
+            <!-- Directors -->
+            <div class="mb-3">
+              <p class="text-xs text-gray-400 mb-1">Directors</p>
+              <p class="text-xs text-gray-700" x-text="project.directors"></p>
+            </div>
+
+            <!-- Report Status -->
+            <div class="mb-3 grid grid-cols-3 gap-2">
+              <div class="text-center p-2 bg-gray-50 rounded-lg">
+                <p class="text-xs text-gray-400">Deadline</p>
+                <p class="text-xs font-medium text-gray-700" x-text="project.reportDeadline || '—'"></p>
+              </div>
+              <div class="text-center p-2 bg-gray-50 rounded-lg">
+                <p class="text-xs text-gray-400">Requested</p>
+                <span class="text-xs font-medium" :class="project.reportRequested ? 'text-gold' : 'text-gray-400'" x-text="project.reportRequested ? 'Yes' : 'No'"></span>
+              </div>
+              <div class="text-center p-2 bg-gray-50 rounded-lg">
+                <p class="text-xs text-gray-400">Submitted</p>
+                <span class="text-xs font-medium" :class="project.reportSubmitted ? 'text-green-600' : 'text-gray-400'" x-text="project.reportSubmitted ? 'Yes' : 'No'"></span>
+              </div>
+            </div>
+
+            <!-- Funding: Requested / Approved -->
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs text-gray-500">Funding</span>
+                <span class="text-xs font-semibold text-gray-600" x-text="'Requested: ' + project.fundingRequested + ' / Approved: ' + project.fundingApproved"></span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="rounded-full h-2 animate-progress bg-gold" :style="'width:' + project.fundingPct + '%'"></div>
+              </div>
+            </div>
+
+            <!-- Team Avatars -->
+            <div class="flex items-center justify-between">
+              <div class="flex -space-x-2">
+                <template x-for="(member, mi) in project.team.slice(0, 3)" :key="mi">
+                  <div class="w-7 h-7 rounded-full border-2 border-white text-xs font-bold flex items-center justify-center" :class="member.bg" :title="member.name">
+                    <span :class="member.text" x-text="member.initials"></span>
+                  </div>
+                </template>
+                <div x-show="project.team.length > 3" class="w-7 h-7 rounded-full border-2 border-white bg-gray-200 text-xs font-medium text-gray-500 flex items-center justify-center" x-text="'+' + (project.team.length - 3)"></div>
+              </div>
+              <a href="#" class="text-xs text-gold hover:underline font-medium">Details &rarr;</a>
+            </div>
+          </div>
+        </template>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Quick Actions -->
+  <div class="fixed bottom-6 right-6 z-40" x-data="{ expanded: false }">
+    <div x-show="expanded" x-cloak x-transition.origin.bottom.right class="mb-3 bg-white rounded-xl shadow-2xl border border-gray-200 p-4 w-56">
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Quick Add</p>
+      <a href="listing.html" class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"><svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span class="text-sm text-gray-700">New Person</span></a>
+      <a href="projects.html" class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"><svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="text-sm text-gray-700">New Project</span></a>
+      <a href="events.html" class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"><svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-sm text-gray-700">New Event</span></a>
+    </div>
+    <button @click="expanded = !expanded" class="w-14 h-14 bg-gold hover:bg-gold-light text-white rounded-full shadow-xl flex items-center justify-center transition-all duration-200" :class="expanded ? 'rotate-45' : ''" aria-label="Quick actions">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <p class="text-xs text-gray-400">&copy; 2026 Africa Multiple Cluster of Excellence</p>
+      <a href="../index.html" class="text-xs text-gold hover:underline font-medium">&larr; Back to Prototypes</a>
+    </div>
+  </footer>
+
+  <script>
+  function projectPortfolio() {
+    return {
+      statusFilter: '',
+      projects: [
+        { id: 1, title: 'Epistemic Plurality in African Science', projectId: 'EP-2022-001', status: 'Active', duration: 'Jan 2022 - Dec 2026', directors: 'Dr. Amina Osei, Prof. Kwame Mensah', reportDeadline: 'Feb 21, 2026', reportRequested: true, reportSubmitted: false, fundingRequested: '\u20AC600,000', fundingApproved: '\u20AC432,000', fundingPct: 72, team: [{initials:'AO',bg:'bg-gold-pale',text:'text-gold',name:'Dr. Osei'},{initials:'KM',bg:'bg-navy-100',text:'text-navy',name:'Prof. Mensah'},{initials:'FA',bg:'bg-purple-100',text:'text-purple-700',name:'Dr. Al-Rashid'},{initials:'SA',bg:'bg-green-100',text:'text-green-700',name:'S. Adeyemi'}] },
+        { id: 2, title: 'Multilingual Knowledge Networks', projectId: 'MKN-2023-002', status: 'Active', duration: 'Mar 2023 - Feb 2027', directors: 'Prof. Kwame Mensah', reportDeadline: 'Mar 11, 2026', reportRequested: true, reportSubmitted: false, fundingRequested: '\u20AC500,000', fundingApproved: '\u20AC225,000', fundingPct: 45, team: [{initials:'KM',bg:'bg-navy-100',text:'text-navy',name:'Prof. Mensah'},{initials:'AO',bg:'bg-gold-pale',text:'text-gold',name:'Dr. Osei'},{initials:'MS',bg:'bg-pink-100',text:'text-pink-700',name:'M. Santos'}] },
+        { id: 3, title: 'Digital Humanities Archive', projectId: 'DHA-2026-003', status: 'Planning', duration: 'Jul 2026 - Jun 2029', directors: 'Dr. Yuki Tanaka', reportDeadline: '', reportRequested: false, reportSubmitted: false, fundingRequested: '\u20AC400,000', fundingApproved: '\u20AC88,000', fundingPct: 22, team: [{initials:'YT',bg:'bg-blue-100',text:'text-blue-700',name:'Dr. Tanaka'},{initials:'AO',bg:'bg-gold-pale',text:'text-gold',name:'Dr. Osei'}] },
+        { id: 4, title: 'Decolonial Pedagogies Initiative', projectId: 'DPI-2021-004', status: 'Active', duration: 'Sep 2021 - Aug 2025', directors: 'Dr. Fatima Al-Rashid, Prof. Elena Volkov', reportDeadline: 'Jan 31, 2026', reportRequested: true, reportSubmitted: true, fundingRequested: '\u20AC400,000', fundingApproved: '\u20AC364,000', fundingPct: 91, team: [{initials:'FA',bg:'bg-purple-100',text:'text-purple-700',name:'Dr. Al-Rashid'},{initials:'EV',bg:'bg-indigo-100',text:'text-indigo-700',name:'Prof. Volkov'},{initials:'JM',bg:'bg-orange-100',text:'text-orange-700',name:'Dr. Mbeki'},{initials:'AB',bg:'bg-teal-100',text:'text-teal-700',name:'A. Bello'},{initials:'CO',bg:'bg-rose-100',text:'text-rose-700',name:'C. Obi'}] },
+        { id: 5, title: 'African Urban Futures', projectId: 'AUF-2023-005', status: 'Active', duration: 'Jan 2023 - Dec 2026', directors: 'Dr. Jean-Pierre Mbeki', reportDeadline: 'Apr 15, 2026', reportRequested: false, reportSubmitted: false, fundingRequested: '\u20AC500,000', fundingApproved: '\u20AC275,000', fundingPct: 55, team: [{initials:'JM',bg:'bg-orange-100',text:'text-orange-700',name:'Dr. Mbeki'},{initials:'SA',bg:'bg-green-100',text:'text-green-700',name:'S. Adeyemi'},{initials:'AB',bg:'bg-teal-100',text:'text-teal-700',name:'A. Bello'}] },
+        { id: 6, title: 'Oral Histories Documentation', projectId: 'OHD-2020-006', status: 'Completed', duration: 'Mar 2020 - Feb 2024', directors: 'Prof. Kwame Mensah', reportDeadline: 'Feb 28, 2024', reportRequested: true, reportSubmitted: true, fundingRequested: '\u20AC350,000', fundingApproved: '\u20AC350,000', fundingPct: 100, team: [{initials:'KM',bg:'bg-navy-100',text:'text-navy',name:'Prof. Mensah'},{initials:'CO',bg:'bg-rose-100',text:'text-rose-700',name:'C. Obi'}] },
+        { id: 7, title: 'Climate Knowledge Systems', projectId: 'CKS-2024-007', status: 'Active', duration: 'Jun 2024 - May 2028', directors: 'Dr. Amina Osei', reportDeadline: 'Jun 30, 2026', reportRequested: false, reportSubmitted: false, fundingRequested: '\u20AC450,000', fundingApproved: '\u20AC135,000', fundingPct: 30, team: [{initials:'AO',bg:'bg-gold-pale',text:'text-gold',name:'Dr. Osei'},{initials:'EV',bg:'bg-indigo-100',text:'text-indigo-700',name:'Prof. Volkov'}] },
+        { id: 8, title: 'Gender & Knowledge Production', projectId: 'GKP-2024-008', status: 'On Hold', duration: 'Jan 2024 - Dec 2027', directors: 'Dr. Fatima Al-Rashid', reportDeadline: '', reportRequested: false, reportSubmitted: false, fundingRequested: '\u20AC350,000', fundingApproved: '\u20AC52,500', fundingPct: 15, team: [{initials:'FA',bg:'bg-purple-100',text:'text-purple-700',name:'Dr. Al-Rashid'},{initials:'MS',bg:'bg-pink-100',text:'text-pink-700',name:'M. Santos'}] },
+        { id: 9, title: 'Pan-African Philosophy Network', projectId: 'PAPN-2019-009', status: 'Completed', duration: 'Sep 2019 - Aug 2023', directors: 'Prof. Kwame Mensah, Dr. Amina Osei', reportDeadline: 'Aug 31, 2023', reportRequested: true, reportSubmitted: true, fundingRequested: '\u20AC280,000', fundingApproved: '\u20AC280,000', fundingPct: 100, team: [{initials:'KM',bg:'bg-navy-100',text:'text-navy',name:'Prof. Mensah'},{initials:'AO',bg:'bg-gold-pale',text:'text-gold',name:'Dr. Osei'},{initials:'JM',bg:'bg-orange-100',text:'text-orange-700',name:'Dr. Mbeki'}] },
+        { id: 10, title: 'Transnational Migration Studies', projectId: 'TMS-2025-010', status: 'On Hold', duration: 'Apr 2025 - Mar 2029', directors: 'Dr. Luisa Fernandez', reportDeadline: '', reportRequested: false, reportSubmitted: false, fundingRequested: '\u20AC400,000', fundingApproved: '\u20AC32,000', fundingPct: 8, team: [{initials:'LF',bg:'bg-amber-100',text:'text-amber-700',name:'Dr. Fernandez'},{initials:'HM',bg:'bg-gray-200',text:'text-gray-600',name:'Dr. Mueller'}] },
+        { id: 11, title: 'Afro-European Cultural Exchange', projectId: 'AECE-2020-011', status: 'Completed', duration: 'Jan 2020 - Jun 2024', directors: 'Prof. Elena Volkov', reportDeadline: 'Jun 30, 2024', reportRequested: true, reportSubmitted: true, fundingRequested: '\u20AC420,000', fundingApproved: '\u20AC420,000', fundingPct: 100, team: [{initials:'EV',bg:'bg-indigo-100',text:'text-indigo-700',name:'Prof. Volkov'},{initials:'MS',bg:'bg-pink-100',text:'text-pink-700',name:'M. Santos'},{initials:'LF',bg:'bg-amber-100',text:'text-amber-700',name:'Dr. Fernandez'}] },
+        { id: 12, title: 'Indigenous Language Preservation', projectId: 'ILP-2026-012', status: 'Planning', duration: 'Oct 2026 - Sep 2030', directors: 'Samuel Adeyemi', reportDeadline: '', reportRequested: false, reportSubmitted: false, fundingRequested: '\u20AC500,000', fundingApproved: '\u20AC25,000', fundingPct: 5, team: [{initials:'SA',bg:'bg-green-100',text:'text-green-700',name:'S. Adeyemi'},{initials:'AB',bg:'bg-teal-100',text:'text-teal-700',name:'A. Bello'}] },
+      ],
+      get filteredProjects() {
+        if (!this.statusFilter) return this.projects;
+        return this.projects.filter(p => p.status === this.statusFilter);
+      },
+      statusClass(status) {
+        const classes = {
+          'Active': 'bg-gold-pale text-gold',
+          'Completed': 'bg-green-100 text-green-700',
+          'Planning': 'bg-navy-100 text-navy',
+          'On Hold': 'bg-gray-100 text-gray-500',
+        };
+        return classes[status] || 'bg-gray-100 text-gray-500';
+      }
+    };
+  }
+  </script>
+</body>
+</html>

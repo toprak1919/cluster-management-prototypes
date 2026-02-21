@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout Prototypes | Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+            "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+            "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+            "purple": { DEFAULT: "#787acd", 50: "#ede0f1", 400: "#787acd" },
+            "coffee": { DEFAULT: "#6b4c3b", 50: "#f5ede4" },
+            "swiss-red": { DEFAULT: "#ff0000" },
+          },
+          fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Inter', system-ui, sans-serif; }</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto py-16 px-6">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-3">Cluster Management — Layout Prototypes</h1>
+      <p class="text-lg text-gray-500 mb-2">18 design directions for the frontend. 6 pages each. 108 pages total.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Style A -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-ubt-green to-azure"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style A</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-ubt-green mb-2">Bento Grid + Glassmorphism</p>
+          <p class="text-xs text-gray-500 mb-4">Animated gradients, frosted glass cards, asymmetric bento layouts. Top navigation.</p>
+          <div class="space-y-1">
+            <a href="style-a/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-a/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-a/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-a/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-a/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-a/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style B -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-[#e8e8e8]"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style B</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-azure mb-2">Neumorphism + Organic Shapes</p>
+          <p class="text-xs text-gray-500 mb-4">Soft raised/pressed effects, blob-shaped avatars, tactile buttons. White sidebar.</p>
+          <div class="space-y-1">
+            <a href="style-b/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-azure-50 text-xs text-gray-600 hover:text-azure transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-b/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-azure-50 text-xs text-gray-600 hover:text-azure transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-b/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-azure-50 text-xs text-gray-600 hover:text-azure transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-b/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-azure-50 text-xs text-gray-600 hover:text-azure transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-b/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-azure-50 text-xs text-gray-600 hover:text-azure transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-b/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-azure-50 text-xs text-gray-600 hover:text-azure transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style C -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gray-900"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style C</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-raspberry mb-2">Dark Terminal + Cyberpunk</p>
+          <p class="text-xs text-gray-500 mb-4">Full dark mode, neon glow accents, monospace data, scan-line effects. Slim sidebar.</p>
+          <div class="space-y-1">
+            <a href="style-c/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-raspberry-50 text-xs text-gray-600 hover:text-raspberry transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-c/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-raspberry-50 text-xs text-gray-600 hover:text-raspberry transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-c/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-raspberry-50 text-xs text-gray-600 hover:text-raspberry transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-c/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-raspberry-50 text-xs text-gray-600 hover:text-raspberry transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-c/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-raspberry-50 text-xs text-gray-600 hover:text-raspberry transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-c/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-raspberry-50 text-xs text-gray-600 hover:text-raspberry transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style D -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-black"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style D</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-gray-900 mb-2">Brutalist Editorial</p>
+          <p class="text-xs text-gray-500 mb-4">Newspaper layouts, massive serif headlines, harsh borders, B&W dominant. Raw typography.</p>
+          <div class="space-y-1">
+            <a href="style-d/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-200 text-xs text-gray-600 hover:text-black transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-d/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-200 text-xs text-gray-600 hover:text-black transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-d/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-200 text-xs text-gray-600 hover:text-black transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-d/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-200 text-xs text-gray-600 hover:text-black transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-d/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-200 text-xs text-gray-600 hover:text-black transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-d/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-200 text-xs text-gray-600 hover:text-black transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style E -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-ubt-green via-azure to-raspberry"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style E</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium bg-gradient-to-r from-ubt-green to-azure bg-clip-text text-transparent mb-2">Aurora Gradient Mesh</p>
+          <p class="text-xs text-gray-500 mb-4">Animated colorful blobs, frosted glass cards, vibrant gradient accents everywhere.</p>
+          <div class="space-y-1">
+            <a href="style-e/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-e/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-e/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-e/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-e/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-e/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style F -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2" style="background: linear-gradient(to right, #6b4c3b, #c45a3c, #af7532)"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style F</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-coffee mb-2">Retro Analog Dashboard</p>
+          <p class="text-xs text-gray-500 mb-4">Vintage gauges, index cards, warm sepia tones, typewriter feel. Old-school charm.</p>
+          <div class="space-y-1">
+            <a href="style-f/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-[#f5ede4] text-xs text-gray-600 hover:text-coffee transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-f/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-[#f5ede4] text-xs text-gray-600 hover:text-coffee transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-f/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-[#f5ede4] text-xs text-gray-600 hover:text-coffee transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-f/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-[#f5ede4] text-xs text-gray-600 hover:text-coffee transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-f/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-[#f5ede4] text-xs text-gray-600 hover:text-coffee transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-f/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-[#f5ede4] text-xs text-gray-600 hover:text-coffee transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style G -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-white border-b-2 border-black"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style G</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-gray-900 mb-2">Swiss Minimalist</p>
+          <p class="text-xs text-gray-500 mb-4">Pure typography, extreme white space, grid precision. Almost no color. Helvetica.</p>
+          <div class="space-y-1">
+            <a href="style-g/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-black transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-g/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-black transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-g/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-black transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-g/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-black transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-g/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-black transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-g/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-black transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style H -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-ubt-green-50 via-azure-50 to-raspberry-50"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style H</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-ubt-green mb-2">Material Design 3</p>
+          <p class="text-xs text-gray-500 mb-4">Google-style tonal surfaces, nav rail, FABs, rounded chips. Roboto. Soft & friendly.</p>
+          <div class="space-y-1">
+            <a href="style-h/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-h/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-h/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-h/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-h/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-h/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-ubt-green-50 text-xs text-gray-600 hover:text-ubt-green transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style I -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gray-200"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style I</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-gray-700 mb-2">Notion / Linear Workspace</p>
+          <p class="text-xs text-gray-500 mb-4">Monochrome, command palette, collapsible sections, database views. Ultra-clean workspace.</p>
+          <div class="space-y-1">
+            <a href="style-i/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-gray-900 transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-i/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-gray-900 transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-i/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-gray-900 transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-i/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-gray-900 transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-i/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-gray-900 transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-i/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-xs text-gray-600 hover:text-gray-900 transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style J -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-indigo-600 to-slate-600"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style J</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-indigo-600 mb-2">Research Analytics Dashboard</p>
+          <p class="text-xs text-gray-500 mb-4">Animated counters, sparklines, grant progress, publication metrics. Indigo + Slate.</p>
+          <div class="space-y-1">
+            <a href="style-j/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-indigo-50 text-xs text-gray-600 hover:text-indigo-600 transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-j/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-indigo-50 text-xs text-gray-600 hover:text-indigo-600 transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-j/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-indigo-50 text-xs text-gray-600 hover:text-indigo-600 transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-j/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-indigo-50 text-xs text-gray-600 hover:text-indigo-600 transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-j/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-indigo-50 text-xs text-gray-600 hover:text-indigo-600 transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-j/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-indigo-50 text-xs text-gray-600 hover:text-indigo-600 transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style K -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-[#1e3a5f] to-[#c5973e]"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style K</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-[#1e3a5f] mb-2">Institutional Portal Pro</p>
+          <p class="text-xs text-gray-500 mb-4">Mega-menu nav, milestone steppers, notification bell, WCAG AA. Navy + Gold.</p>
+          <div class="space-y-1">
+            <a href="style-k/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-[#1e3a5f] transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-k/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-[#1e3a5f] transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-k/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-[#1e3a5f] transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-k/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-[#1e3a5f] transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-k/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-[#1e3a5f] transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-k/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-[#1e3a5f] transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style L -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-teal-700 to-emerald-500"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style L</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-teal-700 mb-2">Grant Lifecycle Tracker</p>
+          <p class="text-xs text-gray-500 mb-4">Budget donuts, funding timelines, burn rates, deadline urgency indicators. Teal + Emerald.</p>
+          <div class="space-y-1">
+            <a href="style-l/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-teal-50 text-xs text-gray-600 hover:text-teal-700 transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-l/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-teal-50 text-xs text-gray-600 hover:text-teal-700 transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-l/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-teal-50 text-xs text-gray-600 hover:text-teal-700 transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-l/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-teal-50 text-xs text-gray-600 hover:text-teal-700 transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-l/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-teal-50 text-xs text-gray-600 hover:text-teal-700 transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-l/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-teal-50 text-xs text-gray-600 hover:text-teal-700 transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style M -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-violet-600 to-violet-400"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style M</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-violet-700 mb-2">Academic Collaboration Hub</p>
+          <p class="text-xs text-gray-500 mb-4">Team workspace with activity feeds, presence indicators, progress rings, kanban views. Left sidebar.</p>
+          <div class="space-y-1">
+            <a href="style-m/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-violet-50 text-xs text-gray-600 hover:text-violet-700 transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-m/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-violet-50 text-xs text-gray-600 hover:text-violet-700 transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-m/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-violet-50 text-xs text-gray-600 hover:text-violet-700 transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-m/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-violet-50 text-xs text-gray-600 hover:text-violet-700 transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-m/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-violet-50 text-xs text-gray-600 hover:text-violet-700 transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-m/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-violet-50 text-xs text-gray-600 hover:text-violet-700 transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style N -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-[#1a1a2e] to-[#e94560]"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style N</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-[#e94560] mb-2">Research Showcase Platform</p>
+          <p class="text-xs text-gray-500 mb-4">Conference-style showcase, scroll reveals, portfolio case studies, hero sections. Charcoal + Coral.</p>
+          <div class="space-y-1">
+            <a href="style-n/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-red-50 text-xs text-gray-600 hover:text-[#e94560] transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-n/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-red-50 text-xs text-gray-600 hover:text-[#e94560] transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-n/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-red-50 text-xs text-gray-600 hover:text-[#e94560] transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-n/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-red-50 text-xs text-gray-600 hover:text-[#e94560] transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-n/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-red-50 text-xs text-gray-600 hover:text-[#e94560] transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-n/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-red-50 text-xs text-gray-600 hover:text-[#e94560] transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style O -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2 bg-gradient-to-r from-slate-900 via-cyan-600 to-slate-900"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style O</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium text-cyan-600 mb-2">Academic Operations Center</p>
+          <p class="text-xs text-gray-500 mb-4">Dark ops dashboard with live indicators, streaming feeds, countdown timers, heatmaps. Icon rail nav.</p>
+          <div class="space-y-1">
+            <a href="style-o/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-cyan-50 text-xs text-gray-600 hover:text-cyan-700 transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-o/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-cyan-50 text-xs text-gray-600 hover:text-cyan-700 transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-o/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-cyan-50 text-xs text-gray-600 hover:text-cyan-700 transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-o/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-cyan-50 text-xs text-gray-600 hover:text-cyan-700 transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-o/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-cyan-50 text-xs text-gray-600 hover:text-cyan-700 transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-o/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-cyan-50 text-xs text-gray-600 hover:text-cyan-700 transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style P -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2" style="background: linear-gradient(to right, #ff0066, #008080)"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style P</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium" style="color:#ff0066">Risograph Print</p>
+          <p class="text-xs text-gray-500 mb-4">Fluorescent pink + teal, halftone dots, misregistration, ink stamps. Zine culture.</p>
+          <div class="space-y-1">
+            <a href="style-p/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-pink-50 text-xs text-gray-600 hover:text-pink-600 transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-p/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-pink-50 text-xs text-gray-600 hover:text-pink-600 transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-p/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-pink-50 text-xs text-gray-600 hover:text-pink-600 transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-p/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-pink-50 text-xs text-gray-600 hover:text-pink-600 transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-p/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-pink-50 text-xs text-gray-600 hover:text-pink-600 transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-p/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-pink-50 text-xs text-gray-600 hover:text-pink-600 transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style Q -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2" style="background: #1a2744"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style Q</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium" style="color:#5bb8ff">Architectural Blueprint</p>
+          <p class="text-xs text-gray-500 mb-4">Dark blue grid, white line work, dimension annotations, title blocks. IBM Plex Mono.</p>
+          <div class="space-y-1">
+            <a href="style-q/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-blue-600 transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-q/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-blue-600 transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-q/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-blue-600 transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-q/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-blue-600 transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-q/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-blue-600 transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-q/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-blue-50 text-xs text-gray-600 hover:text-blue-600 transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style R -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-2" style="background: linear-gradient(to right, #3d6b4f, #b8860b)"></div>
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-lg font-semibold text-gray-900">Style R</h2>
+            <span class="text-xs text-gray-400">6 pages</span>
+          </div>
+          <p class="text-sm font-medium" style="color:#3d6b4f">Botanical Scientific</p>
+          <p class="text-xs text-gray-500 mb-4">Victorian parchment, ornamental gold borders, specimen cards, Playfair Display serif.</p>
+          <div class="space-y-1">
+            <a href="style-r/dashboard.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-green-50 text-xs text-gray-600 hover:text-green-800 transition-colors"><span>Dashboard</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-r/listing.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-green-50 text-xs text-gray-600 hover:text-green-800 transition-colors"><span>Persons</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-r/detail.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-green-50 text-xs text-gray-600 hover:text-green-800 transition-colors"><span>Person Detail</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-r/projects.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-green-50 text-xs text-gray-600 hover:text-green-800 transition-colors"><span>Projects</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-r/events.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-green-50 text-xs text-gray-600 hover:text-green-800 transition-colors"><span>Events</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <a href="style-r/institutions.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 hover:bg-green-50 text-xs text-gray-600 hover:text-green-800 transition-colors"><span>Institutions</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-12 text-sm text-gray-400">
+      Africa Multiple Cluster of Excellence — University of Bayreuth
+    </div>
+  </div>
+</body>
+</html>

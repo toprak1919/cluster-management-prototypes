@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - Africa Multiple Research Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          charcoal: '#1a1a2e',
+          coral: { DEFAULT: '#e94560', 50: '#fef2f4', 100: '#fde6ea', 200: '#f9c0cb', 400: '#e94560', 500: '#d6334e', 600: '#b91d3a' },
+          'ubt-green': { DEFAULT: '#0d9462', 50: '#cceadc', 400: '#0d9462' },
+          azure: { DEFAULT: '#008f9c', 50: '#cee8e9', 400: '#008f9c' },
+          raspberry: { DEFAULT: '#bd62a0', 50: '#f0ddef', 400: '#bd62a0' },
+          purple: { DEFAULT: '#787acd', 50: '#ede0f1', 400: '#787acd' },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    @keyframes heroFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-fade { animation: heroFadeIn 0.8s ease-out forwards; }
+    .hero-fade-d1 { animation: heroFadeIn 0.8s ease-out 0.1s forwards; opacity: 0; }
+    .hero-fade-d2 { animation: heroFadeIn 0.8s ease-out 0.2s forwards; opacity: 0; }
+    .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+    .bar-fill { transform: scaleX(0); transform-origin: left; transition: transform 1.2s ease-out; }
+    .bar-fill.expanded { transform: scaleX(1); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="bg-white text-gray-900 min-h-screen" x-data="{ scrolled: false, mobileOpen: false, activeFilter: 'all' }" @scroll.window="scrolled = (window.scrollY > 50)">
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+       :class="scrolled ? 'bg-white shadow-md' : 'bg-transparent'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="dashboard.html" class="flex items-center gap-2">
+          <span class="text-lg font-bold tracking-tight transition-colors duration-300"
+                :class="scrolled ? 'text-charcoal' : 'text-white'">AFRICA MULTIPLE</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="dashboard.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Home</a>
+          <a href="listing.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Persons</a>
+          <a href="projects.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-coral' : 'text-white bg-white/10'">Projects</a>
+          <a href="events.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Events</a>
+          <a href="institutions.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Institutions</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../index.html" class="text-xs transition-colors duration-300 hidden lg:inline"
+             :class="scrolled ? 'text-gray-400 hover:text-gray-600' : 'text-gray-400 hover:text-white'">All Prototypes</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-2 rounded-lg transition-colors duration-300 cursor-pointer"
+                  :class="scrolled ? 'text-gray-600 hover:bg-gray-100' : 'text-white hover:bg-white/10'">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden pb-3 space-y-1" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Home</a>
+        <a href="listing.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Persons</a>
+        <a href="projects.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-coral' : 'text-white bg-white/10'">Projects</a>
+        <a href="events.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Events</a>
+        <a href="institutions.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="bg-charcoal pt-32 pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl sm:text-5xl font-light text-white tracking-tight hero-fade">Research Portfolio</h1>
+      <p class="mt-4 text-lg text-gray-400 hero-fade-d1">23 interdisciplinary projects advancing African studies</p>
+      <!-- Filter Pills -->
+      <div class="mt-10 flex flex-wrap justify-center gap-2 hero-fade-d2">
+        <button @click="activeFilter = 'all'" class="px-5 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer"
+                :class="activeFilter === 'all' ? 'bg-coral text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'">All Projects</button>
+        <button @click="activeFilter = 'active'" class="px-5 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer"
+                :class="activeFilter === 'active' ? 'bg-coral text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'">Active</button>
+        <button @click="activeFilter = 'completed'" class="px-5 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer"
+                :class="activeFilter === 'completed' ? 'bg-coral text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'">Completed</button>
+        <button @click="activeFilter = 'planning'" class="px-5 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer"
+                :class="activeFilter === 'planning' ? 'bg-coral text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'">Planning</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project 1 (White, Content Left) -->
+  <section class="py-20 bg-white" x-show="activeFilter === 'all' || activeFilter === 'active'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="scroll-reveal" :class="shown && 'visible'">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="px-3 py-1 text-xs font-medium bg-ubt-green-50 text-ubt-green rounded-full">Knowledge</span>
+            <span class="px-3 py-1 text-xs font-medium bg-green-50 text-green-600 rounded-full">Active</span>
+          </div>
+          <h2 class="text-3xl font-semibold text-charcoal mb-2">African Epistemologies</h2>
+          <p class="text-xs text-gray-400 mb-4">Project ID: AEP-2021-001</p>
+          <p class="text-gray-500 leading-relaxed mb-6">Mapping indigenous knowledge systems and their intersection with contemporary academic frameworks across West and East Africa.</p>
+          <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+              <span class="text-gray-400">Directors:</span>
+              <span class="text-charcoal font-medium"> Prof. Asante, Dr. Keita</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-charcoal font-medium"> 2026-06-30</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Report requested:</span>
+              <span class="text-charcoal font-medium"> Yes</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Report submitted:</span>
+              <span class="text-charcoal font-medium"> No</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Requested:</span>
+              <span class="text-charcoal font-medium"> 245,000.00 &euro;</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Approved:</span>
+              <span class="text-charcoal font-medium"> 220,000.00 &euro;</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-400">
+            <span>2021 - Present</span>
+          </div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="bg-slate-50 rounded-2xl p-8">
+            <h4 class="text-sm font-semibold text-charcoal uppercase tracking-wider mb-4">Publications</h4>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-sm border-b border-gray-100 pb-2">
+                <span class="font-medium text-charcoal">2025</span>
+                <div class="text-xs text-gray-400">Planned: 3 articles &middot; Achieved: 2 articles &middot; Costs: 1,200 &euro;</div>
+              </div>
+              <div class="flex items-center justify-between text-sm border-b border-gray-100 pb-2">
+                <span class="font-medium text-charcoal">2024</span>
+                <div class="text-xs text-gray-400">Planned: 2 articles &middot; Achieved: 2 articles &middot; Costs: 800 &euro;</div>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="font-medium text-charcoal">2023</span>
+                <div class="text-xs text-gray-400">Planned: 2 articles &middot; Achieved: 1 article &middot; Costs: 450 &euro;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project 2 (Charcoal, Content Right) -->
+  <section class="py-20 bg-charcoal" x-show="activeFilter === 'all' || activeFilter === 'active'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="scroll-reveal order-2 lg:order-1" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+            <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">Publications</h4>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-sm border-b border-white/10 pb-2">
+                <span class="font-medium text-white">2025</span>
+                <div class="text-xs text-gray-500">Planned: 2 articles &middot; Achieved: 1 article &middot; Costs: 600 &euro;</div>
+              </div>
+              <div class="flex items-center justify-between text-sm border-b border-white/10 pb-2">
+                <span class="font-medium text-white">2024</span>
+                <div class="text-xs text-gray-500">Planned: 3 articles &middot; Achieved: 3 articles &middot; Costs: 1,500 &euro;</div>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="font-medium text-white">2023</span>
+                <div class="text-xs text-gray-500">Planned: 1 article &middot; Achieved: 1 article &middot; Costs: 350 &euro;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-reveal order-1 lg:order-2" :class="shown && 'visible'">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="px-3 py-1 text-xs font-medium bg-raspberry/20 text-raspberry-400 rounded-full">Society</span>
+            <span class="px-3 py-1 text-xs font-medium bg-green-500/20 text-green-400 rounded-full">Active</span>
+          </div>
+          <h2 class="text-3xl font-light text-white mb-2">Urban Transformations</h2>
+          <p class="text-xs text-gray-500 mb-4">Project ID: UTR-2022-004</p>
+          <p class="text-gray-400 leading-relaxed mb-6">Investigating rapid urbanization patterns in sub-Saharan cities and their sociocultural implications.</p>
+          <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+              <span class="text-gray-500">Directors:</span>
+              <span class="text-white font-medium"> Dr. Diallo, Prof. Balogun</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Report deadline:</span>
+              <span class="text-white font-medium"> 2026-09-30</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Requested:</span>
+              <span class="text-white font-medium"> 180,000.00 &euro;</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Approved:</span>
+              <span class="text-white font-medium"> 165,000.00 &euro;</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span>2022 - Present</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project 3 (White, Content Left) -->
+  <section class="py-20 bg-white" x-show="activeFilter === 'all' || activeFilter === 'active'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="scroll-reveal" :class="shown && 'visible'">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="px-3 py-1 text-xs font-medium bg-purple-50 text-purple rounded-full">Culture</span>
+            <span class="px-3 py-1 text-xs font-medium bg-green-50 text-green-600 rounded-full">Active</span>
+          </div>
+          <h2 class="text-3xl font-semibold text-charcoal mb-2">Digital Heritage Archives</h2>
+          <p class="text-xs text-gray-400 mb-4">Project ID: DHA-2020-001</p>
+          <p class="text-gray-500 leading-relaxed mb-6">Creating comprehensive digital archives of oral traditions, artifacts, and cultural practices from 15 African nations.</p>
+          <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+              <span class="text-gray-400">Directors:</span>
+              <span class="text-charcoal font-medium"> Dr. Osei, Dr. Toure</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-charcoal font-medium"> 2026-03-31</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Requested:</span>
+              <span class="text-charcoal font-medium"> 310,000.00 &euro;</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Approved:</span>
+              <span class="text-charcoal font-medium"> 285,000.00 &euro;</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-400">
+            <span>2020 - Present</span>
+          </div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="bg-slate-50 rounded-2xl p-8">
+            <h4 class="text-sm font-semibold text-charcoal uppercase tracking-wider mb-4">Publications</h4>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-sm border-b border-gray-100 pb-2">
+                <span class="font-medium text-charcoal">2025</span>
+                <div class="text-xs text-gray-400">Planned: 4 articles &middot; Achieved: 3 articles &middot; Costs: 2,100 &euro;</div>
+              </div>
+              <div class="flex items-center justify-between text-sm border-b border-gray-100 pb-2">
+                <span class="font-medium text-charcoal">2024</span>
+                <div class="text-xs text-gray-400">Planned: 3 articles &middot; Achieved: 4 articles &middot; Costs: 1,800 &euro;</div>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="font-medium text-charcoal">2023</span>
+                <div class="text-xs text-gray-400">Planned: 2 articles &middot; Achieved: 2 articles &middot; Costs: 900 &euro;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project 4 (Charcoal, Content Right) -->
+  <section class="py-20 bg-charcoal" x-show="activeFilter === 'all' || activeFilter === 'active'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="scroll-reveal order-2 lg:order-1" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+            <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">Publications</h4>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-sm border-b border-white/10 pb-2">
+                <span class="font-medium text-white">2025</span>
+                <div class="text-xs text-gray-500">Planned: 3 articles &middot; Achieved: 2 articles &middot; Costs: 950 &euro;</div>
+              </div>
+              <div class="flex items-center justify-between text-sm border-b border-white/10 pb-2">
+                <span class="font-medium text-white">2024</span>
+                <div class="text-xs text-gray-500">Planned: 2 articles &middot; Achieved: 2 articles &middot; Costs: 700 &euro;</div>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="font-medium text-white">2023</span>
+                <div class="text-xs text-gray-500">Planned: 1 article &middot; Achieved: 1 article &middot; Costs: 400 &euro;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-reveal order-1 lg:order-2" :class="shown && 'visible'">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="px-3 py-1 text-xs font-medium bg-azure/20 text-azure-400 rounded-full">Methodology</span>
+            <span class="px-3 py-1 text-xs font-medium bg-green-500/20 text-green-400 rounded-full">Active</span>
+          </div>
+          <h2 class="text-3xl font-light text-white mb-2">Decolonizing Research Methods</h2>
+          <p class="text-xs text-gray-500 mb-4">Project ID: DRM-2021-009</p>
+          <p class="text-gray-400 leading-relaxed mb-6">Developing Africa-centered research methodologies that honor local knowledge systems while maintaining academic rigor.</p>
+          <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+              <span class="text-gray-500">Directors:</span>
+              <span class="text-white font-medium"> Dr. Mensah, Dr. Mohamed</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Report deadline:</span>
+              <span class="text-white font-medium"> 2026-12-31</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Requested:</span>
+              <span class="text-white font-medium"> 195,000.00 &euro;</span>
+            </div>
+            <div>
+              <span class="text-gray-500">Approved:</span>
+              <span class="text-white font-medium"> 190,000.00 &euro;</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span>2021 - Present</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project 5 (White, Completed) -->
+  <section class="py-20 bg-white" x-show="activeFilter === 'all' || activeFilter === 'completed'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="scroll-reveal" :class="shown && 'visible'">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="px-3 py-1 text-xs font-medium bg-ubt-green-50 text-ubt-green rounded-full">Knowledge</span>
+            <span class="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">Completed</span>
+          </div>
+          <h2 class="text-3xl font-semibold text-charcoal mb-2">Oral History Methodologies</h2>
+          <p class="text-xs text-gray-400 mb-4">Project ID: OHM-2019-007</p>
+          <p class="text-gray-500 leading-relaxed mb-6">Developed new methodological frameworks for collecting and analyzing oral histories in multilingual African contexts.</p>
+          <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+              <span class="text-gray-400">Directors:</span>
+              <span class="text-charcoal font-medium"> Dr. Osei</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Report submitted:</span>
+              <span class="text-charcoal font-medium"> Yes</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Requested:</span>
+              <span class="text-charcoal font-medium"> 120,000.00 &euro;</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Approved:</span>
+              <span class="text-charcoal font-medium"> 120,000.00 &euro;</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-400">
+            <span>2019 - 2022</span>
+            <span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">Completed</span>
+          </div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="bg-slate-50 rounded-2xl p-8">
+            <h4 class="text-sm font-semibold text-charcoal uppercase tracking-wider mb-4">Outcomes</h4>
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-ubt-green/10 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-ubt-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-charcoal">1 Published Handbook</p>
+                  <p class="text-xs text-gray-400">500+ citations</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-coral-50 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-coral" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-charcoal">14 Journal Articles</p>
+                  <p class="text-xs text-gray-400">Across 8 journals</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-charcoal">12 University Adoptions</p>
+                  <p class="text-xs text-gray-400">As teaching methodology</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project 6 (Slate, Planning) -->
+  <section class="py-20 bg-slate-50" x-show="activeFilter === 'all' || activeFilter === 'planning'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="scroll-reveal order-2 lg:order-1" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="bg-white rounded-2xl p-8 shadow-sm">
+            <h4 class="text-sm font-semibold text-charcoal uppercase tracking-wider mb-4">Planned Milestones</h4>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3 text-sm">
+                <div class="w-2 h-2 rounded-full bg-coral"></div>
+                <span class="text-gray-600">Q2 2026: Project kickoff and team assembly</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                <span class="text-gray-600">Q3 2026: Data collection pipeline development</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                <span class="text-gray-600">Q4 2026: ML model training and validation</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                <span class="text-gray-600">Q1 2027: Community engagement workshops</span>
+              </div>
+              <div class="flex items-center gap-3 text-sm">
+                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                <span class="text-gray-600">Q2 2027: First publication submissions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-reveal order-1 lg:order-2" :class="shown && 'visible'">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="px-3 py-1 text-xs font-medium bg-azure-50 text-azure rounded-full">Methodology</span>
+            <span class="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-full">Planning</span>
+          </div>
+          <h2 class="text-3xl font-semibold text-charcoal mb-2">AI-Assisted Cultural Analysis</h2>
+          <p class="text-xs text-gray-400 mb-4">Project ID: ACA-2026-012</p>
+          <p class="text-gray-500 leading-relaxed mb-6">Exploring the use of machine learning for pattern recognition in cultural data sets, including textile patterns, musical structures, and linguistic features.</p>
+          <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div>
+              <span class="text-gray-400">Directors:</span>
+              <span class="text-charcoal font-medium"> Dr. Mensah, Dr. Osei</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Report deadline:</span>
+              <span class="text-charcoal font-medium"> 2027-06-30</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Requested:</span>
+              <span class="text-charcoal font-medium"> 275,000.00 &euro;</span>
+            </div>
+            <div>
+              <span class="text-gray-400">Approved:</span>
+              <span class="text-charcoal font-medium"> &mdash;</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-400">
+            <span>Starting Q2 2026</span>
+            <span class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full text-xs font-medium">Planning</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="text-lg font-bold text-white tracking-tight">AFRICA MULTIPLE</span>
+          <p class="mt-1 text-sm text-gray-500">Cluster of Excellence &mdash; University of Bayreuth</p>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          <a href="dashboard.html" class="hover:text-white transition-colors">Home</a>
+          <a href="listing.html" class="hover:text-white transition-colors">Persons</a>
+          <a href="projects.html" class="hover:text-white transition-colors">Projects</a>
+          <a href="events.html" class="hover:text-white transition-colors">Events</a>
+          <a href="institutions.html" class="hover:text-white transition-colors">Institutions</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-white/10 text-center text-xs text-gray-600">
+        Style N: Research Showcase Platform &mdash; Prototype
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

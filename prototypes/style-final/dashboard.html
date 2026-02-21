@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            "ubt-green": { DEFAULT: "#0d9462", 50: "#edfaf3", 100: "#cceadc", 200: "#7abf9f", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+            "azure": { DEFAULT: "#008f9c", 50: "#edf8f9", 400: "#008f9c", 500: "#007683" },
+            "raspberry": { DEFAULT: "#bd62a0", 50: "#fdf2fa", 400: "#bd62a0", 500: "#a54988" },
+            "purple": { DEFAULT: "#787acd", 50: "#f0f0fb", 400: "#787acd", 500: "#5d64b5" },
+          },
+          fontFamily: { body: ['DM Sans', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    if (localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .dark { color-scheme: dark; }
+    [x-cloak] { display: none !important; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: fadeSlideIn 0.4s ease-out both; }
+    .delay-1 { animation-delay: 50ms; }
+    .delay-2 { animation-delay: 100ms; }
+    .delay-3 { animation-delay: 150ms; }
+    .delay-4 { animation-delay: 200ms; }
+    .delay-5 { animation-delay: 250ms; }
+    .delay-6 { animation-delay: 300ms; }
+  </style>
+</head>
+<body class="bg-[#f8fafb] dark:bg-slate-950 text-slate-800 dark:text-slate-200">
+  <div class="h-screen flex overflow-hidden" x-data="{ sidebarOpen: false, persons: true, projects: true, admin: false, darkMode: document.documentElement.classList.contains('dark') }">
+
+    <!-- Mobile sidebar overlay -->
+    <div x-show="sidebarOpen" x-cloak class="fixed inset-0 z-40 md:hidden">
+      <div class="fixed inset-0 bg-black/30" @click="sidebarOpen = false"></div>
+      <div class="relative flex flex-col w-56 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 h-full">
+        <!-- same sidebar content as desktop, copy below -->
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="hidden md:flex md:flex-col md:w-56 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shrink-0">
+      <!-- Logo -->
+      <div class="h-14 flex items-center px-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <span class="text-sm font-bold text-ubt-green tracking-tight">Africa Multiple</span>
+        <span class="ml-1 text-xs text-slate-400 dark:text-slate-500 font-medium">Cluster</span>
+      </div>
+
+      <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 text-[13px]">
+        <!-- Search -->
+        <a href="#" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Advanced search
+        </a>
+
+        <div class="!mt-3 !mb-2 border-t border-slate-200 dark:border-slate-800"></div>
+
+        <!-- Dashboard -->
+        <a href="dashboard.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md bg-ubt-green-50 dark:bg-ubt-green/10 text-ubt-green font-medium border-l-2 border-ubt-green">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Dashboard
+        </a>
+
+        <div class="!mt-3 !mb-2 border-t border-slate-200 dark:border-slate-800"></div>
+
+        <!-- Persons group -->
+        <button @click="persons = !persons" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-ubt-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span class="font-medium">Persons</span>
+          </span>
+          <svg class="w-3.5 h-3.5 text-slate-400 transition-transform" :class="persons ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="persons" x-collapse class="ml-5 space-y-0.5">
+          <a href="listing.html" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-ubt-green-50 dark:hover:bg-ubt-green/10 hover:text-ubt-green transition-colors">All Persons</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-ubt-green-50 dark:hover:bg-ubt-green/10 hover:text-ubt-green transition-colors">Employees</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-ubt-green-50 dark:hover:bg-ubt-green/10 hover:text-ubt-green transition-colors">Cluster members</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-ubt-green-50 dark:hover:bg-ubt-green/10 hover:text-ubt-green transition-colors">BIGSAS members</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-ubt-green-50 dark:hover:bg-ubt-green/10 hover:text-ubt-green transition-colors">Fellows</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-ubt-green-50 dark:hover:bg-ubt-green/10 hover:text-ubt-green transition-colors">Guests</a>
+        </div>
+
+        <!-- Projects group -->
+        <button @click="projects = !projects" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-azure" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span class="font-medium">Projects</span>
+          </span>
+          <svg class="w-3.5 h-3.5 text-slate-400 transition-transform" :class="projects ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="projects" x-collapse class="ml-5 space-y-0.5">
+          <a href="projects.html" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-azure-50 dark:hover:bg-azure/10 hover:text-azure transition-colors">All Projects</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-azure-50 dark:hover:bg-azure/10 hover:text-azure transition-colors">Research sections</a>
+        </div>
+
+        <!-- Single items -->
+        <a href="#" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Publications
+        </a>
+
+        <a href="events.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg class="w-4 h-4 text-raspberry" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Events
+        </a>
+
+        <a href="#" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm0 0h18"/></svg>
+          Countries
+        </a>
+
+        <a href="#" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Locations
+        </a>
+
+        <a href="institutions.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg class="w-4 h-4 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Institutions
+        </a>
+
+        <div class="!mt-3 !mb-2 border-t border-slate-200 dark:border-slate-800"></div>
+
+        <a href="#" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          Filtered Views
+        </a>
+
+        <!-- Admin group -->
+        <button @click="admin = !admin" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Administration
+          </span>
+          <svg class="w-3.5 h-3.5 text-slate-400 transition-transform" :class="admin ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="admin" x-collapse x-cloak class="ml-5 space-y-0.5">
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Users</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Emails</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Settings</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Expert Sync</a>
+        </div>
+      </nav>
+
+      <!-- Sidebar footer -->
+      <div class="border-t border-slate-200 dark:border-slate-800 px-3 py-3">
+        <a href="../index.html" class="text-[11px] text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">Back to all prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="flex flex-col flex-1 overflow-hidden">
+      <!-- Top bar -->
+      <header class="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center px-6 shrink-0">
+        <button @click="sidebarOpen = true" class="md:hidden mr-4 text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <!-- Breadcrumb -->
+        <div class="text-sm text-slate-500 dark:text-slate-400">
+          <span class="font-medium text-slate-800 dark:text-slate-100">Dashboard</span>
+        </div>
+
+        <div class="flex-1"></div>
+
+        <!-- Search -->
+        <div class="hidden sm:flex items-center bg-slate-50 dark:bg-slate-800 rounded-lg px-3 py-1.5 text-sm text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 w-64">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search persons, projects...
+        </div>
+
+        <!-- Dark mode toggle -->
+        <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode); document.documentElement.classList.toggle('dark')" class="ml-3 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-400 dark:text-slate-500">
+          <svg x-show="darkMode" class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg x-show="!darkMode" class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+
+        <!-- User -->
+        <div class="ml-3 flex items-center gap-2 text-sm">
+          <div class="w-7 h-7 rounded-full bg-ubt-green-100 flex items-center justify-center text-ubt-green text-xs font-semibold">TT</div>
+          <span class="hidden sm:inline text-slate-600 dark:text-slate-400 text-[13px]">bt729758</span>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="flex-1 overflow-y-auto">
+        <div class="max-w-7xl mx-auto px-6 py-6">
+
+          <!-- Quick actions -->
+          <div class="flex items-center justify-between mb-6 animate-in">
+            <div>
+              <h1 class="text-xl font-semibold text-slate-800 dark:text-slate-100">Dashboard</h1>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Overview of the Africa Multiple research cluster</p>
+            </div>
+            <div class="flex gap-2">
+              <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium text-white bg-ubt-green rounded-lg hover:bg-ubt-green-500 transition-colors shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                New Person
+              </a>
+              <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium text-azure bg-azure-50 rounded-lg hover:bg-azure/10 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                New Project
+              </a>
+              <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium text-raspberry bg-raspberry-50 rounded-lg hover:bg-raspberry/10 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                New Event
+              </a>
+            </div>
+          </div>
+
+          <!-- Stats cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <a href="listing.html" class="animate-in delay-1 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow group">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-[13px] text-slate-500 dark:text-slate-400">Persons</p>
+                  <p class="text-2xl font-bold text-slate-800 dark:text-slate-100 font-mono mt-1">847</p>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-ubt-green-50 dark:bg-ubt-green/10 flex items-center justify-center group-hover:bg-ubt-green-100 dark:group-hover:bg-ubt-green/20 transition-colors">
+                  <svg class="w-5 h-5 text-ubt-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 mt-3 text-[11px] text-slate-400 dark:text-slate-500">
+                <span>Cluster: 312</span>
+                <span>BIGSAS: 189</span>
+                <span>Fellows: 67</span>
+              </div>
+            </a>
+
+            <a href="projects.html" class="animate-in delay-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow group">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-[13px] text-slate-500 dark:text-slate-400">Projects</p>
+                  <p class="text-2xl font-bold text-slate-800 dark:text-slate-100 font-mono mt-1">23</p>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-azure-50 dark:bg-azure/10 flex items-center justify-center group-hover:bg-azure/10 dark:group-hover:bg-azure/20 transition-colors">
+                  <svg class="w-5 h-5 text-azure" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 mt-3 text-[11px] text-slate-400 dark:text-slate-500">
+                <span>3 reports due</span>
+                <span>&euro;4.2M funded</span>
+              </div>
+            </a>
+
+            <a href="events.html" class="animate-in delay-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow group">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-[13px] text-slate-500 dark:text-slate-400">Events</p>
+                  <p class="text-2xl font-bold text-slate-800 dark:text-slate-100 font-mono mt-1">12</p>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-raspberry-50 dark:bg-raspberry/10 flex items-center justify-center group-hover:bg-raspberry/10 dark:group-hover:bg-raspberry/20 transition-colors">
+                  <svg class="w-5 h-5 text-raspberry" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 mt-3 text-[11px] text-slate-400 dark:text-slate-500">
+                <span>8 upcoming</span>
+                <span>4 past</span>
+              </div>
+            </a>
+
+            <a href="institutions.html" class="animate-in delay-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow group">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-[13px] text-slate-500 dark:text-slate-400">Institutions</p>
+                  <p class="text-2xl font-bold text-slate-800 dark:text-slate-100 font-mono mt-1">156</p>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple/10 flex items-center justify-center group-hover:bg-purple/10 dark:group-hover:bg-purple/20 transition-colors">
+                  <svg class="w-5 h-5 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 mt-3 text-[11px] text-slate-400 dark:text-slate-500">
+                <span>12 ACC</span>
+                <span>38 countries</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Two-column layout -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Upcoming deadlines -->
+            <div class="animate-in delay-5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+              <h2 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">Upcoming Report Deadlines</h2>
+              <div class="space-y-3">
+                <div class="flex items-start gap-3">
+                  <span class="shrink-0 mt-0.5 w-2 h-2 rounded-full bg-red-400"></span>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[13px] font-medium text-slate-700 dark:text-slate-200 truncate">Transnational Migration Patterns</p>
+                    <p class="text-[11px] text-red-500 font-medium">Due in 3 days</p>
+                  </div>
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0">21 Feb</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="shrink-0 mt-0.5 w-2 h-2 rounded-full bg-amber-400"></span>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[13px] font-medium text-slate-700 dark:text-slate-200 truncate">Decolonizing Knowledge Systems</p>
+                    <p class="text-[11px] text-amber-600 font-medium">Due in 2 weeks</p>
+                  </div>
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0">04 Mar</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="shrink-0 mt-0.5 w-2 h-2 rounded-full bg-ubt-green"></span>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[13px] font-medium text-slate-700 dark:text-slate-200 truncate">Climate Adaptation & Rural Livelihoods</p>
+                    <p class="text-[11px] text-ubt-green font-medium">Due in 1 month</p>
+                  </div>
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0">18 Mar</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="shrink-0 mt-0.5 w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[13px] font-medium text-slate-700 dark:text-slate-200 truncate">Visual Cultures of Resistance</p>
+                    <p class="text-[11px] text-slate-400 dark:text-slate-500">Due in 3 months</p>
+                  </div>
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0">18 May</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent activity -->
+            <div class="animate-in delay-6 lg:col-span-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+              <h2 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-4">Recent Activity</h2>
+              <div class="space-y-3">
+                <div class="flex items-start gap-3 text-[13px]">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0 w-14 mt-0.5">2m ago</span>
+                  <span class="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-ubt-green"></span>
+                  <p class="text-slate-600 dark:text-slate-300"><span class="font-medium text-slate-700 dark:text-slate-100">Dr. Amina Osei</span> — membership category updated to "Senior Researcher"</p>
+                </div>
+                <div class="flex items-start gap-3 text-[13px]">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0 w-14 mt-0.5">15m ago</span>
+                  <span class="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-azure"></span>
+                  <p class="text-slate-600 dark:text-slate-300">Project <span class="font-medium text-slate-700 dark:text-slate-100">Digital Heritage Archives</span> — report submitted</p>
+                </div>
+                <div class="flex items-start gap-3 text-[13px]">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0 w-14 mt-0.5">1h ago</span>
+                  <span class="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-raspberry"></span>
+                  <p class="text-slate-600 dark:text-slate-300">Event <span class="font-medium text-slate-700 dark:text-slate-100">Annual Conference 2026</span> — 3 new guests confirmed</p>
+                </div>
+                <div class="flex items-start gap-3 text-[13px]">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0 w-14 mt-0.5">2h ago</span>
+                  <span class="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-ubt-green"></span>
+                  <p class="text-slate-600 dark:text-slate-300"><span class="font-medium text-slate-700 dark:text-slate-100">Prof. Kwame Asante</span> — Signed Rights and Duties updated</p>
+                </div>
+                <div class="flex items-start gap-3 text-[13px]">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0 w-14 mt-0.5">3h ago</span>
+                  <span class="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-purple"></span>
+                  <p class="text-slate-600 dark:text-slate-300">Institution <span class="font-medium text-slate-700 dark:text-slate-100">University of Rwanda</span> — marked as ACC</p>
+                </div>
+                <div class="flex items-start gap-3 text-[13px]">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0 w-14 mt-0.5">5h ago</span>
+                  <span class="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-ubt-green"></span>
+                  <p class="text-slate-600 dark:text-slate-300"><span class="font-medium text-slate-700 dark:text-slate-100">Dr. Fatima Diallo</span> — new fellowship created (host: Prof. Asante)</p>
+                </div>
+                <div class="flex items-start gap-3 text-[13px]">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0 w-14 mt-0.5">6h ago</span>
+                  <span class="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-azure"></span>
+                  <p class="text-slate-600 dark:text-slate-300">Project <span class="font-medium text-slate-700 dark:text-slate-100">Language & Power in Francophone Africa</span> — funding approved: &euro;180,000</p>
+                </div>
+                <div class="flex items-start gap-3 text-[13px]">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-mono shrink-0 w-14 mt-0.5">1d ago</span>
+                  <span class="shrink-0 mt-1 w-1.5 h-1.5 rounded-full bg-ubt-green"></span>
+                  <p class="text-slate-600 dark:text-slate-300">Expert Search sync completed — 412 persons exported</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

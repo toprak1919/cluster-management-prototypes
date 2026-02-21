@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register of Persons | Africa Multiple</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --parchment: #faf6ee;
+      --ink: #2c2416;
+      --green: #3d6b4f;
+      --gold: #b8860b;
+      --red: #8b3a3a;
+      --blue: #4a6b8a;
+      --gold-light: rgba(184,134,11,0.15);
+      --gold-faint: rgba(184,134,11,0.3);
+    }
+
+    body {
+      font-family: 'Crimson Pro', serif;
+      background-color: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    /* Running Header */
+    .running-header {
+      border-bottom: 1px solid var(--gold);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--parchment);
+    }
+    .running-header::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0; right: 0;
+      height: 0.5px;
+      background: var(--gold-faint);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+    .header-title a { color: inherit; text-decoration: none; }
+    .header-nav {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+    }
+    .header-nav a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: -12px;
+      background: var(--parchment);
+      border: 1px solid var(--gold);
+      padding: 8px 0;
+      min-width: 180px;
+      z-index: 200;
+      margin-top: 8px;
+    }
+    .nav-dropdown-menu::before {
+      content: ''; position: absolute; inset: 3px;
+      border: 0.5px solid var(--gold-faint);
+      pointer-events: none;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 4px 16px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+    .nav-dropdown-menu a:hover { background: var(--gold-light); }
+
+    /* Page body */
+    .page-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* Plate heading */
+    .plate-heading { text-align: center; margin-bottom: 40px; }
+    .plate-no {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--red);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .plate-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 2rem;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .plate-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1rem;
+      color: var(--green);
+    }
+
+    .ornamental-rule {
+      border: none;
+      height: 1px;
+      background: var(--gold);
+      position: relative;
+      margin: 32px 0;
+    }
+    .ornamental-rule::after {
+      content: '\2726';
+      position: absolute;
+      left: 50%;
+      top: -8px;
+      transform: translateX(-50%);
+      background: var(--parchment);
+      padding: 0 8px;
+      color: var(--gold);
+      font-size: 12px;
+    }
+
+    /* Search + Filters */
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+    .search-input {
+      flex: 1;
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      padding: 10px 16px;
+      border: 1px solid var(--gold);
+      background: var(--parchment);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input::placeholder { color: var(--gold); opacity: 0.7; }
+    .search-input:focus { border-color: var(--green); }
+    .filter-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 10px 16px;
+      border: 1px solid var(--gold);
+      background: var(--parchment);
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .filter-btn:hover { background: var(--gold-light); }
+    .filter-btn.active { background: var(--green); color: var(--parchment); border-color: var(--green); }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .filter-tag {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border: 0.5px solid var(--gold-faint);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+    }
+    .filter-tag:hover { border-color: var(--gold); background: var(--gold-light); }
+    .filter-tag.active { border-color: var(--green); color: var(--green); background: rgba(61,107,79,0.08); }
+
+    .results-meta {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--ink);
+      opacity: 0.6;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    /* Register Table */
+    .register-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 32px;
+    }
+    .register-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .register-table thead th {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--red);
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 2px solid var(--gold);
+      border-top: 1px solid var(--gold);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    .register-table thead th:hover { color: var(--green); }
+    .register-table thead th:first-child {
+      width: 40px;
+      color: var(--gold);
+      cursor: default;
+    }
+    .register-table tbody tr {
+      border-bottom: 0.5px solid var(--gold-faint);
+      transition: background 0.15s;
+      animation: fadeInSpecimen 0.4s ease-out both;
+    }
+    .register-table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+    .register-table tbody tr:nth-child(2) { animation-delay: 0.04s; }
+    .register-table tbody tr:nth-child(3) { animation-delay: 0.06s; }
+    .register-table tbody tr:nth-child(4) { animation-delay: 0.08s; }
+    .register-table tbody tr:nth-child(5) { animation-delay: 0.10s; }
+    .register-table tbody tr:nth-child(6) { animation-delay: 0.12s; }
+    .register-table tbody tr:nth-child(7) { animation-delay: 0.14s; }
+    .register-table tbody tr:nth-child(8) { animation-delay: 0.16s; }
+    .register-table tbody tr:nth-child(9) { animation-delay: 0.18s; }
+    .register-table tbody tr:nth-child(10) { animation-delay: 0.20s; }
+    .register-table tbody tr:hover { background: var(--gold-light); }
+    .register-table tbody td {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      padding: 10px 10px;
+      color: var(--ink);
+      vertical-align: top;
+    }
+    .specimen-no {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+    }
+    .name-link {
+      color: var(--blue);
+      text-decoration: none;
+      border-bottom: 0.5px solid transparent;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .name-link:hover { border-bottom-color: var(--blue); color: var(--green); }
+    .tag-cell {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 0.82rem;
+      color: var(--green);
+    }
+    .bool-yes { color: var(--green); }
+    .bool-no { color: var(--ink); opacity: 0.3; }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .pagination a, .pagination span {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      padding: 4px 10px;
+      text-decoration: none;
+      color: var(--ink);
+      border: 0.5px solid transparent;
+      transition: all 0.2s;
+    }
+    .pagination a:hover { border-color: var(--gold); background: var(--gold-light); }
+    .pagination .current {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    @keyframes fadeInSpecimen {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+      text-align: center;
+    }
+    .page-footer a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .page-footer a:hover { color: var(--green); }
+
+    @media (max-width: 768px) {
+      .plate-title { font-size: 1.5rem; }
+      .header-nav { gap: 12px; }
+      .header-nav a { font-size: 9px; }
+      .register-table { font-size: 0.8rem; }
+    }
+    @media (max-width: 480px) {
+      .header-inner { flex-direction: column; gap: 8px; text-align: center; }
+      .header-nav { justify-content: center; flex-wrap: wrap; }
+      .search-bar { flex-direction: column; }
+    }
+  </style>
+</head>
+<body x-data="{
+  search: '',
+  activeFilter: 'all',
+  persons: [
+    { no: '001', title: 'Dr.', last: 'Osei', first: 'Amina', gender: 'Female', bigsas: true, location: 'Bayreuth', languages: 'English, Twi, French', thematic: 'Migration, Diaspora', geographic: 'West Africa' },
+    { no: '002', title: 'Prof.', last: 'Mensah', first: 'Kwame', gender: 'Male', bigsas: false, location: 'Accra', languages: 'English, Akan', thematic: 'Ethics, Religion', geographic: 'West Africa, East Africa' },
+    { no: '003', title: 'Dr.', last: 'Nakamura', first: 'Yuki', gender: 'Female', bigsas: true, location: 'Bayreuth', languages: 'Japanese, English, Swahili', thematic: 'Digital Arts, Performance', geographic: 'East Africa' },
+    { no: '004', title: 'Prof.', last: 'Diallo', first: 'Ndeye', gender: 'Female', bigsas: false, location: 'Dakar', languages: 'French, Wolof, English', thematic: 'Education, Pedagogy', geographic: 'West Africa' },
+    { no: '005', title: '', last: 'Kamau', first: 'Joseph', gender: 'Male', bigsas: true, location: 'Nairobi', languages: 'English, Swahili', thematic: 'Ecology, Land Use', geographic: 'East Africa' },
+    { no: '006', title: 'Dr.', last: 'Achieng', first: 'Linet', gender: 'Female', bigsas: true, location: 'Bayreuth', languages: 'English, Luo, German', thematic: 'Epistemology, Gender', geographic: 'East Africa' },
+    { no: '007', title: 'Prof.', last: 'Okoro', first: 'Tunde', gender: 'Male', bigsas: false, location: 'Lagos', languages: 'English, Yoruba', thematic: 'Political Science, Governance', geographic: 'West Africa, Southern Africa' },
+    { no: '008', title: 'Dr.', last: 'Sandoval', first: 'Elena', gender: 'Female', bigsas: false, location: 'Bayreuth', languages: 'Spanish, English, Portuguese', thematic: 'Mobilities, Borders', geographic: 'West Africa, South America' },
+    { no: '009', title: '', last: 'Mbeki', first: 'Sipho', gender: 'Male', bigsas: true, location: 'Cape Town', languages: 'English, Zulu, Xhosa', thematic: 'History, Memory', geographic: 'Southern Africa' },
+    { no: '010', title: 'Dr.', last: 'Adeyemi', first: 'Funke', gender: 'Female', bigsas: false, location: 'Ibadan', languages: 'English, Yoruba', thematic: 'Visual Arts, Aesthetics', geographic: 'West Africa' }
+  ],
+  get filtered() {
+    let list = this.persons;
+    if (this.search) {
+      const s = this.search.toLowerCase();
+      list = list.filter(p =>
+        p.last.toLowerCase().includes(s) ||
+        p.first.toLowerCase().includes(s) ||
+        p.thematic.toLowerCase().includes(s) ||
+        p.geographic.toLowerCase().includes(s) ||
+        p.location.toLowerCase().includes(s)
+      );
+    }
+    if (this.activeFilter === 'bigsas') list = list.filter(p => p.bigsas);
+    if (this.activeFilter === 'bayreuth') list = list.filter(p => p.location === 'Bayreuth');
+    return list;
+  }
+}">
+
+  <header class="running-header">
+    <div class="header-inner">
+      <div class="header-title"><a href="dashboard.html">The Africa Multiple Compendium</a></div>
+      <nav class="header-nav">
+        <a href="dashboard.html">Index</a>
+        <div class="nav-dropdown">
+          <a href="listing.html" class="active">Persons</a>
+          <div class="nav-dropdown-menu">
+            <a href="listing.html">Register of Persons</a>
+            <a href="#">Employees</a>
+            <a href="#">Cluster Members</a>
+            <a href="#">BIGSAS Members</a>
+            <a href="#">Fellows</a>
+            <a href="#">Guests</a>
+          </div>
+        </div>
+        <a href="projects.html">Projects</a>
+        <a href="events.html">Events</a>
+        <a href="institutions.html">Institutions</a>
+        <a href="detail.html">Specimen</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-body">
+
+    <div class="plate-heading">
+      <span class="plate-no">Plate I</span>
+      <h1 class="plate-title">Register of Persons</h1>
+      <p class="plate-subtitle">A systematic catalogue of all scholarly persons documented within the Compendium</p>
+    </div>
+
+    <hr class="ornamental-rule">
+
+    <!-- Search -->
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Search the Register..." x-model="search">
+      <button class="filter-btn" :class="{ active: activeFilter === 'all' }" @click="activeFilter = 'all'">All</button>
+      <button class="filter-btn" :class="{ active: activeFilter === 'bigsas' }" @click="activeFilter = 'bigsas'">BIGSAS</button>
+      <button class="filter-btn" :class="{ active: activeFilter === 'bayreuth' }" @click="activeFilter = 'bayreuth'">Bayreuth</button>
+    </div>
+
+    <div class="results-meta">
+      Displaying <span x-text="filtered.length"></span> of <span x-text="persons.length"></span> specimens
+    </div>
+
+    <!-- Table -->
+    <div class="register-table-wrap">
+      <table class="register-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Gender</th>
+            <th>BIGSAS</th>
+            <th>Location</th>
+            <th>Languages</th>
+            <th>Thematic Fields</th>
+            <th>Geographic Fields</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="person in filtered" :key="person.no">
+            <tr>
+              <td><span class="specimen-no" x-text="'#' + person.no"></span></td>
+              <td x-text="person.title"></td>
+              <td><a href="detail.html" class="name-link" x-text="person.last"></a></td>
+              <td x-text="person.first"></td>
+              <td x-text="person.gender"></td>
+              <td>
+                <span x-show="person.bigsas" class="bool-yes">Yes</span>
+                <span x-show="!person.bigsas" class="bool-no">&mdash;</span>
+              </td>
+              <td x-text="person.location"></td>
+              <td class="tag-cell" x-text="person.languages"></td>
+              <td class="tag-cell" x-text="person.thematic"></td>
+              <td class="tag-cell" x-text="person.geographic"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span class="current">1</span>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+      <span>&hellip;</span>
+      <a href="#">85</a>
+    </div>
+
+  </main>
+
+  <footer class="page-footer">
+    <hr class="ornamental-rule">
+    <a href="../index.html">&larr; Back to all prototypes</a>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ activeFilter: 'all' }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persons - Cluster Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+                    "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+                    "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+                    "surface": { DEFAULT: "#fffbfe", dim: "#ded8de", container: "#f3edf3", "container-high": "#ece6ec" },
+                    "on-surface": { DEFAULT: "#1c1b1f", variant: "#49454f" },
+                    "primary-container": { DEFAULT: "#cceadc" },
+                    "secondary-container": { DEFAULT: "#cee8e9" },
+                    "tertiary-container": { DEFAULT: "#f0ddef" },
+                },
+                fontFamily: { body: ['Roboto', 'system-ui', 'sans-serif'] },
+                borderRadius: { 'xl': '16px', '2xl': '28px', '3xl': '32px' },
+            }
+        }
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        body { font-family: 'Roboto', system-ui, sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .nav-item-active .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+    <div class="flex min-h-screen">
+        <!-- Navigation Rail (Desktop) -->
+        <nav class="hidden md:flex flex-col items-center w-20 bg-surface py-6 border-r border-surface-dim/30 fixed h-full z-30">
+            <div class="flex flex-col items-center gap-3 flex-1">
+                <a href="dashboard.html" class="flex flex-col items-center gap-1 group">
+                    <div class="w-14 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant">dashboard</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface-variant">Dashboard</span>
+                </a>
+                <a href="listing.html" class="flex flex-col items-center gap-1 group nav-item-active">
+                    <div class="w-14 h-8 rounded-full bg-primary-container flex items-center justify-center transition-colors">
+                        <span class="material-symbols-outlined text-on-surface">person</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface">Persons</span>
+                </a>
+                <a href="projects.html" class="flex flex-col items-center gap-1 group">
+                    <div class="w-14 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant">work</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface-variant">Projects</span>
+                </a>
+                <a href="events.html" class="flex flex-col items-center gap-1 group">
+                    <div class="w-14 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant">event</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface-variant">Events</span>
+                </a>
+                <a href="institutions.html" class="flex flex-col items-center gap-1 group">
+                    <div class="w-14 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant">apartment</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface-variant">Institutions</span>
+                </a>
+            </div>
+            <a href="../index.html" class="text-[10px] text-on-surface-variant hover:text-on-surface mt-auto pb-4 text-center leading-tight">All<br>Prototypes</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-20 pb-20 md:pb-6">
+            <!-- Top App Bar -->
+            <header class="sticky top-0 z-20 bg-surface/95 backdrop-blur-sm px-4 md:px-8 py-4 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-normal text-on-surface">Persons</h1>
+                    <div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center">
+                        <span class="text-sm font-medium text-on-surface">TK</span>
+                    </div>
+                </div>
+                <!-- Search bar -->
+                <div class="flex items-center gap-3 bg-surface-container rounded-full px-4 py-3 max-w-2xl">
+                    <span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+                    <input type="text" placeholder="Search persons by name, institution, or email..." class="bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant outline-none flex-1">
+                </div>
+                <!-- Filter Chips -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-1">
+                    <button @click="activeFilter = 'all'" :class="activeFilter === 'all' ? 'bg-primary-container text-on-surface' : 'border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span x-show="activeFilter === 'all'" class="material-symbols-outlined text-[16px]">check</span>
+                        All
+                    </button>
+                    <button @click="activeFilter = 'members'" :class="activeFilter === 'members' ? 'bg-primary-container text-on-surface' : 'border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span x-show="activeFilter === 'members'" class="material-symbols-outlined text-[16px]">check</span>
+                        Cluster Members
+                    </button>
+                    <button @click="activeFilter = 'bigsas'" :class="activeFilter === 'bigsas' ? 'bg-primary-container text-on-surface' : 'border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span x-show="activeFilter === 'bigsas'" class="material-symbols-outlined text-[16px]">check</span>
+                        BIGSAS
+                    </button>
+                    <button @click="activeFilter = 'fellows'" :class="activeFilter === 'fellows' ? 'bg-primary-container text-on-surface' : 'border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span x-show="activeFilter === 'fellows'" class="material-symbols-outlined text-[16px]">check</span>
+                        Fellows
+                    </button>
+                    <button @click="activeFilter = 'guests'" :class="activeFilter === 'guests' ? 'bg-primary-container text-on-surface' : 'border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span x-show="activeFilter === 'guests'" class="material-symbols-outlined text-[16px]">check</span>
+                        Guests
+                    </button>
+                </div>
+            </header>
+
+            <div class="px-4 md:px-8">
+                <!-- Person List Table -->
+                <div class="bg-surface-container rounded-2xl overflow-hidden overflow-x-auto">
+                    <table class="w-full text-sm text-left min-w-[900px]">
+                        <thead>
+                            <tr class="border-b border-surface-dim/30">
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">Title</th>
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">Last Name</th>
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">First Name</th>
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">Gender</th>
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">BIGSAS</th>
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">Location</th>
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">Languages</th>
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">Thematic Fields</th>
+                                <th class="px-4 py-3 text-xs font-medium text-on-surface-variant uppercase tracking-wider">Geographic Fields</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-surface-dim/20">
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Dr.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Osei</td>
+                                <td class="px-4 py-3 text-on-surface">Amina</td>
+                                <td class="px-4 py-3 text-on-surface-variant">female</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-ubt-green text-[18px]">check_circle</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Accra</td>
+                                <td class="px-4 py-3 text-on-surface-variant">English, French, Twi</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Cultural Anthropology, Gender Studies</td>
+                                <td class="px-4 py-3 text-on-surface-variant">West Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Prof.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Asante</td>
+                                <td class="px-4 py-3 text-on-surface">Kwame</td>
+                                <td class="px-4 py-3 text-on-surface-variant">male</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">cancel</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Cape Coast</td>
+                                <td class="px-4 py-3 text-on-surface-variant">English, Akan</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Governance, Political Science</td>
+                                <td class="px-4 py-3 text-on-surface-variant">West Africa, Sahel</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Dr.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Diallo</td>
+                                <td class="px-4 py-3 text-on-surface">Fatou</td>
+                                <td class="px-4 py-3 text-on-surface-variant">female</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-ubt-green text-[18px]">check_circle</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Dakar</td>
+                                <td class="px-4 py-3 text-on-surface-variant">French, Wolof, English</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Ecology, Environmental Policy</td>
+                                <td class="px-4 py-3 text-on-surface-variant">West Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Prof.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Muller</td>
+                                <td class="px-4 py-3 text-on-surface">Hans</td>
+                                <td class="px-4 py-3 text-on-surface-variant">male</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">cancel</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Bayreuth</td>
+                                <td class="px-4 py-3 text-on-surface-variant">German, English, French</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Cultural Studies, Literature</td>
+                                <td class="px-4 py-3 text-on-surface-variant">East Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Dr.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Mbeki</td>
+                                <td class="px-4 py-3 text-on-surface">Nadia</td>
+                                <td class="px-4 py-3 text-on-surface-variant">female</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">cancel</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Cape Town</td>
+                                <td class="px-4 py-3 text-on-surface-variant">English, Zulu, Afrikaans</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Public Health, Epidemiology</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Southern Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Prof.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Ouedraogo</td>
+                                <td class="px-4 py-3 text-on-surface">Jean</td>
+                                <td class="px-4 py-3 text-on-surface-variant">male</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-ubt-green text-[18px]">check_circle</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Ouagadougou</td>
+                                <td class="px-4 py-3 text-on-surface-variant">French, Moore, English</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Postcolonial Theory</td>
+                                <td class="px-4 py-3 text-on-surface-variant">West Africa, Sahel</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Dr.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Weber</td>
+                                <td class="px-4 py-3 text-on-surface">Sarah</td>
+                                <td class="px-4 py-3 text-on-surface-variant">female</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">cancel</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Bayreuth</td>
+                                <td class="px-4 py-3 text-on-surface-variant">German, English</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Ecology, Biodiversity</td>
+                                <td class="px-4 py-3 text-on-surface-variant">East Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Prof.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Taiwo</td>
+                                <td class="px-4 py-3 text-on-surface">Blessing</td>
+                                <td class="px-4 py-3 text-on-surface-variant">male</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">cancel</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Ibadan</td>
+                                <td class="px-4 py-3 text-on-surface-variant">English, Yoruba</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Governance, Water Resources</td>
+                                <td class="px-4 py-3 text-on-surface-variant">West Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Dr.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Konig</td>
+                                <td class="px-4 py-3 text-on-surface">Maria</td>
+                                <td class="px-4 py-3 text-on-surface-variant">female</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">cancel</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Berlin</td>
+                                <td class="px-4 py-3 text-on-surface-variant">German, English, Swahili</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Migration, Identity Studies</td>
+                                <td class="px-4 py-3 text-on-surface-variant">East Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Prof.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Nkrumah</td>
+                                <td class="px-4 py-3 text-on-surface">Emmanuel</td>
+                                <td class="px-4 py-3 text-on-surface-variant">male</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">cancel</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Accra</td>
+                                <td class="px-4 py-3 text-on-surface-variant">English, Ga, Twi</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Traditional Medicine, Public Health</td>
+                                <td class="px-4 py-3 text-on-surface-variant">West Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Dr.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Fischer</td>
+                                <td class="px-4 py-3 text-on-surface">Luisa</td>
+                                <td class="px-4 py-3 text-on-surface-variant">female</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-ubt-green text-[18px]">check_circle</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Bayreuth</td>
+                                <td class="px-4 py-3 text-on-surface-variant">German, English, Hausa</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Linguistics, Language Technology</td>
+                                <td class="px-4 py-3 text-on-surface-variant">West Africa</td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-high transition-colors cursor-pointer" onclick="location.href='detail.html'">
+                                <td class="px-4 py-3 text-on-surface">Prof.</td>
+                                <td class="px-4 py-3 text-on-surface font-medium">Toure</td>
+                                <td class="px-4 py-3 text-on-surface">Chinwe</td>
+                                <td class="px-4 py-3 text-on-surface-variant">female</td>
+                                <td class="px-4 py-3"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">cancel</span></td>
+                                <td class="px-4 py-3 text-on-surface-variant">Lagos</td>
+                                <td class="px-4 py-3 text-on-surface-variant">English, Igbo, French</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Ecology, Forest Conservation</td>
+                                <td class="px-4 py-3 text-on-surface-variant">Central Africa</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-between mt-6 px-2">
+                    <p class="text-sm text-on-surface-variant">Showing 12 of 847</p>
+                    <div class="flex items-center gap-2">
+                        <button class="h-10 px-4 rounded-full border border-on-surface/20 text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                            Previous
+                        </button>
+                        <button class="h-10 px-4 rounded-full border border-on-surface/20 text-sm font-medium text-on-surface hover:bg-surface-container transition-colors flex items-center gap-1">
+                            Next
+                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- FAB -->
+        <a href="#" class="fixed bottom-24 md:bottom-8 right-6 w-14 h-14 bg-ubt-green rounded-3xl flex items-center justify-center shadow-lg hover:shadow-xl hover:bg-ubt-green-500 transition-all z-40">
+            <span class="material-symbols-outlined text-white text-[28px]">person_add</span>
+        </a>
+
+        <!-- Bottom Navigation (Mobile) -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container z-30 border-t border-surface-dim/30">
+            <div class="flex items-center justify-around py-2">
+                <a href="dashboard.html" class="flex flex-col items-center gap-0.5">
+                    <div class="w-16 h-8 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[22px]">dashboard</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface-variant">Dashboard</span>
+                </a>
+                <a href="listing.html" class="flex flex-col items-center gap-0.5 nav-item-active">
+                    <div class="w-16 h-8 rounded-full bg-primary-container flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface text-[22px]">person</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface">Persons</span>
+                </a>
+                <a href="projects.html" class="flex flex-col items-center gap-0.5">
+                    <div class="w-16 h-8 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[22px]">work</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface-variant">Projects</span>
+                </a>
+                <a href="events.html" class="flex flex-col items-center gap-0.5">
+                    <div class="w-16 h-8 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[22px]">event</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface-variant">Events</span>
+                </a>
+                <a href="institutions.html" class="flex flex-col items-center gap-0.5">
+                    <div class="w-16 h-8 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[22px]">apartment</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface-variant">Institutions</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

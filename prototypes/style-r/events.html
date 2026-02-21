@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar of Assemblies | Africa Multiple</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --parchment: #faf6ee;
+      --ink: #2c2416;
+      --green: #3d6b4f;
+      --gold: #b8860b;
+      --red: #8b3a3a;
+      --blue: #4a6b8a;
+      --gold-light: rgba(184,134,11,0.15);
+      --gold-faint: rgba(184,134,11,0.3);
+    }
+
+    body {
+      font-family: 'Crimson Pro', serif;
+      background-color: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .running-header {
+      border-bottom: 1px solid var(--gold);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--parchment);
+    }
+    .running-header::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 0.5px;
+      background: var(--gold-faint);
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+    .header-title a { color: inherit; text-decoration: none; }
+    .header-nav { display: flex; align-items: baseline; gap: 24px; }
+    .header-nav a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: -12px;
+      background: var(--parchment); border: 1px solid var(--gold);
+      padding: 8px 0; min-width: 180px; z-index: 200; margin-top: 8px;
+    }
+    .nav-dropdown-menu::before {
+      content: ''; position: absolute; inset: 3px;
+      border: 0.5px solid var(--gold-faint); pointer-events: none;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 4px 16px; font-size: 10px; letter-spacing: 0.12em;
+    }
+    .nav-dropdown-menu a:hover { background: var(--gold-light); }
+
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .plate-heading { text-align: center; margin-bottom: 40px; }
+    .plate-no {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--red);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .plate-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 2rem;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .plate-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1rem;
+      color: var(--green);
+    }
+
+    .ornamental-rule {
+      border: none; height: 1px; background: var(--gold);
+      position: relative; margin: 32px 0;
+    }
+    .ornamental-rule::after {
+      content: '\2726'; position: absolute; left: 50%; top: -8px;
+      transform: translateX(-50%); background: var(--parchment);
+      padding: 0 8px; color: var(--gold); font-size: 12px;
+    }
+
+    /* Filter bar */
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .search-input {
+      flex: 1;
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      padding: 10px 16px;
+      border: 1px solid var(--gold);
+      background: var(--parchment);
+      color: var(--ink);
+      outline: none;
+    }
+    .search-input::placeholder { color: var(--gold); opacity: 0.7; }
+    .search-input:focus { border-color: var(--green); }
+    .filter-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 10px 16px;
+      border: 1px solid var(--gold);
+      background: var(--parchment);
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .filter-btn:hover { background: var(--gold-light); }
+    .filter-btn.active { background: var(--green); color: var(--parchment); border-color: var(--green); }
+
+    .results-meta {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--ink);
+      opacity: 0.6;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--gold);
+    }
+
+    /* Year marker */
+    .year-marker {
+      position: relative;
+      margin-bottom: 8px;
+      margin-top: 32px;
+    }
+    .year-marker:first-child { margin-top: 0; }
+    .year-marker::before {
+      content: '';
+      position: absolute;
+      left: -32px;
+      top: 50%;
+      width: 17px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .year-label {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--ink);
+    }
+
+    /* Event entry */
+    .event-entry {
+      position: relative;
+      border: 1px solid var(--gold);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      background: var(--parchment);
+      animation: fadeInSpecimen 0.5s ease-out both;
+    }
+    .event-entry:nth-child(2) { animation-delay: 0.05s; }
+    .event-entry:nth-child(3) { animation-delay: 0.1s; }
+    .event-entry:nth-child(4) { animation-delay: 0.15s; }
+    .event-entry:nth-child(5) { animation-delay: 0.2s; }
+    .event-entry::before {
+      content: '';
+      position: absolute;
+      left: -25px;
+      top: 24px;
+      width: 9px;
+      height: 9px;
+      background: var(--green);
+      border: 2px solid var(--parchment);
+      outline: 1px solid var(--gold);
+      border-radius: 50%;
+    }
+    .event-entry.past {
+      opacity: 0.65;
+    }
+    .event-entry.past::before {
+      background: var(--gold);
+    }
+
+    .event-type {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--red);
+      margin-bottom: 4px;
+    }
+    .event-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .event-title a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .event-title a:hover { color: var(--green); }
+
+    .event-meta {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 3px 12px;
+      margin-bottom: 8px;
+    }
+    .meta-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--ink);
+      opacity: 0.6;
+    }
+    .meta-value {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+    .meta-value a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .meta-value a:hover { border-bottom: 0.5px solid var(--blue); }
+
+    .event-badges {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .badge {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 2px 8px;
+      border: 0.5px solid var(--gold-faint);
+    }
+    .badge-online { color: var(--blue); border-color: var(--blue); }
+    .badge-hybrid { color: var(--green); border-color: var(--green); }
+    .badge-report { color: var(--gold); border-color: var(--gold); }
+
+    @keyframes fadeInSpecimen {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-footer {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px;
+      text-align: center;
+    }
+    .page-footer a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .page-footer a:hover { color: var(--green); }
+
+    @media (max-width: 768px) {
+      .plate-title { font-size: 1.5rem; }
+      .event-meta { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .header-inner { flex-direction: column; gap: 8px; text-align: center; }
+      .header-nav { justify-content: center; flex-wrap: wrap; }
+      .search-bar { flex-direction: column; }
+      .timeline { padding-left: 24px; }
+    }
+  </style>
+</head>
+<body x-data="{
+  search: '',
+  filter: 'all',
+  events: [
+    { title: 'Workshop on Digital Humanities in African Studies', type: 'Workshop', body: 'Research Section Knowledges', start: '16 Feb 2026', end: '18 Feb 2026', online: false, hybrid: true, hosts: 'Dr. Amina Osei', guests: 14, report: false, year: 2026, past: false },
+    { title: 'Pan-African Mobilities Conference', type: 'Conference', body: 'Research Section Mobilities', start: '05 Nov 2025', end: '07 Nov 2025', online: false, hybrid: false, hosts: 'Prof. E. Sandoval, Prof. T. Okoro', guests: 48, report: true, year: 2025, past: true },
+    { title: 'BIGSAS Annual Symposium', type: 'Symposium', body: 'BIGSAS', start: '20 Jun 2025', end: '22 Jun 2025', online: false, hybrid: true, hosts: 'Prof. N. Diallo', guests: 32, report: true, year: 2025, past: true },
+    { title: 'Virtual Colloquium: Language & Identity', type: 'Colloquium', body: 'Research Section Learning', start: '12 Apr 2025', end: '12 Apr 2025', online: true, hybrid: false, hosts: 'Dr. L. Achieng', guests: 22, report: false, year: 2025, past: true },
+    { title: 'Cluster General Assembly', type: 'Assembly', body: 'Cluster Administration', start: '15 Jan 2025', end: '15 Jan 2025', online: false, hybrid: true, hosts: 'Cluster Board', guests: 120, report: true, year: 2025, past: true },
+    { title: 'Workshop on Ethical Research Methods', type: 'Workshop', body: 'Research Section Moralities', start: '08 Oct 2024', end: '10 Oct 2024', online: false, hybrid: false, hosts: 'Prof. K. Mensah', guests: 18, report: true, year: 2024, past: true },
+    { title: 'Summer School: African Aesthetics', type: 'Summer School', body: 'Research Section Aesthetics', start: '01 Jul 2024', end: '12 Jul 2024', online: false, hybrid: false, hosts: 'Dr. F. Adeyemi', guests: 25, report: true, year: 2024, past: true }
+  ],
+  get filtered() {
+    let list = this.events;
+    if (this.search) {
+      const s = this.search.toLowerCase();
+      list = list.filter(e => e.title.toLowerCase().includes(s) || e.type.toLowerCase().includes(s) || e.hosts.toLowerCase().includes(s));
+    }
+    if (this.filter === 'upcoming') list = list.filter(e => !e.past);
+    if (this.filter === 'past') list = list.filter(e => e.past);
+    return list;
+  },
+  get years() {
+    const yrs = [...new Set(this.filtered.map(e => e.year))];
+    return yrs.sort((a, b) => b - a);
+  },
+  eventsForYear(yr) {
+    return this.filtered.filter(e => e.year === yr);
+  }
+}">
+
+  <header class="running-header">
+    <div class="header-inner">
+      <div class="header-title"><a href="dashboard.html">The Africa Multiple Compendium</a></div>
+      <nav class="header-nav">
+        <a href="dashboard.html">Index</a>
+        <div class="nav-dropdown">
+          <a href="listing.html">Persons</a>
+          <div class="nav-dropdown-menu">
+            <a href="listing.html">Register of Persons</a>
+            <a href="#">Employees</a>
+            <a href="#">Cluster Members</a>
+            <a href="#">BIGSAS Members</a>
+            <a href="#">Fellows</a>
+            <a href="#">Guests</a>
+          </div>
+        </div>
+        <a href="projects.html">Projects</a>
+        <a href="events.html" class="active">Events</a>
+        <a href="institutions.html">Institutions</a>
+        <a href="detail.html">Specimen</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-body">
+
+    <div class="plate-heading">
+      <span class="plate-no">Plate IV</span>
+      <h1 class="plate-title">Calendar of Assemblies</h1>
+      <p class="plate-subtitle">Assemblies &amp; Gatherings &mdash; a chronological account</p>
+    </div>
+
+    <hr class="ornamental-rule">
+
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Search assemblies by title, type, or host..." x-model="search">
+      <button class="filter-btn" :class="{ active: filter === 'all' }" @click="filter = 'all'">All</button>
+      <button class="filter-btn" :class="{ active: filter === 'upcoming' }" @click="filter = 'upcoming'">Upcoming</button>
+      <button class="filter-btn" :class="{ active: filter === 'past' }" @click="filter = 'past'">Past</button>
+    </div>
+
+    <div class="results-meta">
+      Displaying <span x-text="filtered.length"></span> assemblies
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+      <template x-for="year in years" :key="year">
+        <div>
+          <div class="year-marker">
+            <span class="year-label" x-text="year"></span>
+          </div>
+
+          <template x-for="event in eventsForYear(year)" :key="event.title">
+            <div class="event-entry" :class="{ past: event.past }">
+              <div class="event-type" x-text="event.type"></div>
+              <h3 class="event-title"><a href="#" x-text="event.title"></a></h3>
+
+              <div class="event-meta">
+                <span class="meta-label">Applying body</span>
+                <span class="meta-value" x-text="event.body"></span>
+
+                <span class="meta-label">Dates</span>
+                <span class="meta-value" x-text="event.start + (event.start !== event.end ? ' \u2014 ' + event.end : '')"></span>
+
+                <span class="meta-label">Hosts</span>
+                <span class="meta-value" x-text="event.hosts"></span>
+
+                <span class="meta-label">Guests</span>
+                <span class="meta-value" x-text="event.guests + ' registered'"></span>
+              </div>
+
+              <div class="event-badges">
+                <template x-if="event.online">
+                  <span class="badge badge-online">Online</span>
+                </template>
+                <template x-if="event.hybrid">
+                  <span class="badge badge-hybrid">Hybrid</span>
+                </template>
+                <template x-if="event.report">
+                  <span class="badge badge-report">Report available</span>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+
+  </main>
+
+  <footer class="page-footer">
+    <hr class="ornamental-rule">
+    <a href="../index.html">&larr; Back to all prototypes</a>
+  </footer>
+
+</body>
+</html>

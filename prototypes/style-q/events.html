@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assembly Schedule — Cluster Management Blueprint</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bp-base: #1a2744;
+      --bp-line: #e8f0ff;
+      --bp-cyan: #5bb8ff;
+      --bp-gold: #ffd700;
+      --bp-red: #ff4444;
+      --bp-grid: rgba(91,184,255,0.08);
+      --bp-grid-fine: rgba(91,184,255,0.04);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      color: var(--bp-line);
+      background-color: var(--bp-base);
+      background-image:
+        linear-gradient(var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(var(--bp-grid-fine) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid-fine) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      min-height: 100vh;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    a { color: var(--bp-cyan); text-decoration: none; }
+    a:hover { color: var(--bp-gold); }
+
+    .sidebar {
+      width: 56px;
+      border-right: 1.5px solid rgba(232,240,255,0.2);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 16px 0; gap: 6px;
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 50; background-color: var(--bp-base);
+    }
+    .main { margin-left: 56px; padding: 32px 40px 120px; }
+
+    .section-marker {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan);
+      font-size: 12px; font-weight: 500;
+      transition: all 0.3s ease; cursor: pointer; text-decoration: none;
+    }
+    .section-marker:hover, .section-marker.active { background: var(--bp-cyan); color: var(--bp-base); }
+    .section-marker.active { border-color: var(--bp-gold); background: var(--bp-gold); color: var(--bp-base); }
+
+    .drawing-title { font-size: 20px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: var(--bp-line); margin-bottom: 4px; }
+    .drawing-subtitle { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--bp-cyan); }
+
+    .dimension-line { position: relative; border-top: 1px solid var(--bp-cyan); margin: 8px 0; }
+    .dimension-line::before, .dimension-line::after { content: ''; position: absolute; top: -4px; width: 1px; height: 9px; background: var(--bp-cyan); }
+    .dimension-line::before { left: 0; } .dimension-line::after { right: 0; }
+    .dimension-label { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--bp-cyan); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+
+    /* Event timeline */
+    .event-timeline {
+      border: 1px solid rgba(232,240,255,0.15);
+      padding: 20px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+    }
+    .et-months {
+      display: flex;
+      margin-left: 0;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--bp-cyan);
+      border-bottom: 1px solid rgba(91,184,255,0.15);
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+    .et-month { flex: 1; min-width: 60px; text-align: center; }
+    .et-row {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      border-bottom: 1px solid rgba(232,240,255,0.04);
+      position: relative;
+    }
+    .et-bar {
+      position: absolute;
+      height: 12px;
+      top: 10px;
+      border: 1px solid var(--bp-cyan);
+      background: rgba(91,184,255,0.15);
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      font-size: 9px;
+      color: var(--bp-line);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .et-bar.hybrid { border-color: var(--bp-gold); background: rgba(255,215,0,0.1); }
+    .et-bar.online { border-style: dashed; }
+
+    /* Event cards */
+    .event-card {
+      border: 1px solid rgba(232,240,255,0.2);
+      padding: 20px 24px;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .event-card-label {
+      position: absolute; top: -9px; left: 16px;
+      background: var(--bp-base); padding: 0 8px;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-gold);
+    }
+    .event-title {
+      font-size: 14px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--bp-line); margin-bottom: 10px;
+    }
+
+    .field-row { display: flex; padding: 4px 0; border-bottom: 1px solid rgba(232,240,255,0.06); }
+    .field-row:last-child { border-bottom: none; }
+    .field-label { width: 180px; min-width: 180px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); }
+    .field-value { flex: 1; font-size: 12px; color: var(--bp-line); }
+    .tag { display: inline-block; border: 1px solid rgba(91,184,255,0.3); padding: 1px 6px; font-size: 10px; margin: 1px 2px; color: var(--bp-cyan); }
+    .bool-yes { color: var(--bp-gold); }
+    .bool-no { color: rgba(232,240,255,0.3); }
+
+    .callout-annotation {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 9px; color: var(--bp-gold);
+      text-transform: uppercase; letter-spacing: 1px; margin-left: 8px;
+    }
+    .callout-annotation::before { content: ''; display: inline-block; width: 16px; height: 1px; background: var(--bp-gold); }
+
+    .guest-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .guest-table th { text-transform: uppercase; letter-spacing: 1px; font-size: 9px; font-weight: 500; color: var(--bp-cyan); text-align: left; padding: 4px 8px; border-bottom: 1px solid rgba(91,184,255,0.2); }
+    .guest-table td { padding: 4px 8px; font-size: 11px; border-bottom: 1px solid rgba(232,240,255,0.06); }
+
+    /* Duration annotation */
+    .duration-dim {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9px;
+      color: var(--bp-cyan);
+      margin-left: 12px;
+    }
+    .duration-dim-line {
+      width: 20px;
+      border-top: 1px solid var(--bp-cyan);
+      position: relative;
+    }
+    .duration-dim-line::before, .duration-dim-line::after {
+      content: ''; position: absolute; top: -3px;
+      width: 1px; height: 7px; background: var(--bp-cyan);
+    }
+    .duration-dim-line::before { left: 0; }
+    .duration-dim-line::after { right: 0; }
+
+    .title-block {
+      position: fixed; bottom: 16px; right: 16px;
+      border: 1.5px solid var(--bp-line);
+      background: var(--bp-base); z-index: 40; font-size: 10px;
+    }
+    .title-block table { border-collapse: collapse; }
+    .title-block td { border: 1px solid rgba(232,240,255,0.3); padding: 3px 10px; white-space: nowrap; }
+    .title-block .tb-header { text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); font-size: 9px; }
+
+    .back-link { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(232,240,255,0.4); }
+    .back-link:hover { color: var(--bp-gold); }
+    .sidebar-item { position: relative; }
+    .sidebar-item .tooltip { display: none; position: absolute; left: 42px; top: 50%; transform: translateY(-50%); background: var(--bp-base); border: 1px solid var(--bp-cyan); padding: 3px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); white-space: nowrap; z-index: 60; }
+    .sidebar-item:hover .tooltip { display: block; }
+
+    @keyframes fadeInBlueprint { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeInBlueprint 0.6s ease forwards; opacity: 0; }
+    .fade-in-1 { animation-delay: 0.1s; }
+    .fade-in-2 { animation-delay: 0.2s; }
+    .fade-in-3 { animation-delay: 0.3s; }
+    .fade-in-4 { animation-delay: 0.4s; }
+    .fade-in-5 { animation-delay: 0.5s; }
+    .fade-in-6 { animation-delay: 0.6s; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 44px; }
+      .main { margin-left: 44px; padding: 20px 12px 140px; }
+      .section-marker { width: 28px; height: 28px; font-size: 10px; }
+      .drawing-title { font-size: 14px; letter-spacing: 2px; }
+      .field-label { width: 140px; min-width: 140px; }
+      .title-block { right: 8px; bottom: 8px; }
+    }
+  </style>
+</head>
+<body x-data="{
+  typeFilter: 'all',
+  events: [
+    { id: 'E001', title: 'BIGSAS Annual Conference 2026', type: 'Conference', body: 'BIGSAS', start: '2026-06-10', end: '2026-06-12', online: false, hybrid: false, hosts: ['Prof. E. Kraus','Dr. Amina Osei'], guests: 45, location: 'Bayreuth', report: true },
+    { id: 'E002', title: 'Workshop: Decolonizing Methods', type: 'Workshop', body: 'Research Section 1', start: '2026-03-22', end: '2026-03-24', online: false, hybrid: true, hosts: ['Prof. U. Bauer'], guests: 28, location: 'Bayreuth', report: false },
+    { id: 'E003', title: 'Seminar: Digital Humanities in Africa', type: 'Seminar', body: 'Research Section 6', start: '2026-04-15', end: '2026-04-15', online: true, hybrid: false, hosts: ['Dr. Kweku Mensah'], guests: 62, location: 'Online', report: false },
+    { id: 'E004', title: 'Symposium: Mobility and Borders', type: 'Symposium', body: 'Research Section 4', start: '2026-05-08', end: '2026-05-10', online: false, hybrid: false, hosts: ['Prof. D. Ndongo','Dr. Mariama Diallo'], guests: 35, location: 'Yaounde', report: false },
+    { id: 'E005', title: 'Lecture Series: African Aesthetics', type: 'Lecture Series', body: 'Research Section 2', start: '2026-01-15', end: '2026-06-15', online: false, hybrid: true, hosts: ['Dr. Yemi Abiodun'], guests: 18, location: 'Bayreuth', report: false },
+    { id: 'E006', title: 'Workshop: Climate Data for Africa', type: 'Workshop', body: 'Research Section 5', start: '2026-07-01', end: '2026-07-03', online: false, hybrid: false, hosts: ['Prof. M. Akinyemi'], guests: 22, location: 'Nairobi', report: false }
+  ],
+  get filtered() {
+    if (this.typeFilter === 'all') return this.events;
+    return this.events.filter(e => e.type.toLowerCase().includes(this.typeFilter));
+  }
+}">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <a href="../index.html" class="back-link" style="margin-bottom: 8px; font-size: 9px; writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 2px;">PROTO</a>
+    <div style="width: 24px; border-top: 1px solid rgba(232,240,255,0.2); margin: 4px 0 8px;"></div>
+    <div class="sidebar-item"><a href="dashboard.html" class="section-marker">A</a><span class="tooltip">Site Plan</span></div>
+    <div class="sidebar-item"><a href="listing.html" class="section-marker">B</a><span class="tooltip">Occupant Register</span></div>
+    <div class="sidebar-item"><a href="detail.html" class="section-marker">C</a><span class="tooltip">Occupant Detail</span></div>
+    <div class="sidebar-item"><a href="projects.html" class="section-marker">D</a><span class="tooltip">Structural Schedule</span></div>
+    <div class="sidebar-item"><a href="events.html" class="section-marker active">E</a><span class="tooltip">Assembly Schedule</span></div>
+    <div class="sidebar-item"><a href="institutions.html" class="section-marker">F</a><span class="tooltip">Partner Directory</span></div>
+  </nav>
+
+  <div class="main">
+    <!-- Header -->
+    <div class="fade-in fade-in-1" style="margin-bottom: 24px;">
+      <div class="drawing-subtitle">Drawing No. Q-005 &mdash; Rev 01</div>
+      <div class="drawing-title">Assembly Schedule &mdash; Events</div>
+      <div class="dimension-line" style="width: 300px; margin-top: 16px;">
+        <span class="dimension-label">Assembly Timeline</span>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="fade-in fade-in-2 event-timeline">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan); font-size: 10px;">E1</span>
+        <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-cyan);">2026 Assembly Timeline</span>
+        <span class="duration-dim" style="margin-left: auto;">
+          <span class="duration-dim-line"></span> Solid = In-Person
+        </span>
+        <span class="duration-dim">
+          <span style="width: 20px; border-top: 1px dashed var(--bp-cyan); display: inline-block;"></span> Dashed = Online
+        </span>
+        <span class="duration-dim">
+          <span style="width: 20px; border-top: 1px solid var(--bp-gold); display: inline-block;"></span> Gold = Hybrid
+        </span>
+      </div>
+      <div class="et-months">
+        <div class="et-month">JAN</div>
+        <div class="et-month">FEB</div>
+        <div class="et-month">MAR</div>
+        <div class="et-month">APR</div>
+        <div class="et-month">MAY</div>
+        <div class="et-month">JUN</div>
+        <div class="et-month">JUL</div>
+        <div class="et-month">AUG</div>
+        <div class="et-month">SEP</div>
+        <div class="et-month">OCT</div>
+        <div class="et-month">NOV</div>
+        <div class="et-month">DEC</div>
+      </div>
+      <!-- Lecture Series: Jan-Jun -->
+      <div class="et-row">
+        <div class="et-bar hybrid" style="left: 4%; width: 42%;">Lecture Series: African Aesthetics</div>
+      </div>
+      <!-- Workshop: Mar 22-24 -->
+      <div class="et-row">
+        <div class="et-bar hybrid" style="left: 21.5%; width: 3%;">Decolonizing Methods</div>
+      </div>
+      <!-- Seminar: Apr 15 (online) -->
+      <div class="et-row">
+        <div class="et-bar online" style="left: 28.5%; width: 1.5%;">Digital Humanities</div>
+      </div>
+      <!-- Symposium: May 8-10 -->
+      <div class="et-row">
+        <div class="et-bar" style="left: 34.5%; width: 2.5%;">Mobility &amp; Borders</div>
+      </div>
+      <!-- Conference: Jun 10-12 -->
+      <div class="et-row">
+        <div class="et-bar" style="left: 44%; width: 2.5%;">BIGSAS Annual 2026</div>
+      </div>
+      <!-- Workshop: Jul 1-3 -->
+      <div class="et-row">
+        <div class="et-bar" style="left: 50%; width: 2.5%;">Climate Data</div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="fade-in fade-in-3" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 10px 16px; border: 1px solid rgba(232,240,255,0.15);">
+      <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan);">Filter by Type:</span>
+      <select x-model="typeFilter" style="background: transparent; border: 1px solid rgba(232,240,255,0.2); color: var(--bp-line); font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding: 4px 10px;">
+        <option value="all" style="background: var(--bp-base);">ALL TYPES</option>
+        <option value="conference" style="background: var(--bp-base);">CONFERENCE</option>
+        <option value="workshop" style="background: var(--bp-base);">WORKSHOP</option>
+        <option value="seminar" style="background: var(--bp-base);">SEMINAR</option>
+        <option value="symposium" style="background: var(--bp-base);">SYMPOSIUM</option>
+        <option value="lecture" style="background: var(--bp-base);">LECTURE SERIES</option>
+      </select>
+      <span style="margin-left: auto; font-size: 10px; color: var(--bp-cyan); text-transform: uppercase; letter-spacing: 1px;">
+        <span x-text="filtered.length" style="color: var(--bp-gold);"></span> Assemblies
+      </span>
+    </div>
+
+    <!-- Event Cards -->
+    <template x-for="(ev, idx) in filtered" :key="ev.id">
+      <div class="event-card fade-in" :style="'animation-delay:' + (0.3 + idx*0.1) + 's'">
+        <div class="event-card-label" x-text="'Assembly ' + ev.id"></div>
+        <div class="event-title" x-text="ev.title"></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px;">
+          <div class="field-row">
+            <div class="field-label">Type of Event</div>
+            <div class="field-value" x-text="ev.type"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Applying Body</div>
+            <div class="field-value" x-text="ev.body"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Start</div>
+            <div class="field-value" x-text="ev.start"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">End</div>
+            <div class="field-value">
+              <span x-text="ev.end"></span>
+              <span class="duration-dim" style="margin-left: 8px;">
+                <span class="duration-dim-line"></span>
+                <span x-text="(() => { const d1 = new Date(ev.start); const d2 = new Date(ev.end); return Math.ceil((d2-d1)/(1000*60*60*24)+1) + ' days'; })()"></span>
+              </span>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Online</div>
+            <div class="field-value" :class="ev.online ? 'bool-yes' : 'bool-no'" x-text="ev.online ? 'YES' : 'NO'"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Hybrid</div>
+            <div class="field-value" :class="ev.hybrid ? 'bool-yes' : 'bool-no'" x-text="ev.hybrid ? 'YES' : 'NO'"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Hosts</div>
+            <div class="field-value"><template x-for="h in ev.hosts" :key="h"><a href="detail.html" style="margin-right: 8px;" x-text="h"></a></template></div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Guests</div>
+            <div class="field-value"><span x-text="ev.guests"></span> registered</div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Location</div>
+            <div class="field-value" x-text="ev.location"></div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Report Available</div>
+            <div class="field-value" :class="ev.report ? 'bool-yes' : 'bool-no'" x-text="ev.report ? 'YES' : 'NO'"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Expanded guest table for first event -->
+    <div class="fade-in fade-in-6" style="margin-top: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan); font-size: 10px;">E2</span>
+        <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-cyan);">Guest Detail &mdash; BIGSAS Annual Conference 2026 (Sample)</span>
+      </div>
+      <div style="border: 1px solid rgba(232,240,255,0.15); padding: 0; overflow-x: auto;">
+        <table class="guest-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Purpose of Stay</th>
+              <th>Invited By</th>
+              <th>Begin</th>
+              <th>End</th>
+              <th>Invited</th>
+              <th>Confirmed</th>
+              <th>Attended</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="detail.html">Prof. Kofi Asante</a></td>
+              <td>Speaker</td>
+              <td>Keynote address</td>
+              <td>Prof. E. Kraus</td>
+              <td>2026-06-09</td>
+              <td>2026-06-13</td>
+              <td class="bool-yes">YES</td>
+              <td class="bool-yes">YES</td>
+              <td style="color: rgba(232,240,255,0.3);">&mdash;</td>
+            </tr>
+            <tr>
+              <td><a href="detail.html">Dr. Fatou Ndiaye</a></td>
+              <td>Panelist</td>
+              <td>Panel on multilingualism</td>
+              <td>Dr. Amina Osei</td>
+              <td>2026-06-10</td>
+              <td>2026-06-12</td>
+              <td class="bool-yes">YES</td>
+              <td class="bool-yes">YES</td>
+              <td style="color: rgba(232,240,255,0.3);">&mdash;</td>
+            </tr>
+            <tr>
+              <td><a href="detail.html">Dr. Felix Okonkwo</a></td>
+              <td>Participant</td>
+              <td>Research presentation</td>
+              <td>Prof. E. Kraus</td>
+              <td>2026-06-10</td>
+              <td>2026-06-12</td>
+              <td class="bool-yes">YES</td>
+              <td style="color: rgba(232,240,255,0.3);">PENDING</td>
+              <td style="color: rgba(232,240,255,0.3);">&mdash;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title Block -->
+  <div class="title-block">
+    <table>
+      <tr>
+        <td class="tb-header">Project</td>
+        <td colspan="3" style="font-weight: 500;">AFRICA MULTIPLE CLUSTER MANAGEMENT</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Drawing</td>
+        <td>Assembly Schedule</td>
+        <td class="tb-header">Rev</td>
+        <td>01</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Date</td>
+        <td>2026-02-18</td>
+        <td class="tb-header">Scale</td>
+        <td>NTS</td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>

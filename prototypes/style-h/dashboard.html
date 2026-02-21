@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ activeNav: 'dashboard', mobileNav: 'dashboard' }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Cluster Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+                    "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+                    "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+                    "surface": { DEFAULT: "#fffbfe", dim: "#ded8de", container: "#f3edf3", "container-high": "#ece6ec" },
+                    "on-surface": { DEFAULT: "#1c1b1f", variant: "#49454f" },
+                    "primary-container": { DEFAULT: "#cceadc" },
+                    "secondary-container": { DEFAULT: "#cee8e9" },
+                    "tertiary-container": { DEFAULT: "#f0ddef" },
+                },
+                fontFamily: { body: ['Roboto', 'system-ui', 'sans-serif'] },
+                borderRadius: { 'xl': '16px', '2xl': '28px', '3xl': '32px' },
+            }
+        }
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        body { font-family: 'Roboto', system-ui, sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .nav-item-active .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+    <div class="flex min-h-screen">
+        <!-- Navigation Rail (Desktop) -->
+        <nav class="hidden md:flex flex-col items-center w-20 bg-surface py-6 border-r border-surface-dim/30 fixed h-full z-30">
+            <div class="flex flex-col items-center gap-3 flex-1">
+                <a href="dashboard.html" class="flex flex-col items-center gap-1 group nav-item-active">
+                    <div class="w-14 h-8 rounded-full bg-primary-container flex items-center justify-center transition-colors">
+                        <span class="material-symbols-outlined text-on-surface">dashboard</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface">Dashboard</span>
+                </a>
+                <a href="listing.html" class="flex flex-col items-center gap-1 group">
+                    <div class="w-14 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant">person</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface-variant">Persons</span>
+                </a>
+                <a href="projects.html" class="flex flex-col items-center gap-1 group">
+                    <div class="w-14 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant">work</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface-variant">Projects</span>
+                </a>
+                <a href="events.html" class="flex flex-col items-center gap-1 group">
+                    <div class="w-14 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant">event</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface-variant">Events</span>
+                </a>
+                <a href="institutions.html" class="flex flex-col items-center gap-1 group">
+                    <div class="w-14 h-8 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant">apartment</span>
+                    </div>
+                    <span class="text-xs font-medium text-on-surface-variant">Institutions</span>
+                </a>
+            </div>
+            <a href="../index.html" class="text-[10px] text-on-surface-variant hover:text-on-surface mt-auto pb-4 text-center leading-tight">All<br>Prototypes</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-20 pb-20 md:pb-6">
+            <!-- Top App Bar -->
+            <header class="sticky top-0 z-20 bg-surface/95 backdrop-blur-sm px-4 md:px-8 py-4 flex items-center justify-between">
+                <h1 class="text-2xl font-normal text-on-surface">Dashboard</h1>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 bg-surface-container rounded-full px-4 py-2 cursor-pointer hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+                        <span class="text-sm text-on-surface-variant hidden sm:inline">Search</span>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center">
+                        <span class="text-sm font-medium text-on-surface">TK</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="px-4 md:px-8 space-y-6">
+                <!-- Stat Cards -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-primary-container rounded-2xl p-5 hover:bg-ubt-green-50 transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-3xl font-light text-on-surface">847</p>
+                                <p class="text-sm text-on-surface-variant mt-1">Total Persons</p>
+                            </div>
+                            <span class="material-symbols-outlined text-on-surface-variant">person</span>
+                        </div>
+                        <p class="text-xs text-ubt-green mt-3 font-medium">+23 this month</p>
+                    </div>
+                    <div class="bg-secondary-container rounded-2xl p-5 hover:bg-azure-50 transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-3xl font-light text-on-surface">156</p>
+                                <p class="text-sm text-on-surface-variant mt-1">Active Projects</p>
+                            </div>
+                            <span class="material-symbols-outlined text-on-surface-variant">work</span>
+                        </div>
+                        <p class="text-xs text-azure mt-3 font-medium">12 pending review</p>
+                    </div>
+                    <div class="bg-tertiary-container rounded-2xl p-5 hover:bg-raspberry-50 transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-3xl font-light text-on-surface">38</p>
+                                <p class="text-sm text-on-surface-variant mt-1">Upcoming Events</p>
+                            </div>
+                            <span class="material-symbols-outlined text-on-surface-variant">event</span>
+                        </div>
+                        <p class="text-xs text-raspberry mt-3 font-medium">5 this week</p>
+                    </div>
+                    <div class="bg-surface-container rounded-2xl p-5 hover:bg-surface-container-high transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-3xl font-light text-on-surface">64</p>
+                                <p class="text-sm text-on-surface-variant mt-1">Institutions</p>
+                            </div>
+                            <span class="material-symbols-outlined text-on-surface-variant">apartment</span>
+                        </div>
+                        <p class="text-xs text-on-surface-variant mt-3 font-medium">12 countries</p>
+                    </div>
+                </div>
+
+                <!-- Two column layout -->
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- Recent Activity -->
+                    <div class="lg:col-span-2 bg-surface-container rounded-2xl overflow-hidden">
+                        <div class="px-5 py-4">
+                            <h2 class="text-lg font-medium text-on-surface">Recent Activity</h2>
+                        </div>
+                        <div class="divide-y divide-surface-dim/30">
+                            <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                                <span class="material-symbols-outlined text-ubt-green">person_add</span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-on-surface">Dr. Fatou Diallo joined as Fellow</p>
+                                    <p class="text-xs text-on-surface-variant">Added to BIGSAS section</p>
+                                </div>
+                                <span class="text-xs text-on-surface-variant whitespace-nowrap">2h ago</span>
+                            </div>
+                            <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                                <span class="material-symbols-outlined text-azure">work</span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-on-surface">Project "Climate Adaptation" updated</p>
+                                    <p class="text-xs text-on-surface-variant">Status changed to In Progress</p>
+                                </div>
+                                <span class="text-xs text-on-surface-variant whitespace-nowrap">4h ago</span>
+                            </div>
+                            <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                                <span class="material-symbols-outlined text-raspberry">event</span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-on-surface">Workshop "Digital Humanities" scheduled</p>
+                                    <p class="text-xs text-on-surface-variant">March 15, 2026 at Main Hall</p>
+                                </div>
+                                <span class="text-xs text-on-surface-variant whitespace-nowrap">6h ago</span>
+                            </div>
+                            <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                                <span class="material-symbols-outlined text-ubt-green">article</span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-on-surface">New publication added by Prof. Muller</p>
+                                    <p class="text-xs text-on-surface-variant">Journal of African Studies Vol. 42</p>
+                                </div>
+                                <span class="text-xs text-on-surface-variant whitespace-nowrap">1d ago</span>
+                            </div>
+                            <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                                <span class="material-symbols-outlined text-azure">apartment</span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-on-surface">University of Lagos partnership confirmed</p>
+                                    <p class="text-xs text-on-surface-variant">New institutional agreement signed</p>
+                                </div>
+                                <span class="text-xs text-on-surface-variant whitespace-nowrap">1d ago</span>
+                            </div>
+                            <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                                <span class="material-symbols-outlined text-raspberry">person</span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-on-surface">Prof. Kwame Asante profile updated</p>
+                                    <p class="text-xs text-on-surface-variant">Contact information revised</p>
+                                </div>
+                                <span class="text-xs text-on-surface-variant whitespace-nowrap">2d ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Sections -->
+                    <div class="bg-surface-container rounded-2xl p-5">
+                        <h2 class="text-lg font-medium text-on-surface mb-4">Research Sections</h2>
+                        <div class="flex flex-wrap gap-2" x-data="{ selected: 'all' }">
+                            <button @click="selected = 'all'" :class="selected === 'all' ? 'bg-primary-container text-on-surface' : 'bg-transparent border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium flex items-center gap-1.5 transition-colors">
+                                <span class="material-symbols-outlined text-[16px]">groups</span>
+                                All (847)
+                            </button>
+                            <button @click="selected = 'governance'" :class="selected === 'governance' ? 'bg-primary-container text-on-surface' : 'bg-transparent border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium flex items-center gap-1.5 transition-colors">
+                                Governance (142)
+                            </button>
+                            <button @click="selected = 'ecology'" :class="selected === 'ecology' ? 'bg-primary-container text-on-surface' : 'bg-transparent border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium flex items-center gap-1.5 transition-colors">
+                                Ecology (198)
+                            </button>
+                            <button @click="selected = 'culture'" :class="selected === 'culture' ? 'bg-primary-container text-on-surface' : 'bg-transparent border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium flex items-center gap-1.5 transition-colors">
+                                Culture (167)
+                            </button>
+                            <button @click="selected = 'health'" :class="selected === 'health' ? 'bg-primary-container text-on-surface' : 'bg-transparent border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium flex items-center gap-1.5 transition-colors">
+                                Health (134)
+                            </button>
+                            <button @click="selected = 'bigsas'" :class="selected === 'bigsas' ? 'bg-primary-container text-on-surface' : 'bg-transparent border border-on-surface/20 text-on-surface-variant'" class="rounded-full px-4 py-1.5 text-sm font-medium flex items-center gap-1.5 transition-colors">
+                                BIGSAS (206)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="bg-surface-container rounded-2xl overflow-hidden">
+                    <div class="px-5 py-4 flex items-center justify-between">
+                        <h2 class="text-lg font-medium text-on-surface">Upcoming Events</h2>
+                        <a href="events.html" class="text-sm font-medium text-ubt-green hover:text-ubt-green-500 transition-colors">View all</a>
+                    </div>
+                    <div class="divide-y divide-surface-dim/30">
+                        <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-ubt-green">calendar_today</span>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-on-surface font-medium">Annual Cluster Conference 2026</p>
+                                <p class="text-xs text-on-surface-variant">Main Auditorium, University of Bayreuth</p>
+                            </div>
+                            <span class="bg-primary-container text-on-surface text-xs font-medium px-3 py-1 rounded-full">Mar 10</span>
+                        </div>
+                        <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-azure">calendar_today</span>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-on-surface font-medium">Digital Humanities Workshop</p>
+                                <p class="text-xs text-on-surface-variant">Seminar Room B, IAS Building</p>
+                            </div>
+                            <span class="bg-secondary-container text-on-surface text-xs font-medium px-3 py-1 rounded-full">Mar 15</span>
+                        </div>
+                        <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-raspberry">calendar_today</span>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-on-surface font-medium">Guest Lecture: Prof. Adesanya</p>
+                                <p class="text-xs text-on-surface-variant">Lecture Hall 1, GW Building</p>
+                            </div>
+                            <span class="bg-tertiary-container text-on-surface text-xs font-medium px-3 py-1 rounded-full">Mar 22</span>
+                        </div>
+                        <div class="flex items-center gap-4 px-5 py-3 hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-ubt-green">calendar_today</span>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-on-surface font-medium">BIGSAS Doctoral Colloquium</p>
+                                <p class="text-xs text-on-surface-variant">Conference Room, BIGSAS Building</p>
+                            </div>
+                            <span class="bg-primary-container text-on-surface text-xs font-medium px-3 py-1 rounded-full">Apr 02</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- FAB -->
+        <a href="#" class="fixed bottom-24 md:bottom-8 right-6 w-14 h-14 bg-ubt-green rounded-3xl flex items-center justify-center shadow-lg hover:shadow-xl hover:bg-ubt-green-500 transition-all z-40">
+            <span class="material-symbols-outlined text-white text-[28px]">add</span>
+        </a>
+
+        <!-- Bottom Navigation (Mobile) -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container z-30 border-t border-surface-dim/30">
+            <div class="flex items-center justify-around py-2">
+                <a href="dashboard.html" class="flex flex-col items-center gap-0.5 nav-item-active">
+                    <div class="w-16 h-8 rounded-full bg-primary-container flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface text-[22px]">dashboard</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface">Dashboard</span>
+                </a>
+                <a href="listing.html" class="flex flex-col items-center gap-0.5">
+                    <div class="w-16 h-8 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[22px]">person</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface-variant">Persons</span>
+                </a>
+                <a href="projects.html" class="flex flex-col items-center gap-0.5">
+                    <div class="w-16 h-8 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[22px]">work</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface-variant">Projects</span>
+                </a>
+                <a href="events.html" class="flex flex-col items-center gap-0.5">
+                    <div class="w-16 h-8 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[22px]">event</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface-variant">Events</span>
+                </a>
+                <a href="institutions.html" class="flex flex-col items-center gap-0.5">
+                    <div class="w-16 h-8 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-[22px]">apartment</span>
+                    </div>
+                    <span class="text-[11px] font-medium text-on-surface-variant">Institutions</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

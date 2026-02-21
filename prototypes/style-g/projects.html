@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Cluster Management</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 400: "#0d9462", 500: "#007b4b" },
+        "azure": { DEFAULT: "#008f9c", 400: "#008f9c" },
+        "raspberry": { DEFAULT: "#bd62a0", 400: "#bd62a0" },
+        "swiss-red": { DEFAULT: "#ff0000", 400: "#ff0000", 500: "#cc0000" },
+      },
+      fontFamily: {
+        body: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+        display: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+      },
+    }
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+  .mono { font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace; }
+</style>
+</head>
+<body class="bg-white text-black antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <nav class="w-52 flex-shrink-0 border-r border-black py-12 px-6 flex flex-col justify-between">
+    <div>
+      <a href="../index.html" class="block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-12 hover:text-black">All Prototypes</a>
+      <ul class="space-y-4">
+        <li class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5"></span>
+          <a href="dashboard.html" class="text-xs uppercase tracking-[0.15em] text-gray-500 hover:text-black">Dashboard</a>
+        </li>
+        <li>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5"></span>
+            <a href="listing.html" class="text-xs uppercase tracking-[0.15em] text-gray-500 hover:text-black">Persons</a>
+          </div>
+          <ul class="ml-5 mt-2 space-y-1.5">
+            <li><span class="text-[10px] text-gray-400 hover:text-black cursor-pointer">Employees</span></li>
+            <li><span class="text-[10px] text-gray-400 hover:text-black cursor-pointer">Cluster members</span></li>
+            <li><span class="text-[10px] text-gray-400 hover:text-black cursor-pointer">BIGSAS members</span></li>
+            <li><span class="text-[10px] text-gray-400 hover:text-black cursor-pointer">Fellows</span></li>
+            <li><span class="text-[10px] text-gray-400 hover:text-black cursor-pointer">Guests</span></li>
+          </ul>
+        </li>
+        <li>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 bg-swiss-red rounded-full"></span>
+            <a href="projects.html" class="text-xs uppercase tracking-[0.15em] font-medium text-black">Projects</a>
+          </div>
+          <ul class="ml-5 mt-2 space-y-1.5">
+            <li><span class="text-[10px] text-gray-400 hover:text-black cursor-pointer">Research sections</span></li>
+          </ul>
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5"></span>
+          <span class="text-xs uppercase tracking-[0.15em] text-gray-500 hover:text-black cursor-pointer">Publications</span>
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5"></span>
+          <a href="events.html" class="text-xs uppercase tracking-[0.15em] text-gray-500 hover:text-black">Events</a>
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5"></span>
+          <span class="text-xs uppercase tracking-[0.15em] text-gray-500 hover:text-black cursor-pointer">Countries</span>
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5"></span>
+          <span class="text-xs uppercase tracking-[0.15em] text-gray-500 hover:text-black cursor-pointer">Locations</span>
+        </li>
+        <li>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5"></span>
+            <a href="institutions.html" class="text-xs uppercase tracking-[0.15em] text-gray-500 hover:text-black">Institutions</a>
+          </div>
+          <ul class="ml-5 mt-2 space-y-1.5">
+            <li><span class="text-[10px] text-gray-400 hover:text-black cursor-pointer">ACC</span></li>
+          </ul>
+        </li>
+        <li class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5"></span>
+          <span class="text-xs uppercase tracking-[0.15em] text-gray-500 hover:text-black cursor-pointer">Filtered Views</span>
+        </li>
+        <li class="mt-6 pt-4 border-t border-gray-200 flex items-center gap-2">
+          <span class="w-1.5 h-1.5"></span>
+          <span class="text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-black cursor-pointer">Administration</span>
+        </li>
+      </ul>
+    </div>
+    <div class="text-[10px] uppercase tracking-[0.15em] text-gray-300">
+      Style G
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-1 py-12 px-16">
+
+    <!-- Header -->
+    <div class="mb-4">
+      <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">Cluster Management</p>
+      <h1 class="text-xs uppercase tracking-[0.3em] text-gray-500">Projects</h1>
+    </div>
+    <p class="text-5xl font-black leading-none mb-8">23</p>
+
+    <!-- Thin Rule -->
+    <div class="h-px bg-black mb-12"></div>
+
+    <!-- Projects Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-black">
+            <th class="text-left text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3 pr-4">Project ID</th>
+            <th class="text-left text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3 pr-4">Title</th>
+            <th class="text-left text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3 pr-4">Directors</th>
+            <th class="text-left text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3 pr-4">Duration</th>
+            <th class="text-left text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3 pr-4">Report deadline</th>
+            <th class="text-center text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3 pr-4">Report requested</th>
+            <th class="text-center text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3 pr-4">Report submitted</th>
+            <th class="text-right text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3 pr-4">Requested</th>
+            <th class="text-right text-xs uppercase tracking-[0.15em] text-gray-400 font-normal pb-3">Approved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">SWI-001</td>
+            <td class="py-4 pr-4 text-sm font-medium">Sahel Water Initiative</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Dr. Amina Osei</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2024-01 &mdash; 2027-12</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2026-03-31</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;2,500,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;2,400,000</td>
+          </tr>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">RFS-002</td>
+            <td class="py-4 pr-4 text-sm font-medium">Rural Food Systems Ghana</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Dr. Samuel Mensah</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2023-06 &mdash; 2026-05</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2026-06-30</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;1,900,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;1,850,000</td>
+          </tr>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">DHA-003</td>
+            <td class="py-4 pr-4 text-sm font-medium">Digital Humanities Africa</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Prof. Kenji Watanabe</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2025-01 &mdash; 2028-12</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2026-12-31</td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;3,400,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;3,200,000</td>
+          </tr>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">UGE-004</td>
+            <td class="py-4 pr-4 text-sm font-medium">Urban Governance in East Africa</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Dr. Jean-Pierre Habimana</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2024-09 &mdash; 2027-08</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2026-09-30</td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;1,700,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;1,600,000</td>
+          </tr>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">LDB-005</td>
+            <td class="py-4 pr-4 text-sm font-medium">Language Documentation: Bantu Dialects</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Dr. Fatou Diallo</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2025-03 &mdash; 2028-02</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2027-03-31</td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;1,050,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;980,000</td>
+          </tr>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">CMP-006</td>
+            <td class="py-4 pr-4 text-sm font-medium">Climate Migration Patterns</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Dr. Thandiwe Ndlovu</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2026-06 &mdash; 2029-05</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2027-06-30</td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;2,200,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;2,100,000</td>
+          </tr>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">PHN-007</td>
+            <td class="py-4 pr-4 text-sm font-medium">Pan-African Health Networks</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Dr. Ingrid M&uuml;ller</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2026-09 &mdash; 2029-08</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2027-09-30</td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;1,800,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;1,750,000</td>
+          </tr>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">AAM-008</td>
+            <td class="py-4 pr-4 text-sm font-medium">African Art Markets &amp; Global Trade</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Dr. Kwame Asante</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2027-01 &mdash; 2029-12</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2028-01-31</td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;950,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;890,000</td>
+          </tr>
+          <tr class="border-b border-gray-200">
+            <td class="py-4 pr-4 text-sm mono text-gray-500">RET-009</td>
+            <td class="py-4 pr-4 text-sm font-medium">Renewable Energy Transitions Sahel</td>
+            <td class="py-4 pr-4 text-sm text-gray-500">Prof. Aisha Mohammed</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2026-10 &mdash; 2030-09</td>
+            <td class="py-4 pr-4 text-sm mono text-gray-500">2027-10-31</td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-center"></td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;4,800,000</td>
+            <td class="py-4 text-sm text-right mono font-bold">&euro;4,500,000</td>
+          </tr>
+          <tr class="border-b border-gray-200 text-gray-400">
+            <td class="py-4 pr-4 text-sm mono">WTN-010</td>
+            <td class="py-4 pr-4 text-sm">West African Trade Networks</td>
+            <td class="py-4 pr-4 text-sm">Dr. Amina Osei</td>
+            <td class="py-4 pr-4 text-sm mono">2020-01 &mdash; 2023-12</td>
+            <td class="py-4 pr-4 text-sm mono">2024-01-31</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;1,300,000</td>
+            <td class="py-4 text-sm text-right mono">&euro;1,200,000</td>
+          </tr>
+          <tr class="border-b border-gray-200 text-gray-400">
+            <td class="py-4 pr-4 text-sm mono">OHA-011</td>
+            <td class="py-4 pr-4 text-sm">Oral History Archives Nigeria</td>
+            <td class="py-4 pr-4 text-sm">Prof. Oluwaseun Adeyemi</td>
+            <td class="py-4 pr-4 text-sm mono">2019-06 &mdash; 2023-05</td>
+            <td class="py-4 pr-4 text-sm mono">2023-06-30</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;850,000</td>
+            <td class="py-4 text-sm text-right mono">&euro;780,000</td>
+          </tr>
+          <tr class="border-b border-gray-200 text-gray-400">
+            <td class="py-4 pr-4 text-sm mono">GLR-012</td>
+            <td class="py-4 pr-4 text-sm">Gender &amp; Land Rights in Southern Africa</td>
+            <td class="py-4 pr-4 text-sm">Dr. Thandiwe Ndlovu</td>
+            <td class="py-4 pr-4 text-sm mono">2021-03 &mdash; 2024-02</td>
+            <td class="py-4 pr-4 text-sm mono">2024-03-31</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-center">&#10003;</td>
+            <td class="py-4 pr-4 text-sm text-right mono">&euro;1,500,000</td>
+            <td class="py-4 text-sm text-right mono">&euro;1,450,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persons | Africa Multiple — Risograph</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --pink: #ff0066;
+      --teal: #008080;
+      --black: #1a1a1a;
+      --paper: #f5f0e8;
+      --overprint: #4a0040;
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: var(--paper);
+      color: var(--black);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      min-height: 100vh;
+    }
+
+    .site-header {
+      background: var(--black);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+    }
+    .site-title {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--pink);
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      border-right: 2px solid #333;
+      display: flex;
+      align-items: center;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      list-style: none;
+      flex: 1;
+    }
+    .nav-links li { position: relative; }
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      transition: color 0.15s, background 0.15s;
+      height: 100%;
+    }
+    .nav-links a:hover { color: #fff; background: #333; }
+    .nav-links a.active { color: var(--pink); background: #2a2a2a; }
+    .nav-links .has-sub:hover .sub-nav { display: flex; }
+    .sub-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--black);
+      border: 2px solid #333;
+      flex-direction: column;
+      min-width: 180px;
+      z-index: 200;
+    }
+    .sub-nav a {
+      padding: 0.5rem 1rem;
+      font-size: 0.65rem;
+      border-bottom: 1px solid #333;
+    }
+    .sub-nav a:last-child { border-bottom: none; }
+
+    .halftone { position: relative; }
+    .halftone::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--black) 1px, transparent 1px);
+      background-size: 4px 4px;
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    .misregister {
+      text-shadow: 2px 1px 0 rgba(255,0,102,0.3), -1px -1px 0 rgba(0,128,128,0.3);
+    }
+
+    .ink-stamp {
+      border: 2px solid currentColor;
+      transform: rotate(-2deg);
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .ink-stamp:hover {
+      background: var(--black);
+      color: var(--paper);
+    }
+    .ink-stamp.active {
+      background: var(--pink);
+      color: #fff;
+      border-color: var(--pink);
+    }
+
+    @keyframes stampIn {
+      from { opacity: 0; transform: scale(1.3) rotate(-5deg); }
+      to { opacity: 1; transform: scale(1) rotate(-2deg); }
+    }
+    @keyframes typeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      border-bottom: 3px solid var(--black);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .page-title {
+      font-family: 'Darker Grotesque', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1;
+      transform: rotate(-0.5deg);
+    }
+    .page-meta {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+      margin-top: 0.5rem;
+    }
+
+    /* FILTERS */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .filter-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+
+    /* SEARCH */
+    .search-bar {
+      display: flex;
+      margin-bottom: 1.5rem;
+    }
+    .search-bar input {
+      flex: 1;
+      border: 2px solid var(--black);
+      background: transparent;
+      padding: 0.6rem 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      outline: none;
+    }
+    .search-bar input:focus { border-color: var(--pink); }
+    .search-bar button {
+      background: var(--black);
+      color: var(--paper);
+      border: 2px solid var(--black);
+      padding: 0.6rem 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-bar button:hover { background: var(--pink); border-color: var(--pink); }
+
+    /* TABLE */
+    .table-wrap {
+      overflow-x: auto;
+      border: 3px solid var(--black);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      min-width: 900px;
+    }
+    thead { background: var(--black); color: var(--paper); }
+    thead th {
+      padding: 0.75rem 0.6rem;
+      text-align: left;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      white-space: nowrap;
+      border-right: 1px solid #333;
+    }
+    thead th:last-child { border-right: none; }
+    tbody tr {
+      border-bottom: 1px solid rgba(26,26,26,0.15);
+      transition: background 0.1s;
+    }
+    tbody tr:nth-child(odd) { background: rgba(255,0,102,0.02); }
+    tbody tr:nth-child(even) { background: rgba(0,128,128,0.02); }
+    tbody tr:hover { background: rgba(255,0,102,0.08); }
+    tbody td {
+      padding: 0.6rem;
+      vertical-align: top;
+      border-right: 1px solid rgba(26,26,26,0.08);
+    }
+    tbody td:last-child { border-right: none; }
+    tbody a {
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    tbody a:hover { color: var(--pink); text-decoration: underline; }
+
+    .bool-yes {
+      color: var(--pink);
+      font-weight: 700;
+    }
+    .bool-no {
+      color: #aaa;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--teal);
+      color: #fff;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.6rem;
+      margin: 0.1rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* PAGINATION */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+      font-size: 0.7rem;
+    }
+    .pagination-pages {
+      display: flex;
+      gap: 0.25rem;
+    }
+    .pagination-pages a, .pagination-pages span {
+      display: inline-block;
+      padding: 0.4rem 0.7rem;
+      border: 2px solid var(--black);
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.15s;
+    }
+    .pagination-pages a:hover {
+      background: var(--black);
+      color: var(--paper);
+    }
+    .pagination-pages .current {
+      background: var(--pink);
+      color: #fff;
+      border-color: var(--pink);
+    }
+
+    .site-footer {
+      border-top: 3px solid var(--black);
+      padding: 1.5rem 0;
+      margin-top: 2rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .site-footer a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .header-inner { flex-direction: column; }
+      .site-title { border-right: none; border-bottom: 2px solid #333; }
+      .page-title { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="dashboard.html" class="site-title">AFRICA MULTIPLE</a>
+      <ul class="nav-links">
+        <li class="has-sub">
+          <a href="listing.html" class="active">Persons</a>
+          <div class="sub-nav">
+            <a href="listing.html">Employees</a>
+            <a href="listing.html">Cluster members</a>
+            <a href="listing.html">BIGSAS members</a>
+            <a href="listing.html">Fellows</a>
+            <a href="listing.html">Guests</a>
+          </div>
+        </li>
+        <li class="has-sub">
+          <a href="projects.html">Projects</a>
+          <div class="sub-nav">
+            <a href="projects.html">Research sections</a>
+          </div>
+        </li>
+        <li><a href="#">Publications</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="#">Countries</a></li>
+        <li><a href="#">Locations</a></li>
+        <li class="has-sub">
+          <a href="institutions.html">Institutions</a>
+          <div class="sub-nav">
+            <a href="institutions.html">ACC</a>
+          </div>
+        </li>
+        <li><a href="#">Filtered Views</a></li>
+        <li><a href="#">Administration</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-content" x-data="{
+    search: '',
+    activeFilter: 'all',
+    persons: [
+      { title: 'Dr.', last: 'Osei', first: 'Amina', middle: '', pseudo: '', gender: 'Female', bigsas: true, location: 'Bayreuth', languages: ['English','French','Twi'], thematic: ['Migration','Identity'], geographic: ['West Africa'] },
+      { title: 'Prof.', last: 'Ndlovu', first: 'Thabo', middle: 'J.', pseudo: '', gender: 'Male', bigsas: false, location: 'Bayreuth', languages: ['English','Zulu','Afrikaans'], thematic: ['Governance','Land Rights'], geographic: ['Southern Africa'] },
+      { title: 'Dr.', last: 'Diallo', first: 'Fatima', middle: '', pseudo: '', gender: 'Female', bigsas: true, location: 'Nairobi', languages: ['French','English','Bambara'], thematic: ['Arts','Performance'], geographic: ['West Africa','East Africa'] },
+      { title: '', last: 'Kimani', first: 'James', middle: 'M.', pseudo: '', gender: 'Male', bigsas: false, location: 'Bayreuth', languages: ['English','Swahili'], thematic: ['Urbanization'], geographic: ['East Africa'] },
+      { title: 'Prof.', last: 'Mbeki', first: 'Zanele', middle: '', pseudo: '', gender: 'Female', bigsas: true, location: 'Moi University', languages: ['English','Xhosa'], thematic: ['Education','Knowledge'], geographic: ['Southern Africa'] },
+      { title: 'Dr.', last: 'Mensah', first: 'Kofi', middle: '', pseudo: '', gender: 'Male', bigsas: true, location: 'Accra', languages: ['English','Akan','French'], thematic: ['Religion','Moralities'], geographic: ['West Africa'] },
+      { title: '', last: 'Abdi', first: 'Halima', middle: '', pseudo: '', gender: 'Female', bigsas: false, location: 'Bayreuth', languages: ['English','Somali','Arabic'], thematic: ['Migration','Conflict'], geographic: ['East Africa','North Africa'] },
+      { title: 'Prof.', last: 'Okoro', first: 'Chidi', middle: 'N.', pseudo: '', gender: 'Male', bigsas: false, location: 'Bayreuth', languages: ['English','Igbo'], thematic: ['Literature','Aesthetics'], geographic: ['West Africa'] },
+      { title: 'Dr.', last: 'Afolabi', first: 'Yemi', middle: '', pseudo: '', gender: 'Male', bigsas: true, location: 'Eldoret', languages: ['English','Yoruba'], thematic: ['Digital Media','Mobility'], geographic: ['West Africa'] },
+      { title: '', last: 'Traore', first: 'Awa', middle: '', pseudo: '', gender: 'Female', bigsas: true, location: 'Bayreuth', languages: ['French','Bambara','English'], thematic: ['Agriculture','Ecology'], geographic: ['West Africa'] }
+    ],
+    get filtered() {
+      let list = this.persons;
+      if (this.activeFilter === 'bigsas') list = list.filter(p => p.bigsas);
+      if (this.activeFilter === 'bayreuth') list = list.filter(p => p.location === 'Bayreuth');
+      if (this.search) {
+        const s = this.search.toLowerCase();
+        list = list.filter(p => (p.first + ' ' + p.last).toLowerCase().includes(s));
+      }
+      return list;
+    }
+  }">
+
+    <div class="page-header halftone">
+      <h1 class="page-title misregister">Persons</h1>
+      <p class="page-meta">847 records in database &mdash; showing sample data</p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-bar">
+      <input type="text" placeholder="Search persons..." x-model="search">
+      <button>Search</button>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <span class="filter-label">Filter:</span>
+      <span class="ink-stamp" :class="{ active: activeFilter === 'all' }" @click="activeFilter = 'all'">All</span>
+      <span class="ink-stamp" :class="{ active: activeFilter === 'bigsas' }" @click="activeFilter = 'bigsas'">BIGSAS</span>
+      <span class="ink-stamp" :class="{ active: activeFilter === 'bayreuth' }" @click="activeFilter = 'bayreuth'">Bayreuth</span>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Pseudonym</th>
+            <th>Gender</th>
+            <th>BIGSAS</th>
+            <th>Location</th>
+            <th>Languages</th>
+            <th>Thematic Fields</th>
+            <th>Geographic Fields</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="(p, i) in filtered" :key="i">
+            <tr style="animation: typeIn 0.3s ease-out both" :style="'animation-delay:' + (i * 0.05) + 's'">
+              <td x-text="p.title"></td>
+              <td><a href="detail.html" x-text="p.last"></a></td>
+              <td x-text="p.first"></td>
+              <td x-text="p.middle"></td>
+              <td x-text="p.pseudo || '—'"></td>
+              <td x-text="p.gender"></td>
+              <td>
+                <span x-show="p.bigsas" class="bool-yes">YES</span>
+                <span x-show="!p.bigsas" class="bool-no">No</span>
+              </td>
+              <td x-text="p.location"></td>
+              <td>
+                <template x-for="l in p.languages" :key="l">
+                  <span class="tag" x-text="l"></span>
+                </template>
+              </td>
+              <td>
+                <template x-for="t in p.thematic" :key="t">
+                  <span class="tag" x-text="t"></span>
+                </template>
+              </td>
+              <td>
+                <template x-for="g in p.geographic" :key="g">
+                  <span class="tag" x-text="g"></span>
+                </template>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <span>Showing <span x-text="filtered.length"></span> of 847 persons</span>
+      <div class="pagination-pages">
+        <span class="current">1</span>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">...</a>
+        <a href="#">85</a>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <span>&copy; 2026 Africa Multiple Cluster of Excellence</span>
+      <a href="../index.html">&larr; Back to all prototypes</a>
+    </footer>
+
+  </main>
+
+</body>
+</html>

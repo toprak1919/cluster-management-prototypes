@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Directory — Cluster Management Blueprint</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bp-base: #1a2744;
+      --bp-line: #e8f0ff;
+      --bp-cyan: #5bb8ff;
+      --bp-gold: #ffd700;
+      --bp-red: #ff4444;
+      --bp-grid: rgba(91,184,255,0.08);
+      --bp-grid-fine: rgba(91,184,255,0.04);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      color: var(--bp-line);
+      background-color: var(--bp-base);
+      background-image:
+        linear-gradient(var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid) 1px, transparent 1px),
+        linear-gradient(var(--bp-grid-fine) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bp-grid-fine) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      min-height: 100vh;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    a { color: var(--bp-cyan); text-decoration: none; }
+    a:hover { color: var(--bp-gold); }
+
+    .sidebar {
+      width: 56px;
+      border-right: 1.5px solid rgba(232,240,255,0.2);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 16px 0; gap: 6px;
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 50; background-color: var(--bp-base);
+    }
+    .main { margin-left: 56px; padding: 32px 40px 120px; }
+
+    .section-marker {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan);
+      font-size: 12px; font-weight: 500;
+      transition: all 0.3s ease; cursor: pointer; text-decoration: none;
+    }
+    .section-marker:hover, .section-marker.active { background: var(--bp-cyan); color: var(--bp-base); }
+    .section-marker.active { border-color: var(--bp-gold); background: var(--bp-gold); color: var(--bp-base); }
+
+    .drawing-title { font-size: 20px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: var(--bp-line); margin-bottom: 4px; }
+    .drawing-subtitle { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--bp-cyan); }
+
+    .dimension-line { position: relative; border-top: 1px solid var(--bp-cyan); margin: 8px 0; }
+    .dimension-line::before, .dimension-line::after { content: ''; position: absolute; top: -4px; width: 1px; height: 9px; background: var(--bp-cyan); }
+    .dimension-line::before { left: 0; } .dimension-line::after { right: 0; }
+    .dimension-label { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--bp-cyan); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+
+    /* Filter */
+    .filter-bar {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px; padding: 10px 16px;
+      border: 1px solid rgba(232,240,255,0.15);
+    }
+    .filter-bar label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); }
+    .filter-bar input, .filter-bar select {
+      background: transparent; border: 1px solid rgba(232,240,255,0.2);
+      color: var(--bp-line); font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; padding: 4px 10px; outline: none;
+    }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--bp-cyan); }
+    .filter-bar select option { background: var(--bp-base); }
+
+    /* Spec table */
+    .spec-table-wrap {
+      border: 1px solid rgba(232,240,255,0.15);
+      overflow-x: auto;
+    }
+    .spec-table {
+      width: 100%; border-collapse: collapse; min-width: 700px;
+    }
+    .spec-table th {
+      text-transform: uppercase; letter-spacing: 1px;
+      font-size: 10px; font-weight: 500; color: var(--bp-cyan);
+      text-align: left; padding: 8px 12px;
+      border-bottom: 1.5px solid var(--bp-cyan);
+      white-space: nowrap;
+    }
+    .spec-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(232,240,255,0.08);
+      font-size: 12px;
+      vertical-align: top;
+    }
+    .spec-table tbody tr:hover { background: rgba(91,184,255,0.06); }
+    .row-num {
+      color: rgba(232,240,255,0.3); font-size: 10px;
+      text-align: right; padding-right: 8px; width: 36px;
+    }
+
+    /* ACC marker */
+    .acc-marker {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 18px; border-radius: 9px;
+      border: 1px solid var(--bp-gold); color: var(--bp-gold);
+      font-size: 9px; font-weight: 600; letter-spacing: 1px;
+    }
+
+    .tag { display: inline-block; border: 1px solid rgba(91,184,255,0.3); padding: 1px 6px; font-size: 10px; margin: 1px 2px; color: var(--bp-cyan); }
+
+    /* Summary specs */
+    .summary-row {
+      display: flex; gap: 24px; margin-bottom: 24px;
+    }
+    .summary-spec {
+      border: 1px solid rgba(232,240,255,0.2);
+      padding: 14px 18px; position: relative;
+    }
+    .summary-spec-label {
+      position: absolute; top: -8px; left: 12px;
+      background: var(--bp-base); padding: 0 6px;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--bp-cyan);
+    }
+    .summary-spec-value {
+      font-size: 24px; font-weight: 300; color: var(--bp-line); letter-spacing: 2px;
+    }
+    .summary-spec-unit {
+      font-size: 10px; color: var(--bp-cyan); text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    /* Linked persons sub */
+    .linked-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .linked-table th { text-transform: uppercase; letter-spacing: 1px; font-size: 9px; font-weight: 500; color: var(--bp-cyan); text-align: left; padding: 4px 8px; border-bottom: 1px solid rgba(91,184,255,0.2); }
+    .linked-table td { padding: 4px 8px; font-size: 11px; border-bottom: 1px solid rgba(232,240,255,0.06); }
+
+    .title-block {
+      position: fixed; bottom: 16px; right: 16px;
+      border: 1.5px solid var(--bp-line);
+      background: var(--bp-base); z-index: 40; font-size: 10px;
+    }
+    .title-block table { border-collapse: collapse; }
+    .title-block td { border: 1px solid rgba(232,240,255,0.3); padding: 3px 10px; white-space: nowrap; }
+    .title-block .tb-header { text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); font-size: 9px; }
+
+    .back-link { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(232,240,255,0.4); }
+    .back-link:hover { color: var(--bp-gold); }
+    .sidebar-item { position: relative; }
+    .sidebar-item .tooltip { display: none; position: absolute; left: 42px; top: 50%; transform: translateY(-50%); background: var(--bp-base); border: 1px solid var(--bp-cyan); padding: 3px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--bp-cyan); white-space: nowrap; z-index: 60; }
+    .sidebar-item:hover .tooltip { display: block; }
+
+    @keyframes fadeInBlueprint { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeInBlueprint 0.6s ease forwards; opacity: 0; }
+    .fade-in-1 { animation-delay: 0.1s; }
+    .fade-in-2 { animation-delay: 0.2s; }
+    .fade-in-3 { animation-delay: 0.3s; }
+    .fade-in-4 { animation-delay: 0.4s; }
+    .fade-in-5 { animation-delay: 0.5s; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 44px; }
+      .main { margin-left: 44px; padding: 20px 12px 140px; }
+      .section-marker { width: 28px; height: 28px; font-size: 10px; }
+      .drawing-title { font-size: 14px; letter-spacing: 2px; }
+      .title-block { right: 8px; bottom: 8px; }
+      .summary-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body x-data="{
+  search: '',
+  accFilter: 'all',
+  institutions: [
+    { num: '001', name: 'University of Bayreuth', acc: false, location: 'Bayreuth, Germany', persons: 124, projects: 18 },
+    { num: '002', name: 'Moi University', acc: true, location: 'Eldoret, Kenya', persons: 34, projects: 6 },
+    { num: '003', name: 'Universite Cheikh Anta Diop', acc: true, location: 'Dakar, Senegal', persons: 28, projects: 5 },
+    { num: '004', name: 'University of Lagos', acc: true, location: 'Lagos, Nigeria', persons: 31, projects: 7 },
+    { num: '005', name: 'University of Ghana', acc: true, location: 'Accra, Ghana', persons: 22, projects: 4 },
+    { num: '006', name: 'Rhodes University', acc: true, location: 'Grahamstown, South Africa', persons: 19, projects: 3 },
+    { num: '007', name: 'Addis Ababa University', acc: true, location: 'Addis Ababa, Ethiopia', persons: 16, projects: 4 },
+    { num: '008', name: 'University of Yaounde I', acc: true, location: 'Yaounde, Cameroon', persons: 14, projects: 3 },
+    { num: '009', name: 'Universite Joseph Ki-Zerbo', acc: true, location: 'Ouagadougou, Burkina Faso', persons: 11, projects: 2 },
+    { num: '010', name: 'SOAS University of London', acc: false, location: 'London, United Kingdom', persons: 8, projects: 2 },
+    { num: '011', name: 'Humboldt-Universitat zu Berlin', acc: false, location: 'Berlin, Germany', persons: 6, projects: 1 },
+    { num: '012', name: 'Lagos Institute for Advanced Study', acc: false, location: 'Lagos, Nigeria', persons: 3, projects: 1 },
+    { num: '013', name: 'University of Cape Town', acc: false, location: 'Cape Town, South Africa', persons: 9, projects: 2 },
+    { num: '014', name: 'Makerere University', acc: true, location: 'Kampala, Uganda', persons: 12, projects: 3 }
+  ],
+  get filtered() {
+    return this.institutions.filter(i => {
+      const q = this.search.toLowerCase();
+      const matchSearch = !q || i.name.toLowerCase().includes(q) || i.location.toLowerCase().includes(q);
+      const matchAcc = this.accFilter === 'all' || (this.accFilter === 'yes' ? i.acc : !i.acc);
+      return matchSearch && matchAcc;
+    });
+  },
+  get accCount() { return this.institutions.filter(i => i.acc).length; },
+  get totalPersons() { return this.institutions.reduce((s,i) => s + i.persons, 0); }
+}">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <a href="../index.html" class="back-link" style="margin-bottom: 8px; font-size: 9px; writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 2px;">PROTO</a>
+    <div style="width: 24px; border-top: 1px solid rgba(232,240,255,0.2); margin: 4px 0 8px;"></div>
+    <div class="sidebar-item"><a href="dashboard.html" class="section-marker">A</a><span class="tooltip">Site Plan</span></div>
+    <div class="sidebar-item"><a href="listing.html" class="section-marker">B</a><span class="tooltip">Occupant Register</span></div>
+    <div class="sidebar-item"><a href="detail.html" class="section-marker">C</a><span class="tooltip">Occupant Detail</span></div>
+    <div class="sidebar-item"><a href="projects.html" class="section-marker">D</a><span class="tooltip">Structural Schedule</span></div>
+    <div class="sidebar-item"><a href="events.html" class="section-marker">E</a><span class="tooltip">Assembly Schedule</span></div>
+    <div class="sidebar-item"><a href="institutions.html" class="section-marker active">F</a><span class="tooltip">Partner Directory</span></div>
+  </nav>
+
+  <div class="main">
+    <!-- Header -->
+    <div class="fade-in fade-in-1" style="margin-bottom: 24px;">
+      <div class="drawing-subtitle">Drawing No. Q-006 &mdash; Rev 01</div>
+      <div class="drawing-title">Partner Directory &mdash; Institutions</div>
+      <div class="dimension-line" style="width: 300px; margin-top: 16px;">
+        <span class="dimension-label">Partner Network</span>
+      </div>
+    </div>
+
+    <!-- Summary specs -->
+    <div class="fade-in fade-in-2 summary-row">
+      <div class="summary-spec">
+        <div class="summary-spec-label">Total Partners</div>
+        <div class="summary-spec-value" x-text="institutions.length"></div>
+        <div class="summary-spec-unit">Institutions</div>
+      </div>
+      <div class="summary-spec">
+        <div class="summary-spec-label">ACC Partners</div>
+        <div class="summary-spec-value" x-text="accCount"></div>
+        <div class="summary-spec-unit">African Cluster Centers</div>
+      </div>
+      <div class="summary-spec">
+        <div class="summary-spec-label">Linked Persons</div>
+        <div class="summary-spec-value" x-text="totalPersons"></div>
+        <div class="summary-spec-unit">Affiliated Occupants</div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="fade-in fade-in-3 filter-bar">
+      <label>Search:</label>
+      <input type="text" x-model="search" placeholder="Name or location..." style="width: 220px;">
+      <label style="margin-left: 12px;">ACC:</label>
+      <select x-model="accFilter">
+        <option value="all">ALL</option>
+        <option value="yes">ACC ONLY</option>
+        <option value="no">NON-ACC</option>
+      </select>
+      <span style="margin-left: auto; font-size: 10px; color: var(--bp-cyan); text-transform: uppercase; letter-spacing: 1px;">
+        Showing <span x-text="filtered.length" style="color: var(--bp-gold);"></span> of <span x-text="institutions.length"></span> records
+      </span>
+    </div>
+
+    <!-- Table -->
+    <div class="fade-in fade-in-4 spec-table-wrap">
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th style="width: 36px;">#</th>
+            <th>Name</th>
+            <th style="width: 60px; text-align: center;">ACC</th>
+            <th>Location</th>
+            <th style="width: 80px; text-align: center;">Persons</th>
+            <th style="width: 80px; text-align: center;">Projects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="inst in filtered" :key="inst.num">
+            <tr>
+              <td class="row-num" x-text="inst.num"></td>
+              <td x-text="inst.name" style="font-weight: 500;"></td>
+              <td style="text-align: center;">
+                <template x-if="inst.acc">
+                  <span class="acc-marker">ACC</span>
+                </template>
+                <template x-if="!inst.acc">
+                  <span style="color: rgba(232,240,255,0.3);">&mdash;</span>
+                </template>
+              </td>
+              <td x-text="inst.location"></td>
+              <td style="text-align: center;" x-text="inst.persons"></td>
+              <td style="text-align: center;" x-text="inst.projects"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Linked persons example -->
+    <div class="fade-in fade-in-5" style="margin-top: 32px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan); font-size: 10px;">F1</span>
+        <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-cyan);">Linked Persons &mdash; Moi University (Sample)</span>
+        <span class="acc-marker" style="margin-left: 8px;">ACC</span>
+      </div>
+      <div style="border: 1px solid rgba(232,240,255,0.15); padding: 0; overflow-x: auto;">
+        <table class="linked-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="detail.html">Prof. Wanjiku Kamau</a></td>
+              <td>Professor</td>
+              <td>Environmental Studies</td>
+            </tr>
+            <tr>
+              <td><a href="detail.html">Dr. James Kiprop</a></td>
+              <td>Senior Lecturer</td>
+              <td>History</td>
+            </tr>
+            <tr>
+              <td><a href="detail.html">Grace Mwangi</a></td>
+              <td>PhD Candidate</td>
+              <td>Economics</td>
+            </tr>
+            <tr>
+              <td><a href="detail.html">Dr. Sarah Wekesa</a></td>
+              <td>Research Associate</td>
+              <td>African Studies</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Linked projects example -->
+      <div style="margin-top: 16px; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--bp-cyan); color: var(--bp-cyan); font-size: 10px;">F2</span>
+        <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--bp-cyan);">Linked Projects &mdash; Moi University</span>
+      </div>
+      <div style="border: 1px solid rgba(232,240,255,0.15); padding: 0; overflow-x: auto;">
+        <table class="linked-table">
+          <thead>
+            <tr>
+              <th>Project ID</th>
+              <th>Title</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color: var(--bp-gold);">F02</td>
+              <td><a href="projects.html">Climate and Livelihood in East Africa</a></td>
+              <td>2022-06 &mdash; 2025-12</td>
+            </tr>
+            <tr>
+              <td style="color: var(--bp-gold);">D01</td>
+              <td><a href="projects.html">Migration Patterns in the Great Rift</a></td>
+              <td>2021-01 &mdash; 2024-06</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title Block -->
+  <div class="title-block">
+    <table>
+      <tr>
+        <td class="tb-header">Project</td>
+        <td colspan="3" style="font-weight: 500;">AFRICA MULTIPLE CLUSTER MANAGEMENT</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Drawing</td>
+        <td>Partner Directory</td>
+        <td class="tb-header">Rev</td>
+        <td>01</td>
+      </tr>
+      <tr>
+        <td class="tb-header">Date</td>
+        <td>2026-02-18</td>
+        <td class="tb-header">Scale</td>
+        <td>NTS</td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" class="font-body">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 100: "#a5d2d5", 200: "#7bbcc1", 300: "#4ca6af", 400: "#008f9c", 500: "#007683", 600: "#005e6b", 700: "#004754", 800: "#00313d", 900: "#001d25" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 100: "#e3bfdd", 200: "#d6a1ca", 300: "#c982b5", 400: "#bd62a0", 500: "#a54988", 600: "#8c3271", 700: "#73195b", 800: "#590043", 900: "#390027" },
+          "purple": { 50: "#ede0f1", 400: "#787acd", 500: "#5d64b5", 700: "#293a85" },
+          "leaf-green": { 50: "#e5e6cb", 400: "#788a32" },
+          "yellow": { 50: "#ebe3ca", 400: "#af7532" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>html { scroll-behavior: smooth; }</style>
+</head>
+<body class="bg-gray-50 font-body text-gray-900">
+
+  <!-- Top Nav -->
+  <nav class="bg-white border-b border-gray-200 sticky top-0 z-50" x-data="{ mobileOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 shrink-0">
+          <svg class="w-8 h-8 text-ubt-green-400" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M10 20 Q16 8 22 20" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="16" cy="14" r="3" fill="currentColor"/>
+          </svg>
+          <span class="text-lg font-semibold text-gray-900 hidden sm:inline">Africa Multiple</span>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="dashboard.html" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition">Dashboard</a>
+          <a href="listing.html" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition">Persons</a>
+          <a href="projects.html" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition">Projects</a>
+          <a href="events.html" class="px-3 py-2 rounded-lg text-sm font-medium bg-ubt-green-50 text-ubt-green-400">Events</a>
+          <a href="institutions.html" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition">Institutions</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../index.html" class="text-xs text-gray-400 hover:text-gray-600 hidden lg:inline transition">All Prototypes</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-1.5 rounded-lg hover:bg-gray-100 transition cursor-pointer" aria-label="Toggle menu">
+            <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="w-9 h-9 rounded-full bg-ubt-green-400 text-white flex items-center justify-center text-sm font-semibold">AD</div>
+        </div>
+      </div>
+      <div class="md:hidden flex gap-1 pb-3 overflow-x-auto" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 whitespace-nowrap">Dashboard</a>
+        <a href="listing.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 whitespace-nowrap">Persons</a>
+        <a href="projects.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 whitespace-nowrap">Projects</a>
+        <a href="events.html" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-ubt-green-50 text-ubt-green-400 whitespace-nowrap">Events</a>
+        <a href="institutions.html" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 whitespace-nowrap">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="{
+    view: 'calendar',
+    calMonth: 2,
+    calYear: 2026,
+    get monthName() { return ['January','February','March','April','May','June','July','August','September','October','November','December'][this.calMonth]; },
+    get daysInMonth() { return new Date(this.calYear, this.calMonth + 1, 0).getDate(); },
+    get firstDay() { return new Date(this.calYear, this.calMonth, 1).getDay(); },
+    prevMonth() { if (this.calMonth === 0) { this.calMonth = 11; this.calYear--; } else { this.calMonth--; } },
+    nextMonth() { if (this.calMonth === 11) { this.calMonth = 0; this.calYear++; } else { this.calMonth++; } },
+    eventDays: {
+      '2026-2': [28],
+      '2026-3': [15],
+      '2026-4': [3],
+      '2026-5': [22],
+      '2026-6': [10],
+      '2026-7': [20],
+      '2026-9': [18],
+      '2026-11': [25],
+    },
+    hasEvent(day) {
+      const key = this.calYear + '-' + this.calMonth + '';
+      const keyAlt = this.calYear + '-' + (this.calMonth) + '';
+      return (this.eventDays[key] || []).includes(day);
+    }
+  }">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div class="flex items-center gap-3">
+        <h1 class="text-2xl font-semibold text-gray-900">Events</h1>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">12</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- View Toggles -->
+        <div class="inline-flex rounded-lg border border-gray-300 bg-white">
+          <button @click="view = 'calendar'" :class="view === 'calendar' ? 'bg-ubt-green-400 text-white' : 'text-gray-600 hover:bg-gray-50'" class="px-3 py-1.5 text-sm font-medium rounded-l-lg transition cursor-pointer">Calendar</button>
+          <button @click="view = 'list'" :class="view === 'list' ? 'bg-ubt-green-400 text-white' : 'text-gray-600 hover:bg-gray-50'" class="px-3 py-1.5 text-sm font-medium border-l border-gray-300 transition cursor-pointer">List</button>
+          <button @click="view = 'timeline'" :class="view === 'timeline' ? 'bg-ubt-green-400 text-white' : 'text-gray-600 hover:bg-gray-50'" class="px-3 py-1.5 text-sm font-medium rounded-r-lg border-l border-gray-300 transition cursor-pointer">Timeline</button>
+        </div>
+        <a href="#" class="inline-flex items-center gap-1.5 px-4 py-2 bg-ubt-green-400 text-white text-sm font-medium rounded-lg hover:bg-ubt-green-500 transition shadow-sm cursor-pointer">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          New Event
+        </a>
+      </div>
+    </div>
+
+    <!-- Featured Upcoming Event -->
+    <div class="bg-gradient-to-r from-ubt-green-400 to-azure-400 rounded-2xl shadow-lg p-6 sm:p-8 mb-8 text-white">
+      <div class="flex flex-col lg:flex-row lg:items-center gap-6">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/20 text-white">Featured</span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/20 text-white">Conference</span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/20 text-white">Hybrid</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold mb-2">Annual Conference 2026</h2>
+          <p class="text-white/80 text-sm mb-4">Applying body: Africa Multiple Cluster of Excellence</p>
+          <div class="flex flex-wrap items-center gap-4 text-sm text-white/90">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Feb 28 &ndash; Mar 2, 2026
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              Bayreuth, Germany
+            </span>
+            <span class="flex items-center gap-1.5">Hosts: 4</span>
+            <span class="flex items-center gap-1.5">Guests: 12</span>
+          </div>
+        </div>
+        <div class="shrink-0 flex flex-col items-center">
+          <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center min-w-[100px]">
+            <p class="text-3xl font-bold">28</p>
+            <p class="text-sm font-medium text-white/80">Feb 2026</p>
+          </div>
+          <span class="mt-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white text-ubt-green-400">Upcoming</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar View -->
+    <div x-show="view === 'calendar'" x-transition>
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <!-- Month Navigation -->
+        <div class="flex items-center justify-between mb-6">
+          <button @click="prevMonth()" class="p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+            <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <h3 class="text-lg font-semibold text-gray-900" x-text="monthName + ' ' + calYear"></h3>
+          <button @click="nextMonth()" class="p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+            <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        <!-- Day Headers -->
+        <div class="grid grid-cols-7 gap-1 mb-2">
+          <template x-for="d in ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']">
+            <div class="text-center text-xs font-medium text-gray-400 py-2" x-text="d"></div>
+          </template>
+        </div>
+        <!-- Calendar Grid -->
+        <div class="grid grid-cols-7 gap-1">
+          <!-- Empty cells for offset -->
+          <template x-for="i in firstDay">
+            <div class="aspect-square"></div>
+          </template>
+          <!-- Day cells -->
+          <template x-for="day in daysInMonth" :key="day">
+            <div class="aspect-square flex flex-col items-center justify-center rounded-lg text-sm relative"
+                 :class="{
+                   'bg-ubt-green-50 font-semibold text-ubt-green-400': hasEvent(day),
+                   'text-gray-700 hover:bg-gray-50': !hasEvent(day),
+                   'ring-2 ring-ubt-green-400': (day === 18 && calMonth === 1 && calYear === 2026)
+                 }">
+              <span x-text="day"></span>
+              <div x-show="hasEvent(day)" class="w-1.5 h-1.5 rounded-full bg-ubt-green-400 mt-0.5"></div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- All Events List -->
+    <div class="space-y-3">
+
+      <!-- Section: Past Events -->
+      <div class="flex items-center gap-3 mb-4 mt-2">
+        <div class="w-2.5 h-2.5 rounded-full bg-gray-400"></div>
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Past Events</h3>
+      </div>
+
+      <!-- Event 1: Research Methodology Seminar -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden opacity-75">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-gray-100 flex flex-col items-center justify-center p-3">
+            <span class="text-2xl font-bold text-gray-500">10</span>
+            <span class="text-xs font-medium text-gray-400 uppercase">Jun 2025</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-700 hover:text-ubt-green-500 transition truncate">Research Methodology Seminar</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-500 shrink-0">Seminar</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Nairobi
+                  </span>
+                  <span>Applying body: BIGSAS</span>
+                  <span>Hosts: 2 &middot; Guests: 8</span>
+                  <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-ubt-green-50 text-ubt-green-500">Report available</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 2: Cluster General Assembly -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden opacity-75">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-gray-100 flex flex-col items-center justify-center p-3">
+            <span class="text-2xl font-bold text-gray-500">15</span>
+            <span class="text-xs font-medium text-gray-400 uppercase">Sep 2025</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-700 hover:text-ubt-green-500 transition truncate">Cluster General Assembly</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-raspberry-50 text-raspberry-500 shrink-0">Conference</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-500 shrink-0">Hybrid</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Bayreuth
+                  </span>
+                  <span>Applying body: Cluster of Excellence</span>
+                  <span>Hosts: 5 &middot; Guests: 20</span>
+                  <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-ubt-green-50 text-ubt-green-500">Report available</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 3: Annual Conference 2025 -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden opacity-75">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-gray-100 flex flex-col items-center justify-center p-3">
+            <span class="text-2xl font-bold text-gray-500">20</span>
+            <span class="text-xs font-medium text-gray-400 uppercase">Nov 2025</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-700 hover:text-ubt-green-500 transition truncate">Annual Conference 2025</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-ubt-green-50 text-ubt-green-500 shrink-0">Conference</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Bayreuth
+                  </span>
+                  <span>Nov 20 &ndash; Nov 22, 2025</span>
+                  <span>Applying body: Cluster of Excellence</span>
+                  <span>Hosts: 6 &middot; Guests: 35</span>
+                  <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-ubt-green-50 text-ubt-green-500">Report available</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 4: New Year Reception -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden opacity-75">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-gray-100 flex flex-col items-center justify-center p-3">
+            <span class="text-2xl font-bold text-gray-500">18</span>
+            <span class="text-xs font-medium text-gray-400 uppercase">Jan 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-700 hover:text-ubt-green-500 transition truncate">New Year Reception</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-yellow-50 text-yellow-400 shrink-0">Workshop</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-400">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Bayreuth
+                  </span>
+                  <span>Applying body: Cluster of Excellence</span>
+                  <span>Hosts: 3 &middot; Guests: 15</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Upcoming Events -->
+      <div class="flex items-center gap-3 mb-4 mt-8">
+        <div class="w-2.5 h-2.5 rounded-full bg-ubt-green-400"></div>
+        <h3 class="text-sm font-semibold text-ubt-green-500 uppercase tracking-wider">Upcoming Events</h3>
+      </div>
+
+      <!-- Event 5: Annual Conference 2026 -->
+      <div class="bg-white rounded-xl shadow-sm border-2 border-ubt-green-200 hover:shadow-md transition-all overflow-hidden">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-ubt-green-400 flex flex-col items-center justify-center p-3 text-white">
+            <span class="text-2xl font-bold">28</span>
+            <span class="text-xs font-medium uppercase">Feb 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-900 hover:text-ubt-green-500 transition truncate">Annual Conference 2026</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-ubt-green-50 text-ubt-green-500 shrink-0">Conference</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-500 shrink-0">Hybrid</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Bayreuth
+                  </span>
+                  <span>Feb 28 &ndash; Mar 2, 2026</span>
+                  <span>Applying body: Cluster of Excellence</span>
+                  <span>Hosts: 4 &middot; Guests: 12</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 shrink-0">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 6: Fellows Workshop -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-azure-400 flex flex-col items-center justify-center p-3 text-white">
+            <span class="text-2xl font-bold">15</span>
+            <span class="text-xs font-medium uppercase">Mar 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-900 hover:text-ubt-green-500 transition truncate">Fellows Workshop</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-500 shrink-0">Workshop</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Accra
+                  </span>
+                  <span>Mar 15 &ndash; Mar 17, 2026</span>
+                  <span>Applying body: BIGSAS</span>
+                  <span>Hosts: 3 &middot; Guests: 10</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 shrink-0">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 7: Public Lecture -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-raspberry-400 flex flex-col items-center justify-center p-3 text-white">
+            <span class="text-2xl font-bold">3</span>
+            <span class="text-xs font-medium uppercase">Apr 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-900 hover:text-ubt-green-500 transition truncate">Public Lecture: Futures of African Studies</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-raspberry-50 text-raspberry-500 shrink-0">Conference</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-500 shrink-0">Online</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span>Applying body: Mobilities Section</span>
+                  <span>Hosts: 1 &middot; Guests: 3</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 shrink-0">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 8: Doctoral Workshop -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-purple-400 flex flex-col items-center justify-center p-3 text-white">
+            <span class="text-2xl font-bold">22</span>
+            <span class="text-xs font-medium uppercase">May 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-900 hover:text-ubt-green-500 transition truncate">Doctoral Workshop</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-500 shrink-0">Workshop</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Cape Town
+                  </span>
+                  <span>May 22 &ndash; May 24, 2026</span>
+                  <span>Applying body: BIGSAS</span>
+                  <span>Hosts: 2 &middot; Guests: 6</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 shrink-0">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 9: Summer School -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-ubt-green-300 flex flex-col items-center justify-center p-3 text-white">
+            <span class="text-2xl font-bold">10</span>
+            <span class="text-xs font-medium uppercase">Jun 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-900 hover:text-ubt-green-500 transition truncate">Summer School</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-ubt-green-50 text-ubt-green-500 shrink-0">Workshop</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-500 shrink-0">Hybrid</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Bayreuth
+                  </span>
+                  <span>Jun 10 &ndash; Jun 20, 2026</span>
+                  <span>Applying body: Cluster of Excellence</span>
+                  <span>Hosts: 4 &middot; Guests: 15</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 shrink-0">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 10: Research Section Retreat -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-azure-300 flex flex-col items-center justify-center p-3 text-white">
+            <span class="text-2xl font-bold">20</span>
+            <span class="text-xs font-medium uppercase">Jul 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-900 hover:text-ubt-green-500 transition truncate">Research Section Retreat</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-azure-50 text-azure-500 shrink-0">Workshop</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Mombasa
+                  </span>
+                  <span>Jul 20 &ndash; Jul 23, 2026</span>
+                  <span>Applying body: Moralities Section</span>
+                  <span>Hosts: 2 &middot; Guests: 5</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 shrink-0">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 11: BIGSAS Graduation -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-raspberry-300 flex flex-col items-center justify-center p-3 text-white">
+            <span class="text-2xl font-bold">18</span>
+            <span class="text-xs font-medium uppercase">Sep 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-900 hover:text-ubt-green-500 transition truncate">BIGSAS Graduation Ceremony</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-raspberry-50 text-raspberry-500 shrink-0">Conference</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Bayreuth
+                  </span>
+                  <span>Applying body: BIGSAS</span>
+                  <span>Hosts: 3 &middot; Guests: 25</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 shrink-0">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 12: Annual Conference 2027 Planning -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden">
+        <div class="flex items-stretch">
+          <div class="w-20 sm:w-24 shrink-0 bg-purple-500 flex flex-col items-center justify-center p-3 text-white">
+            <span class="text-2xl font-bold">25</span>
+            <span class="text-xs font-medium uppercase">Nov 2026</span>
+          </div>
+          <div class="flex-1 p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <a href="#" class="font-semibold text-gray-900 hover:text-ubt-green-500 transition truncate">Annual Conference 2027 Planning</a>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-500 shrink-0">Workshop</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-500 shrink-0">Online</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span>Applying body: Cluster of Excellence</span>
+                  <span>Hosts: 2 &middot; Guests: 4</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 shrink-0">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

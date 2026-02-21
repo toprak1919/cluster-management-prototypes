@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institutions - Africa Multiple Research Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          charcoal: '#1a1a2e',
+          coral: { DEFAULT: '#e94560', 50: '#fef2f4', 100: '#fde6ea', 200: '#f9c0cb', 400: '#e94560', 500: '#d6334e', 600: '#b91d3a' },
+          'ubt-green': { DEFAULT: '#0d9462', 50: '#cceadc', 400: '#0d9462' },
+          azure: { DEFAULT: '#008f9c', 50: '#cee8e9', 400: '#008f9c' },
+          raspberry: { DEFAULT: '#bd62a0', 50: '#f0ddef', 400: '#bd62a0' },
+          purple: { DEFAULT: '#787acd', 50: '#ede0f1', 400: '#787acd' },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    @keyframes heroFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-fade { animation: heroFadeIn 0.8s ease-out forwards; }
+    .hero-fade-d1 { animation: heroFadeIn 0.8s ease-out 0.1s forwards; opacity: 0; }
+    .hero-fade-d2 { animation: heroFadeIn 0.8s ease-out 0.2s forwards; opacity: 0; }
+    .hero-fade-d3 { animation: heroFadeIn 0.8s ease-out 0.3s forwards; opacity: 0; }
+    .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+    .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="bg-white text-gray-900 min-h-screen" x-data="{ scrolled: false, mobileOpen: false }" @scroll.window="scrolled = (window.scrollY > 50)">
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+       :class="scrolled ? 'bg-white shadow-md' : 'bg-transparent'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="dashboard.html" class="flex items-center gap-2">
+          <span class="text-lg font-bold tracking-tight transition-colors duration-300"
+                :class="scrolled ? 'text-charcoal' : 'text-white'">AFRICA MULTIPLE</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="dashboard.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Home</a>
+          <a href="listing.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Persons</a>
+          <a href="projects.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Projects</a>
+          <a href="events.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-300 hover:text-white hover:bg-white/10'">Events</a>
+          <a href="institutions.html" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+             :class="scrolled ? 'text-coral' : 'text-white bg-white/10'">Institutions</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../index.html" class="text-xs transition-colors duration-300 hidden lg:inline"
+             :class="scrolled ? 'text-gray-400 hover:text-gray-600' : 'text-gray-400 hover:text-white'">All Prototypes</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-2 rounded-lg transition-colors duration-300 cursor-pointer"
+                  :class="scrolled ? 'text-gray-600 hover:bg-gray-100' : 'text-white hover:bg-white/10'">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden pb-3 space-y-1" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Home</a>
+        <a href="listing.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Persons</a>
+        <a href="projects.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Projects</a>
+        <a href="events.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-gray-600' : 'text-gray-300'">Events</a>
+        <a href="institutions.html" class="block px-3 py-2 rounded-lg text-sm font-medium" :class="scrolled ? 'text-coral' : 'text-white bg-white/10'">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="bg-charcoal relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute bottom-1/4 right-1/3 w-96 h-96 bg-azure rounded-full filter blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 text-center">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-light text-white tracking-tight hero-fade">
+        Global Research Network
+      </h1>
+      <p class="mt-4 text-lg text-gray-400 hero-fade-d1">Partner institutions spanning five continents</p>
+
+      <!-- Animated Counters -->
+      <div class="mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto hero-fade-d2"
+           x-data="{ shown: false, institutions: 0, countries: 0, continents: 0 }"
+           x-intersect:enter="if(!shown){ shown=true;
+             let a=setInterval(()=>{ if(institutions>=156){clearInterval(a);institutions=156}else{institutions+=Math.ceil((156-institutions)/10)} }, 30);
+             let b=setInterval(()=>{ if(countries>=38){clearInterval(b);countries=38}else{countries+=1} }, 50);
+             let c=setInterval(()=>{ if(continents>=5){clearInterval(c);continents=5}else{continents+=1} }, 200);
+           }">
+        <div>
+          <div class="text-4xl sm:text-5xl font-light text-white" x-text="institutions">0</div>
+          <div class="mt-2 text-sm text-gray-500 uppercase tracking-wider">Institutions</div>
+        </div>
+        <div>
+          <div class="text-4xl sm:text-5xl font-light text-white" x-text="countries">0</div>
+          <div class="mt-2 text-sm text-gray-500 uppercase tracking-wider">Countries</div>
+        </div>
+        <div>
+          <div class="text-4xl sm:text-5xl font-light text-white" x-text="continents">0</div>
+          <div class="mt-2 text-sm text-gray-500 uppercase tracking-wider">Continents</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Africa -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="scroll-reveal flex items-center gap-4 mb-10" :class="shown && 'visible'">
+        <h2 class="text-3xl font-semibold text-charcoal">Africa</h2>
+        <span class="px-3 py-1 text-sm font-medium bg-coral-50 text-coral rounded-full">98 institutions</span>
+        <div class="flex-1 h-px bg-gray-200"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.05s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-ubt-green/10 rounded-xl flex items-center justify-center text-sm font-bold text-ubt-green">UG</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">University of Ghana</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Accra, Ghana</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>45 members</span>
+                <span>6 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2018</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.1s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-raspberry/10 rounded-xl flex items-center justify-center text-sm font-bold text-raspberry">UN</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">University of Nairobi</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Nairobi, Kenya</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>38 members</span>
+                <span>5 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2018</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.15s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-purple/10 rounded-xl flex items-center justify-center text-sm font-bold text-purple">UL</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">University of Lagos</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Lagos, Nigeria</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>32 members</span>
+                <span>4 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2019</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-azure/10 rounded-xl flex items-center justify-center text-sm font-bold text-azure">RU</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">Rhodes University</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Makhanda, South Africa</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>28 members</span>
+                <span>3 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2019</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.25s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-coral-50 rounded-xl flex items-center justify-center text-sm font-bold text-coral">MU</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">Moi University</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Eldoret, Kenya</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>22 members</span>
+                <span>3 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2018</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.3s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-ubt-green/10 rounded-xl flex items-center justify-center text-sm font-bold text-ubt-green">CD</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">Cheikh Anta Diop University</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Dakar, Senegal</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>18 members</span>
+                <span>2 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2020</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.35s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-purple/10 rounded-xl flex items-center justify-center text-sm font-bold text-purple">AA</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">Addis Ababa University</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Addis Ababa, Ethiopia</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>15 members</span>
+                <span>2 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2020</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.4s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-raspberry/10 rounded-xl flex items-center justify-center text-sm font-bold text-raspberry">UB</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">University of Bamako</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Bamako, Mali</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>12 members</span>
+                <span>2 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2021</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Europe (Charcoal) -->
+  <section class="py-20 bg-charcoal">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="scroll-reveal flex items-center gap-4 mb-10" :class="shown && 'visible'">
+        <h2 class="text-3xl font-light text-white">Europe</h2>
+        <span class="px-3 py-1 text-sm font-medium bg-coral/20 text-coral rounded-full">32 institutions</span>
+        <div class="flex-1 h-px bg-white/20"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="scroll-reveal card-hover bg-white/5 border border-white/10 rounded-xl p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.05s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-sm font-bold text-white">UB</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-white text-sm truncate">University of Bayreuth</h4>
+              <p class="text-xs text-gray-500 mt-0.5">Bayreuth, Germany</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
+                <span>120 members</span>
+                <span>18 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-white/10 text-gray-400 rounded-full">Since 2018 (Host)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white/5 border border-white/10 rounded-xl p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.1s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-sm font-bold text-white">SO</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-white text-sm truncate">SOAS University of London</h4>
+              <p class="text-xs text-gray-500 mt-0.5">London, UK</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
+                <span>14 members</span>
+                <span>3 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-white/10 text-gray-400 rounded-full">Since 2019</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white/5 border border-white/10 rounded-xl p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.15s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-sm font-bold text-white">UL</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-white text-sm truncate">Leiden University</h4>
+              <p class="text-xs text-gray-500 mt-0.5">Leiden, Netherlands</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
+                <span>10 members</span>
+                <span>2 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-white/10 text-gray-400 rounded-full">Since 2020</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white/5 border border-white/10 rounded-xl p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-sm font-bold text-white">SP</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-white text-sm truncate">Sciences Po Paris</h4>
+              <p class="text-xs text-gray-500 mt-0.5">Paris, France</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-500">
+                <span>8 members</span>
+                <span>2 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-white/10 text-gray-400 rounded-full">Since 2021</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Americas (White) -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="scroll-reveal flex items-center gap-4 mb-10" :class="shown && 'visible'">
+        <h2 class="text-3xl font-semibold text-charcoal">Americas</h2>
+        <span class="px-3 py-1 text-sm font-medium bg-coral-50 text-coral rounded-full">18 institutions</span>
+        <div class="flex-1 h-px bg-gray-200"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.05s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-coral-50 rounded-xl flex items-center justify-center text-sm font-bold text-coral">HU</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">Harvard University</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Cambridge, USA</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>8 members</span>
+                <span>2 projects</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2021</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.1s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-azure/10 rounded-xl flex items-center justify-center text-sm font-bold text-azure">UW</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">University of West Indies</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Kingston, Jamaica</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>6 members</span>
+                <span>1 project</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2022</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.15s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-ubt-green/10 rounded-xl flex items-center justify-center text-sm font-bold text-ubt-green">US</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">University of Sao Paulo</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Sao Paulo, Brazil</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>5 members</span>
+                <span>1 project</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2023</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Asia & Oceania (Slate) -->
+  <section class="py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="scroll-reveal flex items-center gap-4 mb-10" :class="shown && 'visible'">
+        <h2 class="text-3xl font-semibold text-charcoal">Asia & Oceania</h2>
+        <span class="px-3 py-1 text-sm font-medium bg-coral-50 text-coral rounded-full">8 institutions</span>
+        <div class="flex-1 h-px bg-gray-200"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.05s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-purple/10 rounded-xl flex items-center justify-center text-sm font-bold text-purple">JN</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">Jawaharlal Nehru University</h4>
+              <p class="text-xs text-gray-400 mt-0.5">New Delhi, India</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>4 members</span>
+                <span>1 project</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2023</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-reveal card-hover bg-white rounded-xl border border-gray-100 p-5" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.1s'">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-12 h-12 bg-raspberry/10 rounded-xl flex items-center justify-center text-sm font-bold text-raspberry">UM</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-charcoal text-sm truncate">University of Melbourne</h4>
+              <p class="text-xs text-gray-400 mt-0.5">Melbourne, Australia</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                <span>3 members</span>
+                <span>1 project</span>
+              </div>
+              <span class="inline-block mt-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-500 rounded-full">Since 2024</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Network Summary (Charcoal) -->
+  <section class="py-16 bg-charcoal">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+         x-data="{ shown: false }" x-intersect:enter="shown = true">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.1s'"
+             x-data="{ count: 0 }" x-intersect:enter="let i=setInterval(()=>{ if(count>=847){clearInterval(i);count=847}else{count+=Math.ceil((847-count)/10)} }, 30)">
+          <div class="text-3xl sm:text-4xl font-light text-white" x-text="count">0</div>
+          <div class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Total Members</div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.2s'"
+             x-data="{ count: 0 }" x-intersect:enter="let i=setInterval(()=>{ if(count>=23){clearInterval(i);count=23}else{count+=1} }, 80)">
+          <div class="text-3xl sm:text-4xl font-light text-white" x-text="count">0</div>
+          <div class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Joint Projects</div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.3s'"
+             x-data="{ count: 0 }" x-intersect:enter="let i=setInterval(()=>{ if(count>=342){clearInterval(i);count=342}else{count+=Math.ceil((342-count)/10)} }, 30)">
+          <div class="text-3xl sm:text-4xl font-light text-white" x-text="count">0</div>
+          <div class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Co-Publications</div>
+        </div>
+        <div class="scroll-reveal" :class="shown && 'visible'" :style="shown && 'transition-delay: 0.4s'"
+             x-data="{ count: 0 }" x-intersect:enter="let i=setInterval(()=>{ if(count>=64){clearInterval(i);count=64}else{count+=1} }, 40)">
+          <div class="text-3xl sm:text-4xl font-light text-white" x-text="count">0</div>
+          <div class="mt-1 text-xs text-gray-500 uppercase tracking-wider">Joint Events</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal py-12 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="text-lg font-bold text-white tracking-tight">AFRICA MULTIPLE</span>
+          <p class="mt-1 text-sm text-gray-500">Cluster of Excellence &mdash; University of Bayreuth</p>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          <a href="dashboard.html" class="hover:text-white transition-colors">Home</a>
+          <a href="listing.html" class="hover:text-white transition-colors">Persons</a>
+          <a href="projects.html" class="hover:text-white transition-colors">Projects</a>
+          <a href="events.html" class="hover:text-white transition-colors">Events</a>
+          <a href="institutions.html" class="hover:text-white transition-colors">Institutions</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-white/10 text-center text-xs text-gray-600">
+        Style N: Research Showcase Platform &mdash; Prototype
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

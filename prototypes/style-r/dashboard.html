@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compendium — General Index | Africa Multiple</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --parchment: #faf6ee;
+      --ink: #2c2416;
+      --green: #3d6b4f;
+      --gold: #b8860b;
+      --red: #8b3a3a;
+      --blue: #4a6b8a;
+      --gold-light: rgba(184,134,11,0.15);
+      --gold-faint: rgba(184,134,11,0.3);
+    }
+
+    body {
+      font-family: 'Crimson Pro', serif;
+      background-color: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    /* --- RUNNING HEADER --- */
+    .running-header {
+      border-bottom: 1px solid var(--gold);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--parchment);
+    }
+    .running-header::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0; right: 0;
+      height: 0.5px;
+      background: var(--gold-faint);
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+    .header-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Navigation */
+    .header-nav {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+    }
+    .header-nav a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .header-nav a:hover { opacity: 1; color: var(--green); }
+    .header-nav a.active { opacity: 1; color: var(--green); }
+
+    /* Dropdown */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: -12px;
+      background: var(--parchment);
+      border: 1px solid var(--gold);
+      padding: 8px 0;
+      min-width: 180px;
+      z-index: 200;
+      margin-top: 8px;
+    }
+    .nav-dropdown-menu::before {
+      content: ''; position: absolute; inset: 3px;
+      border: 0.5px solid var(--gold-faint);
+      pointer-events: none;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 4px 16px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: 'Courier Prime', monospace;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.7;
+    }
+    .nav-dropdown-menu a:hover { opacity: 1; color: var(--green); background: var(--gold-light); }
+
+    /* --- MAIN CONTENT --- */
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* Plate heading */
+    .plate-heading {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .plate-no {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--red);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .plate-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .plate-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: var(--green);
+    }
+
+    /* Ornamental rule */
+    .ornamental-rule {
+      border: none;
+      height: 1px;
+      background: var(--gold);
+      position: relative;
+      margin: 32px 0;
+    }
+    .ornamental-rule::after {
+      content: '\2726';
+      position: absolute;
+      left: 50%;
+      top: -8px;
+      transform: translateX(-50%);
+      background: var(--parchment);
+      padding: 0 8px;
+      color: var(--gold);
+      font-size: 12px;
+    }
+
+    /* Opening text */
+    .opening-text {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.05rem;
+      color: var(--ink);
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+      opacity: 0.85;
+    }
+
+    /* Specimen frame */
+    .specimen-frame {
+      border: 1px solid var(--gold);
+      outline: 1px solid var(--gold);
+      outline-offset: 4px;
+      padding: 24px;
+      position: relative;
+      background: var(--parchment);
+    }
+    .specimen-frame::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 0.5px solid var(--gold-faint);
+      pointer-events: none;
+    }
+
+    /* Corner ornaments */
+    .ornament-corner { position: relative; }
+    .ornament-corner::before,
+    .ornament-corner::after {
+      content: '\2767';
+      position: absolute;
+      color: var(--gold);
+      font-size: 18px;
+      opacity: 0.6;
+    }
+    .ornament-corner::before { top: 8px; left: 12px; }
+    .ornament-corner::after { bottom: 8px; right: 12px; transform: rotate(180deg); }
+
+    /* Census grid */
+    .census-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    .census-box {
+      border: 1px solid var(--gold);
+      outline: 1px solid var(--gold);
+      outline-offset: 4px;
+      padding: 20px 16px;
+      text-align: center;
+      position: relative;
+      background: var(--parchment);
+      animation: fadeInSpecimen 0.6s ease-out both;
+    }
+    .census-box:nth-child(2) { animation-delay: 0.1s; }
+    .census-box:nth-child(3) { animation-delay: 0.2s; }
+    .census-box:nth-child(4) { animation-delay: 0.3s; }
+    .census-box::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 0.5px solid var(--gold-faint);
+      pointer-events: none;
+    }
+    .census-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .census-value {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 2.4rem;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .census-note {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--ink);
+      opacity: 0.6;
+    }
+
+    /* Section heading */
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--ink);
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--gold);
+      position: relative;
+    }
+    .section-heading .plate-no {
+      display: inline;
+      margin-right: 8px;
+    }
+
+    /* Observation log */
+    .observation-log {
+      list-style: none;
+      margin-bottom: 48px;
+    }
+    .observation-entry {
+      padding: 12px 0;
+      border-bottom: 0.5px solid var(--gold-faint);
+      display: flex;
+      gap: 16px;
+      align-items: baseline;
+      animation: fadeInSpecimen 0.5s ease-out both;
+    }
+    .observation-entry:nth-child(1) { animation-delay: 0.05s; }
+    .observation-entry:nth-child(2) { animation-delay: 0.1s; }
+    .observation-entry:nth-child(3) { animation-delay: 0.15s; }
+    .observation-entry:nth-child(4) { animation-delay: 0.2s; }
+    .observation-entry:nth-child(5) { animation-delay: 0.25s; }
+    .observation-entry:nth-child(6) { animation-delay: 0.3s; }
+    .observation-date {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--green);
+      white-space: nowrap;
+      min-width: 100px;
+    }
+    .observation-type {
+      font-family: 'Courier Prime', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--red);
+      min-width: 80px;
+    }
+    .observation-text {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      flex: 1;
+    }
+    .observation-text a {
+      color: var(--blue);
+      text-decoration: none;
+      border-bottom: 0.5px solid var(--blue);
+    }
+    .observation-text a:hover { color: var(--green); border-color: var(--green); }
+
+    /* Taxonomy divisions */
+    .taxonomy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    .taxonomy-card {
+      border: 1px solid var(--gold);
+      padding: 20px;
+      position: relative;
+      animation: fadeInSpecimen 0.6s ease-out both;
+    }
+    .taxonomy-card:nth-child(1) { animation-delay: 0.05s; }
+    .taxonomy-card:nth-child(2) { animation-delay: 0.1s; }
+    .taxonomy-card:nth-child(3) { animation-delay: 0.15s; }
+    .taxonomy-card:nth-child(4) { animation-delay: 0.2s; }
+    .taxonomy-card:nth-child(5) { animation-delay: 0.25s; }
+    .taxonomy-card:nth-child(6) { animation-delay: 0.3s; }
+    .taxonomy-name {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+    .taxonomy-spokesperson {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--ink);
+      opacity: 0.6;
+      margin-bottom: 10px;
+    }
+    .taxonomy-stats {
+      display: flex;
+      gap: 16px;
+    }
+    .taxonomy-stat {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--ink);
+      opacity: 0.7;
+    }
+    .taxonomy-stat strong {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--green);
+      display: block;
+    }
+
+    /* Quick links */
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .quick-link {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 0.5px solid var(--gold-faint);
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .quick-link:hover {
+      border-color: var(--gold);
+      background: var(--gold-light);
+    }
+    .quick-link-icon {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--gold);
+    }
+    .quick-link-label {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+    .quick-link-count {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--green);
+      margin-left: auto;
+    }
+
+    /* Footer */
+    .page-footer {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px;
+      text-align: center;
+    }
+    .page-footer a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .page-footer a:hover { color: var(--green); }
+
+    /* Animations */
+    @keyframes fadeInSpecimen {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes revealText {
+      from { opacity: 0; letter-spacing: 0.5em; }
+      to { opacity: 1; letter-spacing: 0.2em; }
+    }
+
+    .animate-reveal {
+      animation: revealText 0.8s ease-out both;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .census-grid { grid-template-columns: repeat(2, 1fr); }
+      .taxonomy-grid { grid-template-columns: 1fr; }
+      .quick-links { grid-template-columns: 1fr; }
+      .plate-title { font-size: 1.6rem; }
+      .header-nav { gap: 12px; }
+      .header-nav a { font-size: 9px; letter-spacing: 0.1em; }
+    }
+    @media (max-width: 480px) {
+      .census-grid { grid-template-columns: 1fr; }
+      .observation-entry { flex-direction: column; gap: 4px; }
+      .header-inner { flex-direction: column; gap: 8px; text-align: center; }
+      .header-nav { justify-content: center; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body x-data="{ showAll: false }">
+
+  <!-- Running Header -->
+  <header class="running-header">
+    <div class="header-inner">
+      <div class="header-title"><a href="dashboard.html">The Africa Multiple Compendium</a></div>
+      <nav class="header-nav">
+        <a href="dashboard.html" class="active">Index</a>
+        <div class="nav-dropdown">
+          <a href="listing.html">Persons</a>
+          <div class="nav-dropdown-menu">
+            <a href="listing.html">Register of Persons</a>
+            <a href="#">Employees</a>
+            <a href="#">Cluster Members</a>
+            <a href="#">BIGSAS Members</a>
+            <a href="#">Fellows</a>
+            <a href="#">Guests</a>
+          </div>
+        </div>
+        <a href="projects.html">Projects</a>
+        <a href="events.html">Events</a>
+        <a href="institutions.html">Institutions</a>
+        <a href="detail.html">Specimen</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Body -->
+  <main class="page-body">
+
+    <!-- Plate Heading -->
+    <div class="plate-heading">
+      <span class="plate-no animate-reveal">Compendium &mdash; General Index</span>
+      <h1 class="plate-title">The Africa Multiple<br>Compendium</h1>
+      <p class="plate-subtitle">Cluster of Excellence &mdash; University of Bayreuth</p>
+    </div>
+
+    <hr class="ornamental-rule">
+
+    <p class="opening-text">
+      A comprehensive record of the research activities, scholarly persons, and institutional
+      partnerships constituting the Africa Multiple Cluster of Excellence. Herein are catalogued
+      all specimens of academic endeavour, arranged for the facilitation of inquiry and reference.
+    </p>
+
+    <!-- Census Figures -->
+    <div class="census-grid">
+      <div class="census-box">
+        <div class="census-label">Census &mdash; Persons</div>
+        <div class="census-value">847</div>
+        <div class="census-note">registered scholars</div>
+      </div>
+      <div class="census-box">
+        <div class="census-label">Census &mdash; Projects</div>
+        <div class="census-value">124</div>
+        <div class="census-note">research expeditions</div>
+      </div>
+      <div class="census-box">
+        <div class="census-label">Census &mdash; Events</div>
+        <div class="census-value">312</div>
+        <div class="census-note">assemblies recorded</div>
+      </div>
+      <div class="census-box">
+        <div class="census-label">Census &mdash; Institutions</div>
+        <div class="census-value">58</div>
+        <div class="census-note">allied partners</div>
+      </div>
+    </div>
+
+    <hr class="ornamental-rule">
+
+    <!-- Recent Observations -->
+    <h2 class="section-heading">
+      <span class="plate-no">Fig. i</span> Recent Observations
+    </h2>
+
+    <ul class="observation-log">
+      <li class="observation-entry">
+        <span class="observation-date">18 Feb 2026</span>
+        <span class="observation-type">Person</span>
+        <span class="observation-text"><a href="detail.html">Dr. Amina Osei</a> &mdash; record updated; fellowship dates amended</span>
+      </li>
+      <li class="observation-entry">
+        <span class="observation-date">17 Feb 2026</span>
+        <span class="observation-type">Project</span>
+        <span class="observation-text"><a href="projects.html">Decolonial Mobilities</a> &mdash; report submitted; funding status confirmed</span>
+      </li>
+      <li class="observation-entry">
+        <span class="observation-date">16 Feb 2026</span>
+        <span class="observation-type">Event</span>
+        <span class="observation-text"><a href="events.html">Workshop on Digital Humanities</a> &mdash; new event registered; 14 guests confirmed</span>
+      </li>
+      <li class="observation-entry">
+        <span class="observation-date">15 Feb 2026</span>
+        <span class="observation-type">Person</span>
+        <span class="observation-text"><a href="listing.html">Prof. Kwame Mensah</a> &mdash; new specimen record created; classified under Moralities</span>
+      </li>
+      <li class="observation-entry">
+        <span class="observation-date">14 Feb 2026</span>
+        <span class="observation-type">Inst.</span>
+        <span class="observation-text"><a href="institutions.html">Moi University</a> &mdash; designated as ACC partner institution</span>
+      </li>
+      <li class="observation-entry">
+        <span class="observation-date">13 Feb 2026</span>
+        <span class="observation-type">Project</span>
+        <span class="observation-text"><a href="projects.html">Linguistic Cartographies</a> &mdash; new expedition catalogued; 3 directors assigned</span>
+      </li>
+    </ul>
+
+    <hr class="ornamental-rule">
+
+    <!-- Taxonomic Divisions -->
+    <h2 class="section-heading">
+      <span class="plate-no">Fig. ii</span> Taxonomic Divisions &mdash; Research Sections
+    </h2>
+
+    <div class="taxonomy-grid">
+      <div class="taxonomy-card">
+        <div class="taxonomy-name">Mobilities</div>
+        <div class="taxonomy-spokesperson">Spokesperson: Prof. E. Sandoval</div>
+        <div class="taxonomy-stats">
+          <div class="taxonomy-stat"><strong>23</strong>projects</div>
+          <div class="taxonomy-stat"><strong>89</strong>persons</div>
+        </div>
+      </div>
+      <div class="taxonomy-card">
+        <div class="taxonomy-name">Moralities</div>
+        <div class="taxonomy-spokesperson">Spokesperson: Prof. K. Mensah</div>
+        <div class="taxonomy-stats">
+          <div class="taxonomy-stat"><strong>19</strong>projects</div>
+          <div class="taxonomy-stat"><strong>76</strong>persons</div>
+        </div>
+      </div>
+      <div class="taxonomy-card">
+        <div class="taxonomy-name">Aesthetics</div>
+        <div class="taxonomy-spokesperson">Spokesperson: Dr. F. Adeyemi</div>
+        <div class="taxonomy-stats">
+          <div class="taxonomy-stat"><strong>21</strong>projects</div>
+          <div class="taxonomy-stat"><strong>84</strong>persons</div>
+        </div>
+      </div>
+      <div class="taxonomy-card">
+        <div class="taxonomy-name">Learning</div>
+        <div class="taxonomy-spokesperson">Spokesperson: Prof. N. Diallo</div>
+        <div class="taxonomy-stats">
+          <div class="taxonomy-stat"><strong>18</strong>projects</div>
+          <div class="taxonomy-stat"><strong>72</strong>persons</div>
+        </div>
+      </div>
+      <div class="taxonomy-card">
+        <div class="taxonomy-name">Knowledges</div>
+        <div class="taxonomy-spokesperson">Spokesperson: Dr. L. Achieng</div>
+        <div class="taxonomy-stats">
+          <div class="taxonomy-stat"><strong>22</strong>projects</div>
+          <div class="taxonomy-stat"><strong>91</strong>persons</div>
+        </div>
+      </div>
+      <div class="taxonomy-card">
+        <div class="taxonomy-name">Affiliations</div>
+        <div class="taxonomy-spokesperson">Spokesperson: Prof. T. Okoro</div>
+        <div class="taxonomy-stats">
+          <div class="taxonomy-stat"><strong>21</strong>projects</div>
+          <div class="taxonomy-stat"><strong>85</strong>persons</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="ornamental-rule">
+
+    <!-- Quick Navigation -->
+    <h2 class="section-heading">
+      <span class="plate-no">Fig. iii</span> Chapter Index
+    </h2>
+
+    <div class="quick-links">
+      <a href="listing.html" class="quick-link">
+        <span class="quick-link-icon">&sect;</span>
+        <span class="quick-link-label">Register of Persons</span>
+        <span class="quick-link-count">847 entries</span>
+      </a>
+      <a href="projects.html" class="quick-link">
+        <span class="quick-link-icon">&sect;</span>
+        <span class="quick-link-label">Catalogue of Research Expeditions</span>
+        <span class="quick-link-count">124 entries</span>
+      </a>
+      <a href="events.html" class="quick-link">
+        <span class="quick-link-icon">&sect;</span>
+        <span class="quick-link-label">Calendar of Assemblies</span>
+        <span class="quick-link-count">312 entries</span>
+      </a>
+      <a href="institutions.html" class="quick-link">
+        <span class="quick-link-icon">&sect;</span>
+        <span class="quick-link-label">Directory of Allied Institutions</span>
+        <span class="quick-link-count">58 entries</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="quick-link-icon">&sect;</span>
+        <span class="quick-link-label">Publications &amp; Outputs</span>
+        <span class="quick-link-count">restricted</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="quick-link-icon">&sect;</span>
+        <span class="quick-link-label">Countries &amp; Locations</span>
+        <span class="quick-link-count">41 countries</span>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <hr class="ornamental-rule">
+    <a href="../index.html">&larr; Back to all prototypes</a>
+  </footer>
+
+</body>
+</html>

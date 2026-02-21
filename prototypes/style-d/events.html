@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events - Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+          "purple": { 50: "#ede0f1", 400: "#787acd" },
+        },
+        fontFamily: {
+          body: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Georgia', 'Times New Roman', 'serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+      }
+    }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-white font-body text-black min-h-screen">
+
+  <!-- Masthead Nav -->
+  <nav class="border-b-2 border-black sticky top-0 z-50 bg-white" x-data="{ mobileOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="dashboard.html" class="font-display text-3xl font-black uppercase tracking-tighter text-black hover:text-ubt-green transition-colors">AFRICA MULTIPLE</a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="dashboard.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Dashboard</a>
+          <a href="listing.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Persons</a>
+          <a href="projects.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Projects</a>
+          <a href="events.html" class="text-xs font-bold uppercase tracking-widest text-ubt-green border-b-2 border-ubt-green pb-0.5">Events</a>
+          <a href="institutions.html" class="text-xs font-bold uppercase tracking-widest text-black hover:text-ubt-green hover:border-b-2 hover:border-ubt-green pb-0.5 transition-all">Institutions</a>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="text-xs font-mono text-gray-400 hover:text-black hidden lg:inline transition-colors">[ALL PROTOTYPES]</a>
+          <button @click="mobileOpen = !mobileOpen" class="md:hidden p-1 cursor-pointer" aria-label="Toggle menu">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="md:hidden border-t-2 border-black py-3 space-y-2" x-show="mobileOpen" x-transition>
+        <a href="dashboard.html" class="block text-xs font-bold uppercase tracking-widest text-black">Dashboard</a>
+        <a href="listing.html" class="block text-xs font-bold uppercase tracking-widest text-black">Persons</a>
+        <a href="projects.html" class="block text-xs font-bold uppercase tracking-widest text-black">Projects</a>
+        <a href="events.html" class="block text-xs font-bold uppercase tracking-widest text-ubt-green">Events</a>
+        <a href="institutions.html" class="block text-xs font-bold uppercase tracking-widest text-black">Institutions</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Section Header -->
+    <section class="py-6 border-b-4 border-black">
+      <h1 class="font-display text-5xl md:text-7xl font-black uppercase tracking-tighter">EVENTS</h1>
+      <div class="h-1 bg-ubt-green mt-3 w-32"></div>
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mt-2">12 EVENTS</p>
+    </section>
+
+    <!-- Featured Next Event -->
+    <section class="bg-black text-white -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-10">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-widest text-ubt-green mb-2">NEXT EVENT</p>
+          <h2 class="font-display text-4xl md:text-6xl font-black uppercase leading-none">FELLOWS WORKSHOP</h2>
+          <p class="font-mono text-xs text-gray-400 mt-2">Type of event: Workshop</p>
+          <p class="font-mono text-xs text-gray-400">Applying body: BIGSAS</p>
+          <div class="flex flex-wrap gap-3 mt-4">
+            <span class="font-mono text-xs font-bold border border-white px-3 py-1 uppercase">WORKSHOP</span>
+            <span class="font-mono text-xs font-bold border border-ubt-green text-ubt-green px-3 py-1 uppercase">IN-PERSON</span>
+          </div>
+          <div class="flex flex-wrap gap-4 mt-3">
+            <p class="font-mono text-xs text-gray-400">Hosts: <span class="text-white">Prof. Ibrahim Toure, Dr. Amina Osei</span></p>
+          </div>
+          <div class="flex flex-wrap gap-4 mt-1">
+            <p class="font-mono text-xs text-gray-400">Locations: <span class="text-white">Bayreuth</span></p>
+            <p class="font-mono text-xs text-gray-400">Countries: <span class="text-white">Germany</span></p>
+          </div>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="font-display text-7xl md:text-9xl font-black leading-none">28</p>
+          <p class="font-mono text-xl font-bold uppercase tracking-widest">FEB 2026</p>
+          <p class="font-mono text-xs text-gray-500 mt-1">10 DAYS AWAY</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events + Calendar -->
+    <div class="flex flex-col lg:flex-row gap-8 py-8">
+
+      <!-- Event Listings -->
+      <div class="flex-1 space-y-0">
+
+        <!-- Event 1 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group">
+          <div class="bg-black text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">28</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">FEB</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold group-hover:text-ubt-green transition-colors">Fellows Workshop</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Workshop &mdash; Applying body: BIGSAS</p>
+            <p class="font-body text-xs text-gray-500">Hosts: Prof. Ibrahim Toure, Dr. Amina Osei &mdash; Guests: 15</p>
+            <p class="font-body text-xs text-gray-500">Locations: Bayreuth &mdash; Countries: Germany</p>
+            <div class="flex gap-2 mt-2">
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5">WORKSHOP</span>
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest border border-black px-2 py-0.5">IN-PERSON</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Event 2 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group">
+          <div class="bg-black text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">15</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">MAR</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold group-hover:text-ubt-green transition-colors">Public Lecture Series</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Lecture &mdash; Applying body: Africa Multiple Cluster</p>
+            <p class="font-body text-xs text-gray-500">Hosts: Prof. Kwame Asante &mdash; Guests: 8</p>
+            <p class="font-body text-xs text-gray-500">Online: Yes &mdash; Countries: Germany</p>
+            <div class="flex gap-2 mt-2">
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5">LECTURE</span>
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest border border-black px-2 py-0.5">ONLINE</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Event 3 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group">
+          <div class="bg-black text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">02</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">APR</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold group-hover:text-ubt-green transition-colors">Research Section Meeting</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Meeting &mdash; Applying body: Mobilities Section</p>
+            <p class="font-body text-xs text-gray-500">Hosts: Dr. Amina Osei &mdash; Guests: 12</p>
+            <p class="font-body text-xs text-gray-500">Locations: Accra &mdash; Countries: Ghana</p>
+            <div class="flex gap-2 mt-2">
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5">MEETING</span>
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest border border-black px-2 py-0.5">IN-PERSON</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Event 4 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group">
+          <div class="bg-black text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">10</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">MAY</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold group-hover:text-ubt-green transition-colors">BIGSAS Colloquium</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Colloquium &mdash; Applying body: BIGSAS</p>
+            <p class="font-body text-xs text-gray-500">Hosts: Dr. Samuel Mwangi &mdash; Guests: 22</p>
+            <p class="font-body text-xs text-gray-500">Locations: Bayreuth &mdash; Countries: Germany &mdash; Hybrid: Yes</p>
+            <div class="flex gap-2 mt-2">
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5">COLLOQUIUM</span>
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest border border-black px-2 py-0.5">HYBRID</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Event 5 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group">
+          <div class="bg-black text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">20</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">JUN</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold group-hover:text-ubt-green transition-colors">Annual Conference 2026</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Conference &mdash; Applying body: Africa Multiple Cluster</p>
+            <p class="font-body text-xs text-gray-500">Hosts: Dr. Joseph Habimana, Prof. Yaa Mensah &mdash; Guests: 45</p>
+            <p class="font-body text-xs text-gray-500">Locations: Eldoret &mdash; Countries: Kenya</p>
+            <div class="flex gap-2 mt-2">
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5">CONFERENCE</span>
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest border border-black px-2 py-0.5">IN-PERSON</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Event 6 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group">
+          <div class="bg-black text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">05</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">SEP</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold group-hover:text-ubt-green transition-colors">Doctoral Workshop</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Workshop &mdash; Applying body: BIGSAS</p>
+            <p class="font-body text-xs text-gray-500">Hosts: Prof. Chidinma Nwosu &mdash; Guests: 18</p>
+            <p class="font-body text-xs text-gray-500">Locations: Lagos &mdash; Countries: Nigeria</p>
+            <div class="flex gap-2 mt-2">
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5">WORKSHOP</span>
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest border border-black px-2 py-0.5">IN-PERSON</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Event 7 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group">
+          <div class="bg-black text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">18</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">OCT</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold group-hover:text-ubt-green transition-colors">Interdisciplinary Symposium</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Symposium &mdash; Applying body: Knowledges Section</p>
+            <p class="font-body text-xs text-gray-500">Hosts: Dr. Aisha Mohammed &mdash; Guests: 20</p>
+            <p class="font-body text-xs text-gray-500">Locations: Nairobi &mdash; Countries: Kenya</p>
+            <div class="flex gap-2 mt-2">
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5">SYMPOSIUM</span>
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest border border-black px-2 py-0.5">IN-PERSON</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Event 8 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group">
+          <div class="bg-black text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">22</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">NOV</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold group-hover:text-ubt-green transition-colors">Book Launch &amp; Panel Discussion</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Panel &mdash; Applying body: Africa Multiple Cluster</p>
+            <p class="font-body text-xs text-gray-500">Hosts: Prof. Kwame Asante &mdash; Guests: 10</p>
+            <p class="font-body text-xs text-gray-500">Locations: Bayreuth &mdash; Countries: Germany &mdash; Hybrid: Yes</p>
+            <div class="flex gap-2 mt-2">
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5">PANEL</span>
+              <span class="font-mono text-[10px] font-bold uppercase tracking-widest border border-black px-2 py-0.5">HYBRID</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- PAST EVENTS -->
+        <div class="pt-8">
+          <div class="border-t-4 border-b-4 border-black py-2 mb-6">
+            <h2 class="font-display text-2xl font-black uppercase text-center tracking-wider">PAST EVENTS</h2>
+          </div>
+        </div>
+
+        <!-- Past Event 9 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group opacity-50">
+          <div class="bg-gray-400 text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">25</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">OCT</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold line-through group-hover:text-ubt-green transition-colors">Annual Conference 2025</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Conference &mdash; Applying body: Africa Multiple Cluster</p>
+            <p class="font-body text-xs text-gray-500">Locations: Bayreuth &mdash; Countries: Germany</p>
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-gray-200 text-gray-600 px-2 py-0.5">CONFERENCE</span>
+          </div>
+        </a>
+
+        <!-- Past Event 10 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group opacity-50">
+          <div class="bg-gray-400 text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">12</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">SEP</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold line-through group-hover:text-ubt-green transition-colors">BIGSAS Doctoral Retreat</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Retreat &mdash; Applying body: BIGSAS</p>
+            <p class="font-body text-xs text-gray-500">Locations: Mombasa &mdash; Countries: Kenya</p>
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-gray-200 text-gray-600 px-2 py-0.5">RETREAT</span>
+          </div>
+        </a>
+
+        <!-- Past Event 11 -->
+        <a href="#" class="flex gap-4 py-5 border-b border-gray-200 hover:bg-gray-50 transition-colors px-2 group opacity-50">
+          <div class="bg-gray-400 text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">04</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">JUN</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold line-through group-hover:text-ubt-green transition-colors">Summer School on African Futures</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Summer School &mdash; Applying body: BIGSAS</p>
+            <p class="font-body text-xs text-gray-500">Locations: Cape Town &mdash; Countries: South Africa</p>
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-gray-200 text-gray-600 px-2 py-0.5">SUMMER SCHOOL</span>
+          </div>
+        </a>
+
+        <!-- Past Event 12 -->
+        <a href="#" class="flex gap-4 py-5 hover:bg-gray-50 transition-colors px-2 group opacity-50">
+          <div class="bg-gray-400 text-white w-20 h-20 flex flex-col items-center justify-center shrink-0">
+            <span class="font-display text-2xl font-black leading-none">15</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest">MAR</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-display text-xl font-bold line-through group-hover:text-ubt-green transition-colors">Public Lecture: Decolonizing the Archive</h3>
+            <p class="font-mono text-xs text-gray-500 mt-0.5">Type: Lecture &mdash; Applying body: Knowledges Section</p>
+            <p class="font-body text-xs text-gray-500">Online: Yes &mdash; Countries: Germany</p>
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest bg-gray-200 text-gray-600 px-2 py-0.5">LECTURE</span>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Calendar Sidebar -->
+      <aside class="lg:w-80 shrink-0">
+        <div class="border-2 border-black p-5 sticky top-24">
+          <h3 class="font-display text-lg font-black uppercase border-b-2 border-black pb-2 mb-4">FEBRUARY 2026</h3>
+          <!-- Calendar Grid -->
+          <div class="grid grid-cols-7 gap-0">
+            <!-- Days header -->
+            <div class="font-mono text-[10px] font-bold text-center py-1 text-gray-500">MO</div>
+            <div class="font-mono text-[10px] font-bold text-center py-1 text-gray-500">TU</div>
+            <div class="font-mono text-[10px] font-bold text-center py-1 text-gray-500">WE</div>
+            <div class="font-mono text-[10px] font-bold text-center py-1 text-gray-500">TH</div>
+            <div class="font-mono text-[10px] font-bold text-center py-1 text-gray-500">FR</div>
+            <div class="font-mono text-[10px] font-bold text-center py-1 text-gray-500">SA</div>
+            <div class="font-mono text-[10px] font-bold text-center py-1 text-gray-500">SU</div>
+            <!-- Week 1 (Feb starts on Sunday) -->
+            <div class="font-mono text-sm text-center py-2 text-gray-300"></div>
+            <div class="font-mono text-sm text-center py-2 text-gray-300"></div>
+            <div class="font-mono text-sm text-center py-2 text-gray-300"></div>
+            <div class="font-mono text-sm text-center py-2 text-gray-300"></div>
+            <div class="font-mono text-sm text-center py-2 text-gray-300"></div>
+            <div class="font-mono text-sm text-center py-2 text-gray-300"></div>
+            <div class="font-mono text-sm font-bold text-center py-2">1</div>
+            <!-- Week 2 -->
+            <div class="font-mono text-sm font-bold text-center py-2">2</div>
+            <div class="font-mono text-sm font-bold text-center py-2">3</div>
+            <div class="font-mono text-sm font-bold text-center py-2">4</div>
+            <div class="font-mono text-sm font-bold text-center py-2">5</div>
+            <div class="font-mono text-sm font-bold text-center py-2">6</div>
+            <div class="font-mono text-sm font-bold text-center py-2">7</div>
+            <div class="font-mono text-sm font-bold text-center py-2">8</div>
+            <!-- Week 3 -->
+            <div class="font-mono text-sm font-bold text-center py-2">9</div>
+            <div class="font-mono text-sm font-bold text-center py-2">10</div>
+            <div class="font-mono text-sm font-bold text-center py-2">11</div>
+            <div class="font-mono text-sm font-bold text-center py-2">12</div>
+            <div class="font-mono text-sm font-bold text-center py-2">13</div>
+            <div class="font-mono text-sm font-bold text-center py-2">14</div>
+            <div class="font-mono text-sm font-bold text-center py-2">15</div>
+            <!-- Week 4 -->
+            <div class="font-mono text-sm font-bold text-center py-2">16</div>
+            <div class="font-mono text-sm font-bold text-center py-2">17</div>
+            <div class="font-mono text-sm font-bold text-center py-2 bg-ubt-green text-white border-2 border-black">18</div>
+            <div class="font-mono text-sm font-bold text-center py-2">19</div>
+            <div class="font-mono text-sm font-bold text-center py-2">20</div>
+            <div class="font-mono text-sm font-bold text-center py-2">21</div>
+            <div class="font-mono text-sm font-bold text-center py-2">22</div>
+            <!-- Week 5 -->
+            <div class="font-mono text-sm font-bold text-center py-2">23</div>
+            <div class="font-mono text-sm font-bold text-center py-2">24</div>
+            <div class="font-mono text-sm font-bold text-center py-2">25</div>
+            <div class="font-mono text-sm font-bold text-center py-2">26</div>
+            <div class="font-mono text-sm font-bold text-center py-2">27</div>
+            <div class="font-mono text-sm font-bold text-center py-2 bg-black text-white">28</div>
+            <div class="font-mono text-sm text-center py-2 text-gray-300"></div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-black">
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-3 h-3 bg-ubt-green border border-black"></div>
+              <span class="font-mono text-[10px] uppercase tracking-widest">Today</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-black"></div>
+              <span class="font-mono text-[10px] uppercase tracking-widest">Event</span>
+            </div>
+          </div>
+
+          <!-- Event Type Summary -->
+          <div class="mt-6 pt-4 border-t-2 border-black">
+            <h4 class="font-display text-sm font-black uppercase mb-3">BY TYPE</h4>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-body text-xs">Conferences</span>
+                <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5">3</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="font-body text-xs">Workshops</span>
+                <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5">3</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="font-body text-xs">Lectures</span>
+                <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5">2</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="font-body text-xs">Symposia</span>
+                <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5">2</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="font-body text-xs">Other</span>
+                <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5">2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t-4 border-black bg-white py-6 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-500">Africa Multiple Cluster of Excellence &mdash; University of Bayreuth</p>
+      <p class="font-mono text-xs text-gray-400">&copy; 2026</p>
+    </div>
+  </footer>
+
+</body>
+</html>

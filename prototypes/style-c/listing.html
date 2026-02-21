@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persons - AM Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00", 950: "#001500" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 100: "#a5d2d5", 200: "#7bbcc1", 300: "#4ca6af", 400: "#008f9c", 500: "#007683", 600: "#005e6b", 700: "#004754", 800: "#00313d", 900: "#001d25" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 100: "#e3bfdd", 200: "#d6a1ca", 300: "#c982b5", 400: "#bd62a0", 500: "#a54988", 600: "#8c3271", 700: "#73195b", 800: "#590043", 900: "#390027" },
+          "purple": { 50: "#ede0f1", 100: "#d7c4e6", 400: "#787acd", 500: "#5d64b5", 700: "#293a85" },
+          "leaf-green": { 50: "#e5e6cb", 400: "#788a32" },
+          "yellow": { 50: "#ebe3ca", 400: "#af7532", 500: "#965e1a" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'Fira Code', 'monospace'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .neon-text {
+      text-shadow: 0 0 7px #0d9462, 0 0 15px rgba(13,148,98,0.4);
+    }
+    .neon-border-hover:hover {
+      border-color: rgba(13, 148, 98, 0.5);
+      box-shadow: 0 0 15px rgba(13, 148, 98, 0.15);
+    }
+    .grid-bg {
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255,255,255,0.02) 50px),
+        repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255,255,255,0.02) 50px);
+    }
+    .glow-dot {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    .neon-glow-green { box-shadow: 0 0 10px rgba(13,148,98,0.3), 0 0 4px rgba(13,148,98,0.2); }
+  </style>
+</head>
+<body class="h-full bg-gray-950 text-gray-300 antialiased" x-data="{ sidebarOpen: false }">
+  <div class="flex h-full">
+
+    <!-- Mobile sidebar overlay -->
+    <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 bg-black/70 z-40 md:hidden" x-transition:enter="transition-opacity duration-200" x-transition:leave="transition-opacity duration-200"></div>
+
+    <!-- Sidebar -->
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed md:static md:translate-x-0 z-50 w-48 bg-gray-900 flex flex-col flex-shrink-0 h-screen overflow-y-auto transition-transform duration-200 border-r border-gray-800">
+      <div class="px-3 py-3 border-b border-gray-800 flex items-center justify-between">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-ubt-green-400 font-semibold font-mono neon-text">AM Cluster</span>
+        <button @click="sidebarOpen = false" class="md:hidden text-gray-400 hover:text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <nav class="flex-1 py-2">
+        <a href="dashboard.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Dashboard
+          </span>
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search
+        </a>
+
+        <div class="px-3 pt-3 pb-1">
+          <span class="text-[10px] uppercase tracking-[0.25em] text-gray-600 font-medium font-mono">Records</span>
+        </div>
+        <a href="listing.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-ubt-green-400 bg-gray-800/80 border-l-2 border-ubt-green-400 transition-all duration-150" style="box-shadow: inset 3px 0 8px -3px rgba(13,148,98,0.3);">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Persons
+          </span>
+          <span class="text-[11px] font-mono text-gray-500">847</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Employees</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Cluster members</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">BIGSAS members</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Fellows</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Guests</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Similar names</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Compare with website</a>
+        </div>
+        <a href="projects.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Projects
+          </span>
+          <span class="text-[11px] font-mono text-gray-600">23</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Research sections</a>
+        </div>
+        <a href="#" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            Publications
+          </span>
+        </a>
+        <a href="events.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Events
+          </span>
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Countries
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Locations
+        </a>
+        <a href="institutions.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            Institutions
+          </span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">ACC</a>
+        </div>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          Filtered Views
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+          Feedback
+        </a>
+
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[10px] uppercase tracking-[0.25em] text-gray-600 font-medium font-mono">Administration</span>
+        </div>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Emails
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Expert Sync
+        </a>
+      </nav>
+
+      <div class="px-3 py-2 border-t border-gray-800">
+        <a href="../index.html" class="text-[11px] text-gray-600 hover:text-ubt-green-400 font-mono transition-all duration-150">&larr; back_to_prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden"
+         x-data="{
+           density: 'comfortable',
+           selectAll: false,
+           colsOpen: false,
+           cols: { title: true, lastName: true, firstName: true, gender: true, bigsas: true, cluster: true, location: true, languages: true, thematic: true, geographic: true }
+         }">
+
+      <!-- Toolbar -->
+      <div class="bg-gray-900 border-b border-gray-800 px-3 py-1.5 flex flex-wrap items-center gap-2 flex-shrink-0">
+        <!-- Hamburger for mobile -->
+        <button @click="sidebarOpen = true" class="md:hidden text-gray-500 hover:text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="relative">
+          <svg class="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Search persons..." class="w-48 pl-7 pr-2 py-1 text-xs font-mono border border-gray-700 rounded bg-gray-800 text-gray-300 placeholder-gray-600 focus:outline-none focus:border-ubt-green-400 focus:shadow-[0_0_10px_rgba(13,148,98,0.3)] transition-all duration-200">
+        </div>
+        <!-- Columns dropdown -->
+        <div class="relative">
+          <button @click="colsOpen = !colsOpen" class="text-xs px-2 py-1 border border-gray-700 rounded hover:bg-gray-800 text-gray-500 flex items-center gap-1 font-mono transition-all duration-150">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>
+            Columns
+          </button>
+          <div x-show="colsOpen" x-cloak @click.away="colsOpen = false" class="absolute left-0 mt-1 w-44 bg-gray-800 border border-gray-700 rounded shadow-lg shadow-black/50 z-20 py-1">
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.title" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> Title
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.lastName" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" disabled> Last Name
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.firstName" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> First Name
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.gender" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> Gender
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.bigsas" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> BIGSAS
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.cluster" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> Cluster
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.location" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> Location
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.languages" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> Languages
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.thematic" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> Thematic Fields
+            </label>
+            <label class="flex items-center gap-2 px-3 py-1 text-xs text-gray-400 hover:bg-gray-700 cursor-pointer font-mono">
+              <input type="checkbox" x-model="cols.geographic" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400"> Geographic Fields
+            </label>
+          </div>
+        </div>
+        <select class="text-xs px-2 py-1 border border-gray-700 rounded bg-gray-800 text-gray-400 font-mono focus:outline-none focus:border-ubt-green-400 focus:shadow-[0_0_10px_rgba(13,148,98,0.3)]">
+          <option value="">Research Section</option>
+          <option>Mobilities</option>
+          <option>Knowledges</option>
+          <option>Moralities</option>
+          <option>Learning</option>
+          <option>Aesthetics</option>
+        </select>
+        <select class="text-xs px-2 py-1 border border-gray-700 rounded bg-gray-800 text-gray-400 font-mono focus:outline-none focus:border-ubt-green-400 focus:shadow-[0_0_10px_rgba(13,148,98,0.3)]">
+          <option value="">Gender</option>
+          <option>Female</option>
+          <option>Male</option>
+          <option>Diverse</option>
+        </select>
+        <div class="flex-1"></div>
+        <span class="text-xs text-ubt-green-400 font-mono neon-text">$ showing 1-20 of 847 records</span>
+        <select class="text-xs px-2 py-1 border border-gray-700 rounded bg-gray-800 text-gray-400 font-mono focus:outline-none focus:border-ubt-green-400">
+          <option>Bulk Actions</option>
+          <option>Export Selected</option>
+          <option>Email Selected</option>
+          <option>Delete Selected</option>
+        </select>
+        <!-- Density toggle -->
+        <div class="flex border border-gray-700 rounded overflow-hidden">
+          <button @click="density = 'comfortable'" :class="density === 'comfortable' ? 'bg-gray-700 text-ubt-green-400' : 'hover:bg-gray-800 text-gray-500'" class="px-1.5 py-1 transition-all duration-150" title="Comfortable">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <button @click="density = 'compact'" :class="density === 'compact' ? 'bg-gray-700 text-ubt-green-400' : 'hover:bg-gray-800 text-gray-500'" class="px-1.5 py-1 transition-all duration-150" title="Compact">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16M4 8h16M4 11h16M4 14h16M4 17h16M4 20h16"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="flex-1 overflow-auto grid-bg">
+        <table class="w-full border-collapse">
+          <thead class="bg-gray-800 sticky top-0 z-10">
+            <tr>
+              <th class="w-8 px-2 py-2 text-left">
+                <input type="checkbox" x-model="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400">
+              </th>
+              <th x-show="cols.title" class="px-2 py-2 text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                Title
+                <svg class="inline w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5 5 5M7 13l5 5 5-5"/></svg>
+              </th>
+              <th x-show="cols.lastName" class="px-2 py-2 text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                Last Name
+                <svg class="inline w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5 5 5M7 13l5 5 5-5"/></svg>
+              </th>
+              <th x-show="cols.firstName" class="px-2 py-2 text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                First Name
+                <svg class="inline w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5 5 5M7 13l5 5 5-5"/></svg>
+              </th>
+              <th x-show="cols.gender" class="px-2 py-2 text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                Gender
+              </th>
+              <th x-show="cols.bigsas" class="px-2 py-2 text-center text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                BIGSAS
+              </th>
+              <th x-show="cols.cluster" class="px-2 py-2 text-center text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                Cluster
+              </th>
+              <th x-show="cols.location" class="px-2 py-2 text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                Location
+                <svg class="inline w-2.5 h-2.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5 5 5M7 13l5 5 5-5"/></svg>
+              </th>
+              <th x-show="cols.languages" class="px-2 py-2 text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                Languages
+              </th>
+              <th x-show="cols.thematic" class="px-2 py-2 text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                Thematic Fields
+              </th>
+              <th x-show="cols.geographic" class="px-2 py-2 text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono cursor-pointer hover:text-ubt-green-400 transition-all duration-150">
+                Geographic Fields
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Osei</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Amina</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Accra</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, French, Twi</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Transnational Mobility</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Ghana</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Prof.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Asante</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Kwame</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Cape Town</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Twi</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Decolonial Studies</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Southern Africa</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Diallo</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Fatima</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dakar</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">French, Wolof</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Heritage Studies</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Senegal</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Mwangi</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Samuel</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Nairobi</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Swahili</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Climate Adaptation</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">East Africa, Kenya</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Prof.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Nwosu</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Chidinma</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Lagos</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Igbo</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Visual Cultures</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Nigeria</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Habimana</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Jean-Pierre</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Kigali</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">French, Kinyarwanda, English</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Conflict Resolution</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">East Africa, Rwanda</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Mohammed</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Aisha</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Zaria</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Hausa, Arabic</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Islamic Knowledge Systems</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Nigeria</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Prof.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Molefe</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Thabo</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Johannesburg</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Zulu, Sesotho</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Urban Ethics</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Southern Africa</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Achieng</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Grace</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Nairobi</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Swahili, Luo</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Educational Policy</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">East Africa, Kenya</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Prof.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Tour&eacute;</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Ibrahim</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Bamako</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">French, Bambara</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Performance Arts</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Mali</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Okafor</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Blessing</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Benin City</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Edo</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Diaspora Networks</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Nigeria</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Prof.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Mensah</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Yaa</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Kumasi</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Twi, Ga</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Indigenous Knowledge</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Ghana</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Diop</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Moussa</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Saint-Louis</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">French, Wolof, Pulaar</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Religious Ethics</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Senegal</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Nyambura</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Esther</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Nairobi</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Swahili, Kikuyu</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Digital Pedagogy</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">East Africa, Kenya</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Prof.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Konat&eacute;</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Adama</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Bamako</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">French, Bambara, Soninke</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Oral Traditions</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Mali</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Adeyemi</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Oluwaseun</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Ibadan</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Yoruba</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Migration Patterns</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Nigeria</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Prof.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Abdullahi</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Zainab</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Kano</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Hausa, Fulfulde</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Gender Studies</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Nigeria</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Mugisha</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Patrick</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Kampala</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Luganda, Swahili</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Land Rights</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">East Africa, Uganda</td>
+            </tr>
+            <tr class="bg-gray-900 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Dr.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Benali</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Nadia</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Female</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Rabat</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Arabic, French, Amazigh</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Multilingual Education</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">North Africa, Morocco</td>
+            </tr>
+            <tr class="bg-gray-950 hover:bg-ubt-green-950/30 hover:border-l-2 hover:border-l-ubt-green-400 border-b border-gray-800/50 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+              <td :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'"><input type="checkbox" :checked="selectAll" class="w-3 h-3 rounded border-gray-600 bg-gray-700 accent-ubt-green-400" @click.stop></td>
+              <td x-show="cols.title" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Prof.</td>
+              <td x-show="cols.lastName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="font-medium text-gray-200 font-mono"><a href="detail.html" class="hover:text-ubt-green-400 transition-all duration-150" @click.stop>Mensah</a></td>
+              <td x-show="cols.firstName" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-300 font-mono">Emmanuel</td>
+              <td x-show="cols.gender" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Male</td>
+              <td x-show="cols.bigsas" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-gray-700">&#9675;</td>
+              <td x-show="cols.cluster" :class="density === 'compact' ? 'px-2 py-1' : 'px-2 py-1.5'" class="text-center text-xs text-ubt-green-400 glow-dot">&#9679;</td>
+              <td x-show="cols.location" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Accra</td>
+              <td x-show="cols.languages" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">English, Fante, Twi</td>
+              <td x-show="cols.thematic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">Visual Arts</td>
+              <td x-show="cols.geographic" :class="density === 'compact' ? 'px-2 py-1 text-[11px]' : 'px-2 py-1.5 text-xs'" class="text-gray-500 font-mono">West Africa, Ghana</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer with pagination -->
+      <div class="bg-gray-900 border-t border-gray-800 px-3 py-1.5 flex items-center justify-between flex-shrink-0 flex-wrap gap-2">
+        <div class="flex items-center gap-2 text-xs text-gray-500 font-mono">
+          <span>rows_per_page:</span>
+          <select class="text-xs border border-gray-700 rounded px-1 py-0.5 bg-gray-800 text-gray-400 font-mono focus:outline-none focus:border-ubt-green-400">
+            <option selected>20</option>
+            <option>50</option>
+            <option>100</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-gray-500 font-mono">
+          <span class="text-ubt-green-400 neon-text">1-20 of 847</span>
+          <div class="flex gap-0.5 items-center">
+            <button class="px-1.5 py-0.5 rounded text-gray-700 cursor-not-allowed" disabled>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button class="px-1.5 py-0.5 rounded bg-ubt-green-400 text-gray-900 text-[11px] font-mono font-medium min-w-[24px] text-center neon-glow-green">1</button>
+            <button class="px-1.5 py-0.5 rounded hover:bg-gray-800 text-gray-500 text-[11px] font-mono font-medium min-w-[24px] text-center transition-all duration-150">2</button>
+            <button class="px-1.5 py-0.5 rounded hover:bg-gray-800 text-gray-500 text-[11px] font-mono font-medium min-w-[24px] text-center transition-all duration-150">3</button>
+            <span class="text-gray-600 px-0.5">...</span>
+            <button class="px-1.5 py-0.5 rounded hover:bg-gray-800 text-gray-500 text-[11px] font-mono font-medium min-w-[24px] text-center transition-all duration-150">43</button>
+            <button class="px-1.5 py-0.5 rounded hover:bg-gray-800 text-gray-500 transition-all duration-150">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

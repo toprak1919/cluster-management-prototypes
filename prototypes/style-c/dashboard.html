@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - AM Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b", 600: "#006235", 700: "#004b20", 800: "#00340c", 900: "#001f00", 950: "#001500" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 100: "#a5d2d5", 200: "#7bbcc1", 300: "#4ca6af", 400: "#008f9c", 500: "#007683", 600: "#005e6b", 700: "#004754", 800: "#00313d", 900: "#001d25" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 100: "#e3bfdd", 200: "#d6a1ca", 300: "#c982b5", 400: "#bd62a0", 500: "#a54988", 600: "#8c3271", 700: "#73195b", 800: "#590043", 900: "#390027" },
+          "purple": { 50: "#ede0f1", 100: "#d7c4e6", 400: "#787acd", 500: "#5d64b5", 700: "#293a85" },
+          "leaf-green": { 50: "#e5e6cb", 400: "#788a32" },
+          "yellow": { 50: "#ebe3ca", 400: "#af7532", 500: "#965e1a" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'Fira Code', 'monospace'] },
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    @keyframes scan-line {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+    @keyframes blink-cursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .neon-text {
+      text-shadow: 0 0 7px #0d9462, 0 0 15px rgba(13,148,98,0.4);
+    }
+    .neon-text-azure {
+      text-shadow: 0 0 7px #008f9c, 0 0 15px rgba(0,143,156,0.4);
+    }
+    .neon-text-raspberry {
+      text-shadow: 0 0 7px #bd62a0, 0 0 15px rgba(189,98,160,0.4);
+    }
+    .neon-text-yellow {
+      text-shadow: 0 0 7px #af7532, 0 0 15px rgba(175,117,50,0.4);
+    }
+    .neon-border-hover:hover {
+      border-color: rgba(13, 148, 98, 0.5);
+      box-shadow: 0 0 15px rgba(13, 148, 98, 0.15);
+    }
+    .grid-bg {
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255,255,255,0.02) 50px),
+        repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255,255,255,0.02) 50px);
+    }
+    .glow-dot {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    .glow-bar {
+      box-shadow: 0 0 8px currentColor, 0 0 2px currentColor;
+    }
+    .cursor-blink::after {
+      content: '_';
+      animation: blink-cursor 1s step-end infinite;
+    }
+    .neon-glow-green { box-shadow: 0 0 10px rgba(13,148,98,0.3), 0 0 4px rgba(13,148,98,0.2); }
+    .neon-glow-red { box-shadow: 0 0 10px rgba(239,68,68,0.3), 0 0 4px rgba(239,68,68,0.2); }
+    .neon-glow-yellow { box-shadow: 0 0 10px rgba(234,179,8,0.3), 0 0 4px rgba(234,179,8,0.2); }
+  </style>
+</head>
+<body class="h-full bg-gray-950 text-gray-300 antialiased" x-data="{ sidebarOpen: false }">
+  <div class="flex h-full">
+
+    <!-- Mobile sidebar overlay -->
+    <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 bg-black/70 z-40 md:hidden" x-transition:enter="transition-opacity duration-200" x-transition:leave="transition-opacity duration-200"></div>
+
+    <!-- Sidebar -->
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed md:static md:translate-x-0 z-50 w-48 bg-gray-900 flex flex-col flex-shrink-0 h-screen overflow-y-auto transition-transform duration-200 border-r border-gray-800">
+      <div class="px-3 py-3 border-b border-gray-800 flex items-center justify-between">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-ubt-green-400 font-semibold font-mono neon-text">AM Cluster</span>
+        <button @click="sidebarOpen = false" class="md:hidden text-gray-400 hover:text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <nav class="flex-1 py-2">
+        <a href="dashboard.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-ubt-green-400 bg-gray-800/80 border-l-2 border-ubt-green-400 transition-all duration-150" style="box-shadow: inset 3px 0 8px -3px rgba(13,148,98,0.3);">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Dashboard
+          </span>
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search
+        </a>
+
+        <div class="px-3 pt-3 pb-1">
+          <span class="text-[10px] uppercase tracking-[0.25em] text-gray-600 font-medium font-mono">Records</span>
+        </div>
+        <a href="listing.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Persons
+          </span>
+          <span class="text-[11px] font-mono text-gray-600">847</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Employees</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Cluster members</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">BIGSAS members</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Fellows</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Guests</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Similar names</a>
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Compare with website</a>
+        </div>
+        <a href="projects.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Projects
+          </span>
+          <span class="text-[11px] font-mono text-gray-600">23</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">Research sections</a>
+        </div>
+        <a href="#" title="Coming soon" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            Publications
+          </span>
+          <span class="text-[11px] font-mono text-gray-600">340</span>
+        </a>
+        <a href="events.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Events
+          </span>
+          <span class="text-[11px] font-mono text-gray-600">12</span>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Countries
+          </span>
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Locations
+          </span>
+        </a>
+        <a href="institutions.html" class="flex items-center justify-between px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent transition-all duration-150">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            Institutions
+          </span>
+          <span class="text-[11px] font-mono text-gray-600">156</span>
+        </a>
+        <div class="ml-5 border-l border-gray-800">
+          <a href="#" class="block px-3 py-1 text-[11px] text-gray-600 hover:text-gray-400 font-mono transition-all duration-150">ACC</a>
+        </div>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          Filtered Views
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+          Feedback
+        </a>
+
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[10px] uppercase tracking-[0.25em] text-gray-600 font-medium font-mono">Administration</span>
+        </div>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Emails
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </a>
+        <a href="#" class="flex items-center px-3 py-1.5 text-xs text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 border-l-2 border-transparent gap-2 transition-all duration-150">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Expert Sync
+        </a>
+      </nav>
+
+      <div class="px-3 py-2 border-t border-gray-800">
+        <a href="../index.html" class="text-[11px] text-gray-600 hover:text-ubt-green-400 font-mono transition-all duration-150">&larr; back_to_prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+
+      <!-- Top Bar -->
+      <header class="bg-gray-900 border-b border-gray-800 px-4 py-2 flex items-center gap-3 flex-shrink-0">
+        <!-- Hamburger for mobile -->
+        <button @click="sidebarOpen = true" class="md:hidden text-gray-500 hover:text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="flex-1 relative">
+          <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Search persons, projects, events..." class="w-full pl-8 pr-3 py-1.5 text-xs font-mono border border-gray-700 rounded bg-gray-800 text-gray-300 placeholder-gray-600 focus:outline-none focus:border-ubt-green-400 focus:shadow-[0_0_10px_rgba(13,148,98,0.3)] transition-all duration-200">
+        </div>
+        <!-- + New dropdown -->
+        <div x-data="{ newOpen: false }" class="relative">
+          <button @click="newOpen = !newOpen" class="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium font-mono text-gray-900 bg-ubt-green-400 rounded hover:bg-ubt-green-300 transition-all duration-150 neon-glow-green">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            New
+          </button>
+          <div x-show="newOpen" x-cloak @click.away="newOpen = false" class="absolute right-0 mt-1 w-36 bg-gray-800 border border-gray-700 rounded shadow-lg shadow-black/50 z-20">
+            <a href="#" title="Coming soon" class="block px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-700 hover:text-ubt-green-400 font-mono transition-all duration-150">
+              <svg class="w-3 h-3 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              New Person
+            </a>
+            <a href="#" title="Coming soon" class="block px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-700 hover:text-ubt-green-400 font-mono transition-all duration-150">
+              <svg class="w-3 h-3 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              New Project
+            </a>
+            <a href="#" title="Coming soon" class="block px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-700 hover:text-ubt-green-400 font-mono transition-all duration-150">
+              <svg class="w-3 h-3 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              New Event
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-500 font-mono">admin</span>
+          <div class="w-6 h-6 rounded-full bg-ubt-green-400/20 border border-ubt-green-400/50 text-ubt-green-400 flex items-center justify-center text-[11px] font-mono font-medium">AD</div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="flex-1 overflow-y-auto p-3 grid-bg" x-data="{ projectTab: 'projects' }">
+
+        <!-- KPI Strip -->
+        <div class="bg-gray-900 border border-gray-800 rounded px-4 py-2.5 mb-3 flex items-center text-xs divide-x divide-gray-800 overflow-x-auto">
+          <a href="listing.html" class="pr-4 hover:text-ubt-green-400 transition-all duration-150 font-mono">
+            <span class="text-gray-500 text-[10px] uppercase tracking-wider">Persons</span>
+            <span class="block text-lg font-bold text-ubt-green-400 neon-text leading-tight">847</span>
+          </a>
+          <a href="#" title="Coming soon" class="px-4 hover:text-ubt-green-400 transition-all duration-150 font-mono">
+            <span class="text-gray-500 text-[10px] uppercase tracking-wider">Projects</span>
+            <span class="block text-lg font-bold text-ubt-green-400 neon-text leading-tight">23</span>
+          </a>
+          <a href="#" title="Coming soon" class="px-4 hover:text-ubt-green-400 transition-all duration-150 font-mono">
+            <span class="text-gray-500 text-[10px] uppercase tracking-wider">Events</span>
+            <span class="block text-lg font-bold text-ubt-green-400 neon-text leading-tight">12</span>
+          </a>
+          <a href="#" title="Coming soon" class="px-4 hover:text-ubt-green-400 transition-all duration-150 font-mono">
+            <span class="text-gray-500 text-[10px] uppercase tracking-wider">Pubs</span>
+            <span class="block text-lg font-bold text-ubt-green-400 neon-text leading-tight">340</span>
+          </a>
+          <a href="#" title="Coming soon" class="px-4 hover:text-ubt-green-400 transition-all duration-150 font-mono">
+            <span class="text-gray-500 text-[10px] uppercase tracking-wider">Inst.</span>
+            <span class="block text-lg font-bold text-ubt-green-400 neon-text leading-tight">156</span>
+          </a>
+          <a href="#" title="Coming soon" class="pl-4 hover:text-ubt-green-400 transition-all duration-150 font-mono">
+            <span class="text-gray-500 text-[10px] uppercase tracking-wider">Countries</span>
+            <span class="block text-lg font-bold text-ubt-green-400 neon-text leading-tight">38</span>
+          </a>
+        </div>
+
+        <!-- Two Panels -->
+        <div class="flex flex-col md:flex-row gap-3 h-[calc(100%-5rem)]">
+
+          <!-- Left Panel: Kanban -->
+          <div class="w-full md:w-[60%] bg-gray-900 border border-gray-800 rounded flex flex-col min-h-0">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-800 px-3">
+              <button @click="projectTab = 'projects'" :class="projectTab === 'projects' ? 'text-ubt-green-400 border-b-2 border-ubt-green-400' : 'text-gray-500 hover:text-gray-300'" class="text-xs px-3 py-2 -mb-px font-medium font-mono transition-all duration-150" :style="projectTab === 'projects' ? 'text-shadow: 0 0 7px #0d9462' : ''">Projects</button>
+              <button @click="projectTab = 'events'" :class="projectTab === 'events' ? 'text-ubt-green-400 border-b-2 border-ubt-green-400' : 'text-gray-500 hover:text-gray-300'" class="text-xs px-3 py-2 -mb-px font-medium font-mono transition-all duration-150" :style="projectTab === 'events' ? 'text-shadow: 0 0 7px #0d9462' : ''">Events</button>
+              <button @click="projectTab = 'persons'" :class="projectTab === 'persons' ? 'text-ubt-green-400 border-b-2 border-ubt-green-400' : 'text-gray-500 hover:text-gray-300'" class="text-xs px-3 py-2 -mb-px font-medium font-mono transition-all duration-150" :style="projectTab === 'persons' ? 'text-shadow: 0 0 7px #0d9462' : ''">Persons</button>
+            </div>
+
+            <!-- Projects Kanban -->
+            <div x-show="projectTab === 'projects'" class="flex-1 overflow-auto p-3">
+              <div class="flex gap-3 h-full">
+                <!-- Planned -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1.5 mb-2">
+                    <span class="text-[10px] uppercase tracking-widest text-azure-400 font-mono neon-text-azure">Planned</span>
+                    <span class="text-[11px] font-mono text-gray-500 bg-gray-800 rounded px-1">3</span>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="bg-gray-800/70 border border-gray-700 rounded p-2 cursor-pointer hover:border-ubt-green-400/50 hover:shadow-[0_0_15px_rgba(13,148,98,0.1)] transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-200 leading-tight">Digital Heritage Archive</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-purple-400/10 border border-purple-400/30 text-[9px] font-mono font-medium text-purple-400">FD</span>
+                        <span class="text-[11px] text-gray-500 font-mono">2026-2029</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-raspberry-400 glow-dot"></span>
+                        <span class="text-[11px] text-gray-500 font-mono">Moralities</span>
+                      </div>
+                    </div>
+                    <div class="bg-gray-800/70 border border-gray-700 rounded p-2 cursor-pointer hover:border-ubt-green-400/50 hover:shadow-[0_0_15px_rgba(13,148,98,0.1)] transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-200 leading-tight">Ocean Economies of East Africa</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-azure-400/10 border border-azure-400/30 text-[9px] font-mono font-medium text-azure-400">SM</span>
+                        <span class="text-[11px] text-gray-500 font-mono">2026-2028</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-azure-400 glow-dot"></span>
+                        <span class="text-[11px] text-gray-500 font-mono">Mobilities</span>
+                      </div>
+                    </div>
+                    <div class="bg-gray-800/70 border border-gray-700 rounded p-2 cursor-pointer hover:border-ubt-green-400/50 hover:shadow-[0_0_15px_rgba(13,148,98,0.1)] transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-200 leading-tight">Pan-African Curriculum Reform</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-ubt-green-400/10 border border-ubt-green-400/30 text-[9px] font-mono font-medium text-ubt-green-400">CN</span>
+                        <span class="text-[11px] text-gray-500 font-mono">2027-2030</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-leaf-green-400 glow-dot"></span>
+                        <span class="text-[11px] text-gray-500 font-mono">Learning</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Active -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1.5 mb-2">
+                    <span class="text-[10px] uppercase tracking-widest text-ubt-green-400 font-mono neon-text">Active</span>
+                    <span class="text-[11px] font-mono text-gray-500 bg-gray-800 rounded px-1">4</span>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="bg-gray-800/70 border border-gray-700 rounded p-2 cursor-pointer hover:border-ubt-green-400/50 hover:shadow-[0_0_15px_rgba(13,148,98,0.1)] transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-200 leading-tight">Transnational Migration Patterns</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-azure-400/10 border border-azure-400/30 text-[9px] font-mono font-medium text-azure-400">AO</span>
+                        <span class="text-[11px] text-gray-500 font-mono">2023-2026</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-azure-400 glow-dot"></span>
+                        <span class="text-[11px] text-gray-500 font-mono">Mobilities</span>
+                      </div>
+                    </div>
+                    <div class="bg-gray-800/70 border border-gray-700 rounded p-2 cursor-pointer hover:border-ubt-green-400/50 hover:shadow-[0_0_15px_rgba(13,148,98,0.1)] transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-200 leading-tight">Decolonizing Knowledge Systems</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-purple-400/10 border border-purple-400/30 text-[9px] font-mono font-medium text-purple-400">KA</span>
+                        <span class="text-[11px] text-gray-500 font-mono">2024-2027</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-purple-400 glow-dot"></span>
+                        <span class="text-[11px] text-gray-500 font-mono">Knowledges</span>
+                      </div>
+                    </div>
+                    <div class="bg-gray-800/70 border border-gray-700 rounded p-2 cursor-pointer hover:border-ubt-green-400/50 hover:shadow-[0_0_15px_rgba(13,148,98,0.1)] transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-200 leading-tight">Climate Adaptation &amp; Rural Livelihoods</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-azure-400/10 border border-azure-400/30 text-[9px] font-mono font-medium text-azure-400">SM</span>
+                        <span class="text-[11px] text-gray-500 font-mono">2022-2025</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-leaf-green-400 glow-dot"></span>
+                        <span class="text-[11px] text-gray-500 font-mono">Learning</span>
+                      </div>
+                    </div>
+                    <div class="bg-gray-800/70 border border-gray-700 rounded p-2 cursor-pointer hover:border-ubt-green-400/50 hover:shadow-[0_0_15px_rgba(13,148,98,0.1)] transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-200 leading-tight">Visual Cultures of Resistance</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-ubt-green-400/10 border border-ubt-green-400/30 text-[9px] font-mono font-medium text-ubt-green-400">CN</span>
+                        <span class="text-[11px] text-gray-500 font-mono">2023-2026</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 glow-dot"></span>
+                        <span class="text-[11px] text-gray-500 font-mono">Aesthetics</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Completed -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1.5 mb-2">
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500 font-mono">Completed</span>
+                    <span class="text-[11px] font-mono text-gray-500 bg-gray-800 rounded px-1">2</span>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="bg-gray-800/40 border border-gray-700/50 rounded p-2 opacity-60 cursor-pointer hover:opacity-100 hover:border-ubt-green-400/30 transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-400 leading-tight">Mapping Linguistic Diversity</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-700 text-[9px] font-mono font-medium text-gray-500">GA</span>
+                        <span class="text-[11px] text-gray-600 font-mono">2020-2024</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-purple-400/50"></span>
+                        <span class="text-[11px] text-gray-600 font-mono">Knowledges</span>
+                      </div>
+                    </div>
+                    <div class="bg-gray-800/40 border border-gray-700/50 rounded p-2 opacity-60 cursor-pointer hover:opacity-100 hover:border-ubt-green-400/30 transition-all duration-200">
+                      <div class="text-xs font-medium text-gray-400 leading-tight">Conflict Memory in Great Lakes</div>
+                      <div class="flex items-center gap-2 mt-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-700 text-[9px] font-mono font-medium text-gray-500">JPH</span>
+                        <span class="text-[11px] text-gray-600 font-mono">2021-2024</span>
+                      </div>
+                      <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-raspberry-400/50"></span>
+                        <span class="text-[11px] text-gray-600 font-mono">Moralities</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Events Tab -->
+            <div x-show="projectTab === 'events'" x-cloak class="flex-1 overflow-auto p-3">
+              <div class="space-y-0">
+                <div class="flex items-center gap-3 px-2 py-1.5 hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 rounded cursor-pointer transition-all duration-150">
+                  <span class="text-[11px] font-mono text-ubt-green-400/60 w-20 flex-shrink-0">2025-09-15</span>
+                  <span class="text-xs font-medium text-gray-300 flex-1 truncate font-mono">Cluster General Assembly</span>
+                  <span class="text-[11px] text-gray-500 w-20 flex-shrink-0 text-right font-mono">Bayreuth</span>
+                  <span class="text-[11px] font-mono text-gray-600 w-16 flex-shrink-0 text-right">120</span>
+                </div>
+                <div class="flex items-center gap-3 px-2 py-1.5 hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 rounded cursor-pointer transition-all duration-150">
+                  <span class="text-[11px] font-mono text-ubt-green-400/60 w-20 flex-shrink-0">2025-11-20</span>
+                  <span class="text-xs font-medium text-gray-300 flex-1 truncate font-mono">Annual Conference 2025</span>
+                  <span class="text-[11px] text-gray-500 w-20 flex-shrink-0 text-right font-mono">Bayreuth</span>
+                  <span class="text-[11px] font-mono text-gray-600 w-16 flex-shrink-0 text-right">250</span>
+                </div>
+                <div class="flex items-center gap-3 px-2 py-1.5 hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 rounded cursor-pointer transition-all duration-150">
+                  <span class="text-[11px] font-mono text-ubt-green-400/60 w-20 flex-shrink-0">2026-01-10</span>
+                  <span class="text-xs font-medium text-gray-300 flex-1 truncate font-mono">Research Methodology Seminar</span>
+                  <span class="text-[11px] text-gray-500 w-20 flex-shrink-0 text-right font-mono">Nairobi</span>
+                  <span class="text-[11px] font-mono text-gray-600 w-16 flex-shrink-0 text-right">35</span>
+                </div>
+                <div class="flex items-center gap-3 px-2 py-1.5 hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 rounded cursor-pointer transition-all duration-150">
+                  <span class="text-[11px] font-mono text-ubt-green-400/60 w-20 flex-shrink-0">2026-02-28</span>
+                  <span class="text-xs font-medium text-gray-300 flex-1 truncate font-mono">Annual Conference 2026</span>
+                  <span class="text-[11px] text-gray-500 w-20 flex-shrink-0 text-right font-mono">Bayreuth</span>
+                  <span class="text-[11px] px-1.5 py-0.5 rounded bg-azure-400/10 text-azure-400 font-mono font-medium w-16 flex-shrink-0 text-center border border-azure-400/20">Planned</span>
+                </div>
+                <div class="flex items-center gap-3 px-2 py-1.5 hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 rounded cursor-pointer transition-all duration-150">
+                  <span class="text-[11px] font-mono text-ubt-green-400/60 w-20 flex-shrink-0">2026-03-15</span>
+                  <span class="text-xs font-medium text-gray-300 flex-1 truncate font-mono">Fellows Workshop</span>
+                  <span class="text-[11px] text-gray-500 w-20 flex-shrink-0 text-right font-mono">Accra</span>
+                  <span class="text-[11px] px-1.5 py-0.5 rounded bg-azure-400/10 text-azure-400 font-mono font-medium w-16 flex-shrink-0 text-center border border-azure-400/20">Planned</span>
+                </div>
+                <div class="flex items-center gap-3 px-2 py-1.5 hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 rounded cursor-pointer transition-all duration-150">
+                  <span class="text-[11px] font-mono text-ubt-green-400/60 w-20 flex-shrink-0">2026-04-03</span>
+                  <span class="text-xs font-medium text-gray-300 flex-1 truncate font-mono">Public Lecture: Futures of African Studies</span>
+                  <span class="text-[11px] text-gray-500 w-20 flex-shrink-0 text-right font-mono">Online</span>
+                  <span class="text-[11px] px-1.5 py-0.5 rounded bg-azure-400/10 text-azure-400 font-mono font-medium w-16 flex-shrink-0 text-center border border-azure-400/20">Planned</span>
+                </div>
+                <div class="flex items-center gap-3 px-2 py-1.5 hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 rounded cursor-pointer transition-all duration-150">
+                  <span class="text-[11px] font-mono text-ubt-green-400/60 w-20 flex-shrink-0">2026-05-22</span>
+                  <span class="text-xs font-medium text-gray-300 flex-1 truncate font-mono">Doctoral Workshop</span>
+                  <span class="text-[11px] text-gray-500 w-20 flex-shrink-0 text-right font-mono">Cape Town</span>
+                  <span class="text-[11px] px-1.5 py-0.5 rounded bg-azure-400/10 text-azure-400 font-mono font-medium w-16 flex-shrink-0 text-center border border-azure-400/20">Planned</span>
+                </div>
+                <div class="flex items-center gap-3 px-2 py-1.5 hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 rounded cursor-pointer transition-all duration-150">
+                  <span class="text-[11px] font-mono text-ubt-green-400/60 w-20 flex-shrink-0">2026-06-10</span>
+                  <span class="text-xs font-medium text-gray-300 flex-1 truncate font-mono">Summer School</span>
+                  <span class="text-[11px] text-gray-500 w-20 flex-shrink-0 text-right font-mono">Bayreuth</span>
+                  <span class="text-[11px] px-1.5 py-0.5 rounded bg-azure-400/10 text-azure-400 font-mono font-medium w-16 flex-shrink-0 text-center border border-azure-400/20">Planned</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Persons Tab -->
+            <div x-show="projectTab === 'persons'" x-cloak class="flex-1 overflow-auto p-3">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-gray-800">
+                    <th class="text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono pb-1.5 px-1">Name</th>
+                    <th class="text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono pb-1.5 px-1">Institution</th>
+                    <th class="text-left text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono pb-1.5 px-1">Section</th>
+                    <th class="text-right text-[10px] uppercase tracking-widest text-gray-500 font-medium font-mono pb-1.5 px-1">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150" onclick="window.location='detail.html'">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Dr. Amina Osei</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">Univ. of Ghana</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-azure-400/10 text-azure-400 border border-azure-400/20 font-mono">Mobilities</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-02-10</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Prof. Kwame Asante</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">Univ. of Cape Town</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-purple-400/10 text-purple-400 border border-purple-400/20 font-mono">Knowledges</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-02-08</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Dr. Fatima Diallo</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">UCAD</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-raspberry-400/10 text-raspberry-400 border border-raspberry-400/20 font-mono">Moralities</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-02-05</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Dr. Samuel Mwangi</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">Kenyatta Univ.</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-green-400/10 text-green-400 border border-green-400/20 font-mono">Learning</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-02-03</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Prof. Chidinma Nwosu</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">Univ. of Lagos</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 font-mono">Aesthetics</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-01-28</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Dr. Jean-Pierre Habimana</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">Univ. of Rwanda</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-azure-400/10 text-azure-400 border border-azure-400/20 font-mono">Mobilities</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-01-22</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Dr. Aisha Mohammed</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">Ahmadu Bello Univ.</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-purple-400/10 text-purple-400 border border-purple-400/20 font-mono">Knowledges</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-01-18</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Prof. Thabo Molefe</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">Wits University</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-raspberry-400/10 text-raspberry-400 border border-raspberry-400/20 font-mono">Moralities</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-01-15</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Dr. Grace Achieng</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">Univ. of Nairobi</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-green-400/10 text-green-400 border border-green-400/20 font-mono">Learning</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-01-10</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-400/5 hover:border-l-2 hover:border-l-ubt-green-400 cursor-pointer transition-all duration-150">
+                    <td class="text-xs font-medium text-gray-200 py-1 px-1 font-mono">Prof. Ibrahim Tour&eacute;</td>
+                    <td class="text-xs text-gray-500 py-1 px-1 font-mono">USTTB</td>
+                    <td class="py-1 px-1"><span class="text-[11px] px-1.5 py-0.5 rounded bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 font-mono">Aesthetics</span></td>
+                    <td class="text-[11px] font-mono text-gray-600 py-1 px-1 text-right">2026-01-05</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right Panel -->
+          <div class="w-full md:w-[40%] flex flex-col gap-3 min-h-0 overflow-y-auto">
+
+            <!-- Recent Changes -->
+            <div class="bg-gray-900 border border-gray-800 rounded p-3">
+              <div class="text-[10px] uppercase tracking-widest text-gray-600 font-mono mb-2">$ recent_changes</div>
+              <div class="space-y-1.5 font-mono">
+                <div class="flex items-start gap-2 text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-ubt-green-400/50 flex-shrink-0">&gt;</span>
+                  <span class="text-[11px] text-ubt-green-400/40 flex-shrink-0">14:32</span>
+                  <span class="text-gray-400">Dr. Osei profile updated</span>
+                </div>
+                <div class="flex items-start gap-2 text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-ubt-green-400/50 flex-shrink-0">&gt;</span>
+                  <span class="text-[11px] text-ubt-green-400/40 flex-shrink-0">12:15</span>
+                  <span class="text-gray-400">New project created: <span class="text-ubt-green-400">Digital Heritage Archive</span></span>
+                </div>
+                <div class="flex items-start gap-2 text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-ubt-green-400/50 flex-shrink-0">&gt;</span>
+                  <span class="text-[11px] text-ubt-green-400/40 flex-shrink-0">11:40</span>
+                  <span class="text-gray-400">Prof. Asante fellowship record added</span>
+                </div>
+                <div class="flex items-start gap-2 text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-ubt-green-400/50 flex-shrink-0">&gt;</span>
+                  <span class="text-[11px] text-ubt-green-400/40 flex-shrink-0">09:58</span>
+                  <span class="text-gray-400">Event <span class="text-ubt-green-400">Annual Conference 2026</span> scheduled</span>
+                </div>
+                <div class="flex items-start gap-2 text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-ubt-green-400/50 flex-shrink-0">&gt;</span>
+                  <span class="text-[11px] text-ubt-green-400/40 flex-shrink-0">08:22</span>
+                  <span class="text-gray-400">Dr. Diallo expert search consent updated</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Report Deadlines -->
+            <div class="bg-gray-900 border border-gray-800 rounded p-3">
+              <div class="text-[10px] uppercase tracking-widest text-gray-600 font-mono mb-2">$ report_deadlines</div>
+              <div class="space-y-1.5">
+                <a href="#" title="Coming soon" class="flex items-center justify-between text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-gray-400 truncate mr-2 font-mono">Transnational Migration</span>
+                  <span class="flex-shrink-0 px-1.5 py-0.5 rounded text-[11px] font-mono font-medium bg-red-500/10 text-red-400 border border-red-500/20 neon-glow-red">3 days</span>
+                </a>
+                <a href="#" title="Coming soon" class="flex items-center justify-between text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-gray-400 truncate mr-2 font-mono">Decolonizing Knowledge</span>
+                  <span class="flex-shrink-0 px-1.5 py-0.5 rounded text-[11px] font-mono font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 neon-glow-yellow">2 weeks</span>
+                </a>
+                <a href="#" title="Coming soon" class="flex items-center justify-between text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-gray-400 truncate mr-2 font-mono">Climate Adaptation</span>
+                  <span class="flex-shrink-0 px-1.5 py-0.5 rounded text-[11px] font-mono font-medium bg-ubt-green-400/10 text-ubt-green-400 border border-ubt-green-400/20 neon-glow-green">1 month</span>
+                </a>
+                <a href="#" title="Coming soon" class="flex items-center justify-between text-xs cursor-pointer hover:bg-ubt-green-400/5 rounded px-1 py-0.5 transition-all duration-150">
+                  <span class="text-gray-400 truncate mr-2 font-mono">Visual Cultures</span>
+                  <span class="flex-shrink-0 px-1.5 py-0.5 rounded text-[11px] font-mono font-medium bg-gray-700/50 text-gray-500 border border-gray-700">3 months</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Data Quality -->
+            <div class="bg-gray-900 border border-gray-800 rounded p-3">
+              <div class="text-[10px] uppercase tracking-widest text-gray-600 font-mono mb-2">$ data_quality</div>
+              <div class="space-y-2.5">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[11px] text-gray-500 font-mono">person.email_coverage</span>
+                    <span class="text-[11px] font-mono text-ubt-green-400 neon-text">78%</span>
+                  </div>
+                  <div class="w-full h-1.5 bg-gray-800 rounded-full"><div class="h-1.5 bg-ubt-green-400 rounded-full glow-bar" style="width:78%; color: #0d9462;"></div></div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[11px] text-gray-500 font-mono">project.end_date_set</span>
+                    <span class="text-[11px] font-mono text-ubt-green-400 neon-text">92%</span>
+                  </div>
+                  <div class="w-full h-1.5 bg-gray-800 rounded-full"><div class="h-1.5 bg-ubt-green-400 rounded-full glow-bar" style="width:92%; color: #0d9462;"></div></div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[11px] text-gray-500 font-mono">person.orcid_linked</span>
+                    <span class="text-[11px] font-mono text-yellow-400 neon-text-yellow">45%</span>
+                  </div>
+                  <div class="w-full h-1.5 bg-gray-800 rounded-full"><div class="h-1.5 bg-yellow-400 rounded-full glow-bar" style="width:45%; color: #eab308;"></div></div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[11px] text-gray-500 font-mono">person.institution</span>
+                    <span class="text-[11px] font-mono text-ubt-green-400 neon-text">88%</span>
+                  </div>
+                  <div class="w-full h-1.5 bg-gray-800 rounded-full"><div class="h-1.5 bg-ubt-green-400 rounded-full glow-bar" style="width:88%; color: #0d9462;"></div></div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[11px] text-gray-500 font-mono">expert_search.consent</span>
+                    <span class="text-[11px] font-mono text-yellow-400 neon-text-yellow">62%</span>
+                  </div>
+                  <div class="w-full h-1.5 bg-gray-800 rounded-full"><div class="h-1.5 bg-yellow-400 rounded-full glow-bar" style="width:62%; color: #eab308;"></div></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+</body>
+</html>

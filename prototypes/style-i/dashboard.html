@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Africa Multiple Cluster</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          "ubt-green": { DEFAULT: "#0d9462", 50: "#cceadc", 100: "#a3d4bd", 200: "#7abf9f", 300: "#4ea980", 400: "#0d9462", 500: "#007b4b" },
+          "azure": { DEFAULT: "#008f9c", 50: "#cee8e9", 400: "#008f9c" },
+          "raspberry": { DEFAULT: "#bd62a0", 50: "#f0ddef", 400: "#bd62a0" },
+          "notion-gray": { 50: "#f7f7f5", 100: "#f1f1ef", 200: "#e3e2de", 300: "#d3d2ce", 400: "#9b9a97", 500: "#787774", 600: "#55544e", 700: "#37352f", 800: "#2f2f2f", 900: "#191919" },
+        },
+        fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] },
+      }
+    }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    [x-cloak] { display: none !important; }
+    .sidebar-item { transition: background-color 0.1s ease; }
+  </style>
+</head>
+<body class="h-full bg-white text-notion-gray-700" x-data="{ sidebarOpen: false, persons: true, projects: true, institutions: true, admin: true }">
+
+  <!-- Mobile overlay -->
+  <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 bg-black/20 z-40 lg:hidden"></div>
+
+  <div class="h-full flex">
+    <!-- Sidebar -->
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed lg:static inset-y-0 left-0 z-50 w-60 bg-notion-gray-50 border-r border-notion-gray-200 flex flex-col transform lg:translate-x-0 transition-transform duration-200">
+      <!-- Workspace -->
+      <div class="px-3 py-3 flex items-center gap-2">
+        <div class="w-5 h-5 rounded bg-ubt-green flex items-center justify-center">
+          <span class="text-white text-xs font-semibold">A</span>
+        </div>
+        <span class="text-sm font-semibold text-notion-gray-700 truncate">Africa Multiple</span>
+        <span class="w-2 h-2 rounded-full bg-ubt-green ml-auto flex-shrink-0"></span>
+      </div>
+
+      <!-- Search shortcut -->
+      <div class="px-3 mb-2">
+        <button class="w-full flex items-center gap-2 px-2 py-1.5 rounded-md bg-notion-gray-100 text-notion-gray-400 text-sm hover:bg-notion-gray-200 transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span>Search...</span>
+          <span class="ml-auto text-xs bg-notion-gray-200 text-notion-gray-500 px-1.5 py-0.5 rounded">&#8984;K</span>
+        </button>
+      </div>
+
+      <nav class="flex-1 overflow-y-auto px-1 text-sm">
+        <!-- Search (Advanced) -->
+        <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+          <svg class="w-4 h-4 text-notion-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span>Advanced Search</span>
+        </a>
+
+        <!-- Persons -->
+        <div class="mt-2 mb-1">
+          <button @click="persons = !persons" class="w-full flex items-center gap-1 px-2 py-1 text-xs font-medium text-notion-gray-400 uppercase tracking-wider hover:text-notion-gray-600">
+            <span class="text-[10px]" x-text="persons ? '&#9660;' : '&#9654;'"></span>
+            Persons
+          </button>
+          <div x-show="persons" x-collapse>
+            <a href="listing.html" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+              <span class="text-sm">&#128100;</span><span>All Persons</span>
+              <span class="ml-auto text-xs text-notion-gray-400">847</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">Employees</a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">Cluster members</a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">BIGSAS members</a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">Fellows</a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">Guests</a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">Similar names</a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">Compare with website</a>
+          </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="mb-1">
+          <button @click="projects = !projects" class="w-full flex items-center gap-1 px-2 py-1 text-xs font-medium text-notion-gray-400 uppercase tracking-wider hover:text-notion-gray-600">
+            <span class="text-[10px]" x-text="projects ? '&#9660;' : '&#9654;'"></span>
+            Projects
+          </button>
+          <div x-show="projects" x-collapse>
+            <a href="projects.html" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+              <span class="text-sm">&#128300;</span><span>All Projects</span>
+              <span class="ml-auto text-xs text-notion-gray-400">23</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">Research sections</a>
+          </div>
+        </div>
+
+        <!-- Publications -->
+        <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+          <span class="text-sm">&#128196;</span><span>Publications</span>
+        </a>
+
+        <!-- Events -->
+        <a href="events.html" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+          <span class="text-sm">&#128197;</span><span>Events</span>
+          <span class="ml-auto text-xs text-notion-gray-400">12</span>
+        </a>
+
+        <!-- Countries -->
+        <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+          <span class="text-sm">&#127758;</span><span>Countries</span>
+        </a>
+
+        <!-- Locations -->
+        <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+          <span class="text-sm">&#128205;</span><span>Locations</span>
+        </a>
+
+        <!-- Institutions -->
+        <div class="mb-1">
+          <button @click="institutions = !institutions" class="w-full flex items-center gap-1 px-2 py-1 text-xs font-medium text-notion-gray-400 uppercase tracking-wider hover:text-notion-gray-600">
+            <span class="text-[10px]" x-text="institutions ? '&#9660;' : '&#9654;'"></span>
+            Institutions
+          </button>
+          <div x-show="institutions" x-collapse>
+            <a href="institutions.html" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+              <span class="text-sm">&#127963;</span><span>All Institutions</span>
+              <span class="ml-auto text-xs text-notion-gray-400">156</span>
+            </a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 pl-7 rounded-md hover:bg-notion-gray-100 text-notion-gray-500 text-xs">ACC</a>
+          </div>
+        </div>
+
+        <!-- Filtered Views -->
+        <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600">
+          <span class="text-sm">&#128203;</span><span>Filtered Views</span>
+        </a>
+
+        <!-- Admin section -->
+        <div class="mt-3 mb-1">
+          <button @click="admin = !admin" class="w-full flex items-center gap-1 px-2 py-1 text-xs font-medium text-notion-gray-400 uppercase tracking-wider hover:text-notion-gray-600">
+            <span class="text-[10px]" x-text="admin ? '&#9660;' : '&#9654;'"></span>
+            Administration
+          </button>
+          <div x-show="admin" x-collapse>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600"><span class="text-sm">&#128172;</span><span>Feedback</span></a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600"><span class="text-sm">&#128231;</span><span>Emails</span></a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600"><span class="text-sm">&#9881;&#65039;</span><span>Settings</span></a>
+            <a href="#" class="sidebar-item flex items-center gap-2 px-3 py-1 rounded-md hover:bg-notion-gray-100 text-notion-gray-600"><span class="text-sm">&#128260;</span><span>Expert Sync</span></a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- User & back link -->
+      <div class="border-t border-notion-gray-200 px-3 py-2">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 rounded-full bg-notion-gray-300 flex items-center justify-center text-xs text-white font-medium">TT</div>
+          <span class="text-sm text-notion-gray-600 truncate">Toprak Tarkandikici</span>
+        </div>
+        <a href="../index.html" class="text-xs text-notion-gray-400 hover:text-notion-gray-600 transition-colors">&larr; Back to all prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 overflow-y-auto min-w-0">
+      <!-- Mobile header -->
+      <div class="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-notion-gray-200">
+        <button @click="sidebarOpen = true" class="text-notion-gray-500">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <span class="text-sm font-medium">Africa Multiple</span>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-6 lg:px-16 py-8">
+        <!-- Command palette bar -->
+        <div class="mb-8">
+          <div class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-notion-gray-100 text-notion-gray-400 text-sm cursor-pointer hover:bg-notion-gray-200 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span>Search or jump to...</span>
+            <span class="ml-auto text-xs bg-notion-gray-200 text-notion-gray-500 px-2 py-0.5 rounded">&#8984;K</span>
+          </div>
+        </div>
+
+        <!-- Page title -->
+        <h1 class="text-3xl font-bold text-notion-gray-900 mb-8">&#128202; Dashboard</h1>
+
+        <!-- Stats callout -->
+        <div class="mb-8 px-4 py-3 bg-notion-gray-100 border-l-4 border-ubt-green rounded-r-md">
+          <p class="text-sm text-notion-gray-700"><strong>847</strong> persons across <strong>38</strong> countries and <strong>156</strong> institutions</p>
+        </div>
+
+        <!-- Quick links -->
+        <div class="mb-10 flex flex-wrap gap-2">
+          <a href="listing.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md bg-notion-gray-100 text-notion-gray-600 hover:bg-notion-gray-200 transition-colors">
+            <span>&#128100;</span> New Person
+          </a>
+          <a href="projects.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md bg-notion-gray-100 text-notion-gray-600 hover:bg-notion-gray-200 transition-colors">
+            <span>&#128300;</span> New Project
+          </a>
+          <a href="events.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md bg-notion-gray-100 text-notion-gray-600 hover:bg-notion-gray-200 transition-colors">
+            <span>&#128197;</span> New Event
+          </a>
+          <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md bg-notion-gray-100 text-notion-gray-600 hover:bg-notion-gray-200 transition-colors">
+            <span>&#128260;</span> Run Import
+          </a>
+          <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md bg-ubt-green/10 text-ubt-green hover:bg-ubt-green/20 transition-colors">
+            <span>&#128202;</span> Full Report
+          </a>
+        </div>
+
+        <!-- Recent Persons -->
+        <section class="mb-10" x-data="{ open: true }">
+          <button @click="open = !open" class="flex items-center gap-2 mb-3 group">
+            <span class="text-xs text-notion-gray-400" x-text="open ? '&#9660;' : '&#9654;'"></span>
+            <h2 class="text-lg font-semibold text-notion-gray-700">Recent Persons</h2>
+            <span class="text-xs text-notion-gray-400">5 entries</span>
+          </button>
+          <div x-show="open" x-collapse>
+            <div class="border border-notion-gray-200 rounded-md overflow-hidden">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-notion-gray-200 bg-notion-gray-50">
+                    <th class="text-left px-3 py-2 text-xs font-medium uppercase text-notion-gray-400">Last Name</th>
+                    <th class="text-left px-3 py-2 text-xs font-medium uppercase text-notion-gray-400">First Name</th>
+                    <th class="text-left px-3 py-2 text-xs font-medium uppercase text-notion-gray-400">Location</th>
+                    <th class="text-left px-3 py-2 text-xs font-medium uppercase text-notion-gray-400">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-notion-gray-100 hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2"><a href="detail.html" class="text-notion-gray-700 hover:underline">Osei</a></td>
+                    <td class="px-3 py-2 text-notion-gray-500">Amina</td>
+                    <td class="px-3 py-2 text-notion-gray-500">Accra</td>
+                    <td class="px-3 py-2 text-notion-gray-400">2 hours ago</td>
+                  </tr>
+                  <tr class="border-b border-notion-gray-100 hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Mensah</a></td>
+                    <td class="px-3 py-2 text-notion-gray-500">Kwame</td>
+                    <td class="px-3 py-2 text-notion-gray-500">Cape Town</td>
+                    <td class="px-3 py-2 text-notion-gray-400">5 hours ago</td>
+                  </tr>
+                  <tr class="border-b border-notion-gray-100 hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Diallo</a></td>
+                    <td class="px-3 py-2 text-notion-gray-500">Fatima</td>
+                    <td class="px-3 py-2 text-notion-gray-500">Dakar</td>
+                    <td class="px-3 py-2 text-notion-gray-400">Yesterday</td>
+                  </tr>
+                  <tr class="border-b border-notion-gray-100 hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Adebayo</a></td>
+                    <td class="px-3 py-2 text-notion-gray-500">Olufemi</td>
+                    <td class="px-3 py-2 text-notion-gray-500">Ibadan</td>
+                    <td class="px-3 py-2 text-notion-gray-400">Yesterday</td>
+                  </tr>
+                  <tr class="hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Kimani</a></td>
+                    <td class="px-3 py-2 text-notion-gray-500">Sarah</td>
+                    <td class="px-3 py-2 text-notion-gray-500">Nairobi</td>
+                    <td class="px-3 py-2 text-notion-gray-400">2 days ago</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <a href="listing.html" class="inline-block mt-2 text-sm text-notion-gray-400 hover:text-notion-gray-600 transition-colors">View all persons &rarr;</a>
+          </div>
+        </section>
+
+        <!-- Active Projects -->
+        <section class="mb-10" x-data="{ open: true }">
+          <button @click="open = !open" class="flex items-center gap-2 mb-3 group">
+            <span class="text-xs text-notion-gray-400" x-text="open ? '&#9660;' : '&#9654;'"></span>
+            <h2 class="text-lg font-semibold text-notion-gray-700">Active Projects</h2>
+            <span class="text-xs text-notion-gray-400">5 entries</span>
+          </button>
+          <div x-show="open" x-collapse>
+            <div class="border border-notion-gray-200 rounded-md overflow-hidden">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-notion-gray-200 bg-notion-gray-50">
+                    <th class="text-left px-3 py-2 text-xs font-medium uppercase text-notion-gray-400">Project ID</th>
+                    <th class="text-left px-3 py-2 text-xs font-medium uppercase text-notion-gray-400">Title</th>
+                    <th class="text-left px-3 py-2 text-xs font-medium uppercase text-notion-gray-400">Directors</th>
+                    <th class="text-left px-3 py-2 text-xs font-medium uppercase text-notion-gray-400">Duration</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-notion-gray-100 hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2 text-notion-gray-400 font-mono text-xs">P-2022-01</td>
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Transnational Migration Patterns</a></td>
+                    <td class="px-3 py-2"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-notion-gray-100 text-xs">&#128100; Dr. Osei</span></td>
+                    <td class="px-3 py-2 text-notion-gray-400">2022&ndash;2026</td>
+                  </tr>
+                  <tr class="border-b border-notion-gray-100 hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2 text-notion-gray-400 font-mono text-xs">P-2023-03</td>
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Digital Heritage Preservation</a></td>
+                    <td class="px-3 py-2"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-notion-gray-100 text-xs">&#128100; Prof. Mensah</span></td>
+                    <td class="px-3 py-2 text-notion-gray-400">2023&ndash;2026</td>
+                  </tr>
+                  <tr class="border-b border-notion-gray-100 hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2 text-notion-gray-400 font-mono text-xs">P-2023-05</td>
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Urban Aesthetics in West Africa</a></td>
+                    <td class="px-3 py-2"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-notion-gray-100 text-xs">&#128100; Dr. Kimani</span></td>
+                    <td class="px-3 py-2 text-notion-gray-400">2023&ndash;2026</td>
+                  </tr>
+                  <tr class="border-b border-notion-gray-100 hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2 text-notion-gray-400 font-mono text-xs">P-2024-01</td>
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Language &amp; Identity Research</a></td>
+                    <td class="px-3 py-2"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-notion-gray-100 text-xs">&#128100; Dr. Diallo</span></td>
+                    <td class="px-3 py-2 text-notion-gray-400">2024&ndash;2026</td>
+                  </tr>
+                  <tr class="hover:bg-notion-gray-50 transition-colors">
+                    <td class="px-3 py-2 text-notion-gray-400 font-mono text-xs">P-2024-02</td>
+                    <td class="px-3 py-2"><a href="#" class="text-notion-gray-700 hover:underline">Climate Mobilities Mapping</a></td>
+                    <td class="px-3 py-2"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-notion-gray-100 text-xs">&#128100; Prof. Adebayo</span></td>
+                    <td class="px-3 py-2 text-notion-gray-400">2024&ndash;2027</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <a href="projects.html" class="inline-block mt-2 text-sm text-notion-gray-400 hover:text-notion-gray-600 transition-colors">View all projects &rarr;</a>
+          </div>
+        </section>
+
+        <!-- Upcoming Events -->
+        <section class="mb-10" x-data="{ open: true }">
+          <button @click="open = !open" class="flex items-center gap-2 mb-3 group">
+            <span class="text-xs text-notion-gray-400" x-text="open ? '&#9660;' : '&#9654;'"></span>
+            <h2 class="text-lg font-semibold text-notion-gray-700">Upcoming Events</h2>
+            <span class="text-xs text-notion-gray-400">4 entries</span>
+          </button>
+          <div x-show="open" x-collapse>
+            <div class="space-y-2">
+              <div class="flex items-start gap-4 px-3 py-2.5 rounded-md hover:bg-notion-gray-50 transition-colors">
+                <div class="text-center flex-shrink-0 w-10">
+                  <div class="text-xs text-notion-gray-400 uppercase">Mar</div>
+                  <div class="text-lg font-semibold text-notion-gray-700">15</div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <a href="#" class="text-sm font-medium text-notion-gray-700 hover:underline">Annual Research Symposium</a>
+                  <div class="text-xs text-notion-gray-400 mt-0.5">Bayreuth, Germany &middot; Conference</div>
+                </div>
+                <span class="text-xs text-notion-gray-400">3 hosts &middot; 8 guests</span>
+              </div>
+              <div class="flex items-start gap-4 px-3 py-2.5 rounded-md hover:bg-notion-gray-50 transition-colors">
+                <div class="text-center flex-shrink-0 w-10">
+                  <div class="text-xs text-notion-gray-400 uppercase">Apr</div>
+                  <div class="text-lg font-semibold text-notion-gray-700">02</div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <a href="#" class="text-sm font-medium text-notion-gray-700 hover:underline">Workshop: Digital Methods</a>
+                  <div class="text-xs text-notion-gray-400 mt-0.5">Accra, Ghana &middot; Workshop &middot; Hybrid</div>
+                </div>
+                <span class="text-xs text-notion-gray-400">2 hosts &middot; 5 guests</span>
+              </div>
+              <div class="flex items-start gap-4 px-3 py-2.5 rounded-md hover:bg-notion-gray-50 transition-colors">
+                <div class="text-center flex-shrink-0 w-10">
+                  <div class="text-xs text-notion-gray-400 uppercase">May</div>
+                  <div class="text-lg font-semibold text-notion-gray-700">18</div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <a href="#" class="text-sm font-medium text-notion-gray-700 hover:underline">Guest Lecture: African Urbanism</a>
+                  <div class="text-xs text-notion-gray-400 mt-0.5">Cape Town, South Africa &middot; Lecture &middot; Online</div>
+                </div>
+                <span class="text-xs text-notion-gray-400">1 host &middot; 1 guest</span>
+              </div>
+              <div class="flex items-start gap-4 px-3 py-2.5 rounded-md hover:bg-notion-gray-50 transition-colors">
+                <div class="text-center flex-shrink-0 w-10">
+                  <div class="text-xs text-notion-gray-400 uppercase">Jun</div>
+                  <div class="text-lg font-semibold text-notion-gray-700">07</div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <a href="#" class="text-sm font-medium text-notion-gray-700 hover:underline">Summer School: Multiplicity</a>
+                  <div class="text-xs text-notion-gray-400 mt-0.5">Nairobi, Kenya &middot; Summer School</div>
+                </div>
+                <span class="text-xs text-notion-gray-400">4 hosts &middot; 12 guests</span>
+              </div>
+            </div>
+            <a href="events.html" class="inline-block mt-3 text-sm text-notion-gray-400 hover:text-notion-gray-600 transition-colors">View all events &rarr;</a>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

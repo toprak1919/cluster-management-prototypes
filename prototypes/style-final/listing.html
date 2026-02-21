@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persons | Africa Multiple Cluster Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "ubt-green": { DEFAULT: "#0d9462", 50: "#edfaf3", 100: "#cceadc", 200: "#7abf9f", 400: "#0d9462", 500: "#007b4b", 600: "#006235" },
+            "azure": { DEFAULT: "#008f9c", 50: "#edf8f9", 400: "#008f9c" },
+            "raspberry": { DEFAULT: "#bd62a0", 50: "#fdf2fa", 400: "#bd62a0" },
+            "purple": { DEFAULT: "#787acd", 50: "#f0f0fb", 400: "#787acd" },
+          },
+          fontFamily: { body: ['DM Sans', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    [x-cloak] { display: none !important; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: fadeSlideIn 0.4s ease-out both; }
+    @keyframes rowIn { from { opacity: 0; } to { opacity: 1; } }
+    .row-animate { animation: rowIn 0.3s ease-out both; }
+  </style>
+</head>
+<body class="bg-[#f8fafb] text-slate-800">
+  <div class="h-screen flex overflow-hidden" x-data="{ sidebarOpen: false, persons: true, projects: false, admin: false, activeFilter: 'all' }">
+
+    <!-- Sidebar (same as dashboard) -->
+    <aside class="hidden md:flex md:flex-col md:w-56 bg-slate-50 border-r border-slate-200 shrink-0">
+      <div class="h-14 flex items-center px-4 border-b border-slate-200 bg-white">
+        <a href="dashboard.html" class="flex items-center">
+          <span class="text-sm font-bold text-ubt-green tracking-tight">Africa Multiple</span>
+          <span class="ml-1 text-xs text-slate-400 font-medium">Cluster</span>
+        </a>
+      </div>
+      <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 text-[13px]">
+        <a href="#" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-500 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Advanced search
+        </a>
+        <div class="!mt-3 !mb-2 border-t border-slate-200"></div>
+        <a href="dashboard.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Dashboard
+        </a>
+        <div class="!mt-3 !mb-2 border-t border-slate-200"></div>
+        <button @click="persons = !persons" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md bg-ubt-green-50 text-ubt-green font-medium">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Persons
+          </span>
+          <svg class="w-3.5 h-3.5 text-ubt-green/50 transition-transform" :class="persons ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="persons" x-collapse class="ml-5 space-y-0.5">
+          <a href="listing.html" class="block px-2.5 py-1.5 rounded-md text-ubt-green bg-ubt-green-50 font-medium border-l-2 border-ubt-green">All Persons</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Employees</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Cluster members</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">BIGSAS members</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Fellows</a>
+          <a href="#" class="block px-2.5 py-1.5 rounded-md text-slate-500 hover:bg-ubt-green-50 hover:text-ubt-green transition-colors">Guests</a>
+        </div>
+        <button @click="projects = !projects" class="flex items-center justify-between w-full px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <span class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-azure" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Projects
+          </span>
+          <svg class="w-3.5 h-3.5 text-slate-400 transition-transform" :class="projects ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <a href="events.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-raspberry" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Events
+        </a>
+        <a href="institutions.html" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Institutions
+        </a>
+      </nav>
+      <div class="border-t border-slate-200 px-3 py-3">
+        <a href="../index.html" class="text-[11px] text-slate-400 hover:text-slate-600 transition-colors">Back to all prototypes</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex flex-col flex-1 overflow-hidden">
+      <!-- Top bar -->
+      <header class="h-14 bg-white border-b border-slate-200 flex items-center px-6 shrink-0">
+        <div class="text-sm text-slate-500">
+          <a href="dashboard.html" class="hover:text-slate-700 transition-colors">Dashboard</a>
+          <span class="mx-1.5 text-slate-300">/</span>
+          <span class="font-medium text-slate-800">Persons</span>
+        </div>
+        <div class="flex-1"></div>
+        <div class="hidden sm:flex items-center bg-slate-50 rounded-lg px-3 py-1.5 text-sm text-slate-400 border border-slate-200 w-64">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search persons, projects...
+        </div>
+        <div class="ml-4 flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-ubt-green-100 flex items-center justify-center text-ubt-green text-xs font-semibold">TT</div>
+        </div>
+      </header>
+
+      <main class="flex-1 overflow-y-auto">
+        <div class="max-w-full mx-auto px-6 py-6">
+
+          <!-- Header row -->
+          <div class="flex items-center justify-between mb-4 animate-in">
+            <div class="flex items-center gap-3">
+              <h1 class="text-xl font-semibold text-slate-800">Persons</h1>
+              <span class="text-xs font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">847</span>
+              <a href="#" class="inline-flex items-center gap-1 px-2.5 py-1 text-[12px] font-medium text-white bg-ubt-green rounded-md hover:bg-ubt-green-500 transition-colors">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                New
+              </a>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="text-[12px] text-slate-500 hover:text-slate-700 px-2.5 py-1.5 border border-slate-200 rounded-md transition-colors">Export CSV</button>
+              <button class="text-[12px] text-slate-500 hover:text-slate-700 px-2.5 py-1.5 border border-slate-200 rounded-md transition-colors">PDF</button>
+            </div>
+          </div>
+
+          <!-- Filter pills -->
+          <div class="flex items-center gap-1.5 mb-4 animate-in" style="animation-delay: 50ms">
+            <button @click="activeFilter = 'all'" :class="activeFilter === 'all' ? 'bg-ubt-green text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'" class="px-3 py-1 text-[12px] font-medium rounded-full transition-colors">All</button>
+            <button @click="activeFilter = 'cluster'" :class="activeFilter === 'cluster' ? 'bg-ubt-green text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'" class="px-3 py-1 text-[12px] font-medium rounded-full transition-colors">Cluster</button>
+            <button @click="activeFilter = 'bigsas'" :class="activeFilter === 'bigsas' ? 'bg-ubt-green text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'" class="px-3 py-1 text-[12px] font-medium rounded-full transition-colors">BIGSAS</button>
+            <button @click="activeFilter = 'fellows'" :class="activeFilter === 'fellows' ? 'bg-ubt-green text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'" class="px-3 py-1 text-[12px] font-medium rounded-full transition-colors">Fellows</button>
+            <button @click="activeFilter = 'guests'" :class="activeFilter === 'guests' ? 'bg-ubt-green text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'" class="px-3 py-1 text-[12px] font-medium rounded-full transition-colors">Guests</button>
+          </div>
+
+          <!-- Table -->
+          <div class="bg-white rounded-lg border border-slate-200 overflow-hidden animate-in" style="animation-delay: 100ms">
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-slate-200 bg-slate-50/80">
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Title</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">
+                      Last Name
+                      <svg class="inline w-3 h-3 ml-0.5 text-ubt-green" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                    </th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">First Name</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Gender</th>
+                    <th class="text-center px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">BIGSAS</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none">Location</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none hidden xl:table-cell">Languages</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none hidden xl:table-cell">Thematic Fields</th>
+                    <th class="text-left px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 select-none hidden 2xl:table-cell">Geographic Fields</th>
+                  </tr>
+                  <!-- Filter row -->
+                  <tr class="border-b border-slate-100 bg-white">
+                    <td class="px-4 py-1.5"><input type="text" placeholder="Filter..." class="w-full text-[12px] border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green"></td>
+                    <td class="px-4 py-1.5"><input type="text" placeholder="Filter..." class="w-full text-[12px] border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green"></td>
+                    <td class="px-4 py-1.5"><input type="text" placeholder="Filter..." class="w-full text-[12px] border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green"></td>
+                    <td class="px-4 py-1.5">
+                      <select class="w-full text-[12px] border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green">
+                        <option value="">All</option>
+                        <option>female</option>
+                        <option>male</option>
+                        <option>diverse</option>
+                      </select>
+                    </td>
+                    <td class="px-4 py-1.5">
+                      <select class="w-full text-[12px] border border-slate-200 rounded px-1 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green">
+                        <option value="">All</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                      </select>
+                    </td>
+                    <td class="px-4 py-1.5"><input type="text" placeholder="Filter..." class="w-full text-[12px] border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green"></td>
+                    <td class="px-4 py-1.5 hidden xl:table-cell"><input type="text" placeholder="Filter..." class="w-full text-[12px] border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green"></td>
+                    <td class="px-4 py-1.5 hidden xl:table-cell"><input type="text" placeholder="Filter..." class="w-full text-[12px] border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green"></td>
+                    <td class="px-4 py-1.5 hidden 2xl:table-cell"><input type="text" placeholder="Filter..." class="w-full text-[12px] border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ubt-green focus:border-ubt-green"></td>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 150ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Dr.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Osei</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Amina</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">female</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">✓</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Accra</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">English, French, Twi</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Transnational Mobility, Diaspora Studies</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">West Africa, Ghana, Senegal</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 180ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Prof.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Asante</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Kwame</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">male</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">–</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Cape Town</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">English, Twi, Ga</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">African Philosophy, Epistemology</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">Southern Africa, Ghana</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 210ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Dr.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Diallo</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Fatima</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">female</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">✓</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Dakar</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">French, Wolof, English</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Ethics, Religion & Society</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">West Africa, Senegal</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 240ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Dr.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Mwangi</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Samuel</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">male</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">–</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Nairobi</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">English, Swahili</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Education Policy, Rural Development</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">East Africa, Kenya</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 270ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Prof.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Nwosu</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Chidinma</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">female</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">–</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Lagos</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">English, Igbo</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Contemporary Art, Visual Culture</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">West Africa, Nigeria</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 300ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Dr.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Habimana</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Jean-Pierre</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">male</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">–</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Kigali</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">French, Kinyarwanda, English</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Conflict Studies, Displacement</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">Central Africa, Rwanda</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 330ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Dr.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Mohammed</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Aisha</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">female</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">✓</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Zaria</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">English, Hausa, Arabic</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Islamic Studies, Hausa Literature</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">West Africa, Nigeria</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 360ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Prof.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Molefe</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Thabo</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">male</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">–</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Johannesburg</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">English, Zulu, Sotho</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Political Philosophy, Justice</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">Southern Africa</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 390ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Dr.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Achieng</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Grace</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">female</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">–</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Nairobi</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Swahili, English, Luo</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Linguistics, Swahili Studies</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">East Africa, Kenya</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 420ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Prof.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Touré</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Ibrahim</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">male</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">–</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Bamako</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">French, Bambara</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Aesthetics, Performance Studies</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">West Africa, Mali</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 450ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Dr.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Okafor</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Blessing</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">female</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-ubt-green-100 text-ubt-green text-[10px] font-bold leading-4">✓</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Benin City</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">English, Edo</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Migration Studies, Diaspora</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">West Africa, Nigeria</td>
+                  </tr>
+                  <tr class="hover:bg-ubt-green-50/30 cursor-pointer transition-colors row-animate" onclick="window.location='detail.html'" style="animation-delay: 480ms">
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Prof.</td>
+                    <td class="px-4 py-3 text-[13px] font-medium text-slate-800"><a href="detail.html" class="hover:text-ubt-green transition-colors">Mensah</a></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-700">Yaa</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">female</td>
+                    <td class="px-4 py-3 text-center"><span class="inline-block w-4 h-4 rounded-full bg-slate-100 text-slate-300 text-[10px] font-bold leading-4">–</span></td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500">Kumasi</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">English, Twi, Fante</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden xl:table-cell">Epistemology, African Knowledge</td>
+                    <td class="px-4 py-3 text-[13px] text-slate-500 hidden 2xl:table-cell">West Africa, Ghana</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50/50">
+              <span class="text-[12px] text-slate-500">Showing <span class="font-medium">1–12</span> of <span class="font-medium">847</span></span>
+              <div class="flex items-center gap-1">
+                <button class="px-2.5 py-1 text-[12px] text-slate-400 border border-slate-200 rounded bg-white cursor-not-allowed" disabled>Previous</button>
+                <button class="px-2.5 py-1 text-[12px] text-white bg-ubt-green rounded font-medium">1</button>
+                <button class="px-2.5 py-1 text-[12px] text-slate-600 border border-slate-200 rounded bg-white hover:bg-slate-50">2</button>
+                <button class="px-2.5 py-1 text-[12px] text-slate-600 border border-slate-200 rounded bg-white hover:bg-slate-50">3</button>
+                <span class="px-1 text-slate-400">…</span>
+                <button class="px-2.5 py-1 text-[12px] text-slate-600 border border-slate-200 rounded bg-white hover:bg-slate-50">71</button>
+                <button class="px-2.5 py-1 text-[12px] text-slate-600 border border-slate-200 rounded bg-white hover:bg-slate-50">Next</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
